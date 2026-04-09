@@ -36,31 +36,22 @@ const FAQ = () => {
       <PageHeader title="FAQ" subtitle="Frequently asked questions about our services." />
 
       <section className="py-16 relative overflow-hidden">
-        {/* Layered background */}
+        {/* Background */}
         <div className="absolute inset-0 bg-gradient-to-b from-background via-card to-background" />
-
-        {/* Animated orbs */}
-        <div className="absolute top-20 left-10 w-72 h-72 rounded-full bg-primary/8 blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-64 h-64 rounded-full bg-secondary/8 blur-3xl animate-pulse" style={{ animationDelay: "1.5s" }} />
+        <div className="absolute top-20 left-10 w-72 h-72 rounded-full bg-primary/8 blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-64 h-64 rounded-full bg-secondary/8 blur-3xl" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full bg-accent/5 blur-3xl" />
-
-        {/* Spinning ring decoration */}
-        <div className="absolute top-16 right-16 w-32 h-32 rounded-full border border-primary/10 animate-spin-slow" />
-        <div className="absolute bottom-16 left-16 w-20 h-20 rounded-full border border-secondary/10 animate-counter-spin" />
 
         <div className="relative container max-w-2xl mx-auto px-4">
 
           {/* Header */}
           <AnimatedSection animation="fade-in-up" className="text-center mb-12">
             <div className="relative inline-flex mb-5">
-              {/* Ping rings */}
-              <div className="absolute inset-0 rounded-2xl bg-primary/20 animate-ping-slow" />
-              <div className="absolute inset-0 rounded-2xl bg-primary/10 animate-ping-slow" style={{ animationDelay: "0.5s" }} />
               <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center relative z-10 border border-primary/20">
                 <HelpCircle className="text-primary" size={32} />
               </div>
             </div>
-            <h2 className="text-3xl font-heading font-bold text-shimmer mb-3">Got Questions?</h2>
+            <h2 className="text-3xl font-heading font-bold text-foreground mb-3">Got Questions?</h2>
             <p className="text-muted-foreground">Find answers to the most common questions below.</p>
             {/* Animated underline */}
             <div className="mt-3 h-px w-24 mx-auto bg-gradient-to-r from-primary to-secondary animate-line-grow origin-left" />
@@ -135,8 +126,8 @@ const FAQ = () => {
               <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/10 to-secondary/20 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               <div className="relative glass-strong rounded-2xl p-8 text-center glow-border hover:-translate-y-2 transition-all duration-500">
                 {/* Sparkle decoration */}
-                <Sparkles className="absolute top-4 right-4 text-primary/30 animate-bounce-subtle" size={18} />
-                <Sparkles className="absolute bottom-4 left-4 text-secondary/30 animate-bounce-subtle" size={14} style={{ animationDelay: "0.7s" }} />
+                <Sparkles className="absolute top-4 right-4 text-primary/30" size={18} />
+                <Sparkles className="absolute bottom-4 left-4 text-secondary/30" size={14} />
 
                 <div className="w-14 h-14 rounded-xl bg-secondary/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:shadow-[0_0_25px_hsl(var(--secondary)/0.3)] transition-all duration-500 border border-secondary/20">
                   <MessageCircle className="text-secondary" size={26} />

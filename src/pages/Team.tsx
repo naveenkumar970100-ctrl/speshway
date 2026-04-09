@@ -1,10 +1,16 @@
 import Layout from "@/components/Layout";
 import PageHeader from "@/components/PageHeader";
 import AnimatedSection from "@/components/AnimatedSection";
+import MotionSection from "@/components/MotionSection";
+import GooeyButton from "@/components/GooeyButton";
 import PhoneMockup from "@/components/PhoneMockup";
 import SocialScreen from "@/components/phone-screens/SocialScreen";
-import { Linkedin, Github, Twitter, Users, Award, Globe, Code, Cloud, Palette, BarChart2, Settings, Briefcase } from "lucide-react";
+import TextReveal from "@/components/TextReveal";
+import MagneticButton from "@/components/MagneticButton";
+import { Linkedin, Github, Twitter, Users, Award, Globe, Code, Cloud, Palette, BarChart2, Settings, Briefcase, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import aboutTeam from "@/assets/about-team.jpg";
+import { cn } from "@/lib/utils";
 
 const members = [
   { name: "Rajesh Kumar", role: "CEO & Founder", bio: "15+ years in IT leadership and digital strategy.", initials: "RK", gradient: "from-primary to-accent", icon: Briefcase },
@@ -26,117 +32,155 @@ const Team = () => (
     <PageHeader title="Our Team" subtitle="Meet the talented people behind Speshway Solutions." />
 
     {/* Culture */}
-    <section className="py-16 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-card to-background" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-secondary/5 blur-3xl" />
+    <section className="py-24 relative overflow-hidden bg-background">
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-card/20 to-background" />
+      
       <div className="relative container">
-        <AnimatedSection className="text-center mb-10">
-          <span className="text-primary text-sm font-semibold uppercase tracking-widest">Our Culture</span>
-          <h2 className="text-3xl font-heading font-bold mt-2 text-foreground">What Makes Us Different</h2>
-        </AnimatedSection>
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="text-center mb-20">
+          <MotionSection animation="parallax-reveal">
+            <span className="text-primary text-sm font-bold uppercase tracking-[0.3em]">Our Culture</span>
+            <TextReveal 
+              text="What Makes Us Different" 
+              className="text-4xl md:text-5xl font-heading font-bold mt-4 justify-center"
+            />
+          </MotionSection>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
           {culture.map((c, i) => (
-            <AnimatedSection key={c.title} delay={i * 120} animation="fade-in-up">
-              <div className="glass rounded-xl p-6 text-center hover:glow-border transition-all duration-500 hover:-translate-y-2 group">
-                <div className={`w-12 h-12 rounded-xl bg-${c.color}/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:shadow-[0_0_20px_hsl(var(--${c.color})/0.3)] transition-all duration-300`}>
-                  <c.icon className={`text-${c.color}`} size={22} />
+            <MotionSection key={c.title} delay={i * 0.1} animation="skew-up">
+              <div className="glass rounded-[2.5rem] p-10 text-center hover:glow-border-strong transition-all duration-700 hover:-translate-y-2 group card-3d border-white/5 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                
+                <div className={`w-16 h-16 rounded-2xl bg-${c.color}/10 flex items-center justify-center mx-auto mb-8 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-[0_0_40px_hsl(var(--${c.color})/0.4)] transition-all duration-500 border border-${c.color}/10 relative z-10`}>
+                  <c.icon className={`text-${c.color}`} size={28} />
                 </div>
-                <h3 className="font-heading font-semibold text-foreground mb-2">{c.title}</h3>
-                <p className="text-sm text-muted-foreground">{c.desc}</p>
+                <h3 className="font-heading font-bold text-2xl text-foreground mb-4 relative z-10">{c.title}</h3>
+                <p className="text-muted-foreground leading-relaxed font-light relative z-10">{c.desc}</p>
               </div>
-            </AnimatedSection>
+            </MotionSection>
           ))}
         </div>
       </div>
     </section>
 
     {/* Team photo + social phone */}
-    <section className="py-20 bg-background relative overflow-hidden">
-      <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-primary/5 blur-3xl animate-pulse" />
-      <div className="container grid md:grid-cols-2 gap-12 items-center">
-        <AnimatedSection animation="slide-in-left">
+    <section className="py-24 bg-background relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      <div className="container grid md:grid-cols-2 gap-24 items-center">
+        <MotionSection animation="zoom-out">
           <div className="relative group">
-            <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-            <img
-              src={aboutTeam}
-              alt="Speshway team"
-              className="relative rounded-2xl w-full object-cover shadow-2xl group-hover:scale-[1.02] transition-transform duration-500"
-              loading="lazy"
-              width={600}
-              height={400}
-            />
-            <div className="absolute -bottom-4 -right-4 glass rounded-xl px-4 py-3 glow-border animate-bounce-subtle">
-              <div className="text-lg font-bold text-primary">15+</div>
-              <div className="text-xs text-muted-foreground">Team Members</div>
+            <div className="absolute -inset-10 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-[3rem] blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+            <div className="relative overflow-hidden rounded-[3rem] border border-white/10 shadow-2xl">
+              <img
+                src={aboutTeam}
+                alt="Speshway team"
+                className="w-full h-auto object-cover group-hover:scale-110 group-hover:rotate-1 transition-all duration-1000 ease-out-expo"
+                loading="lazy"
+              />
+            </div>
+            
+            <div className="absolute -bottom-8 -right-8 glass rounded-2xl px-8 py-6 glow-border-strong shadow-2xl border-white/10">
+              <div className="text-4xl font-black text-primary">15+</div>
+              <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Global Experts</div>
             </div>
           </div>
-        </AnimatedSection>
-        <AnimatedSection animation="slide-in-right" className="flex flex-col items-center gap-4">
+        </MotionSection>
+        
+        <MotionSection animation="skew-up" className="flex flex-col items-center md:items-start gap-10">
           <div>
-            <span className="text-secondary text-sm font-semibold uppercase tracking-widest">Connected Team</span>
-            <h2 className="text-2xl font-heading font-bold mt-2 mb-3 text-foreground">We Build Together</h2>
-            <p className="text-muted-foreground text-sm leading-relaxed mb-6">
-              Our team stays connected across time zones, collaborating on cutting-edge projects and sharing knowledge every day.
+            <span className="text-secondary text-sm font-bold uppercase tracking-[0.3em] mb-4 block">Connected Team</span>
+            <TextReveal 
+              text="We Build Together" 
+              className="text-4xl md:text-6xl font-heading font-bold mb-6"
+            />
+            <p className="text-muted-foreground text-lg leading-relaxed font-light max-w-lg">
+              Our team stays connected across time zones, collaborating on cutting-edge projects and sharing knowledge every day to deliver exceptional digital products.
             </p>
           </div>
-          <PhoneMockup color="secondary" animationClass="animate-float" animationDelay="0s">
-            <SocialScreen />
-          </PhoneMockup>
-        </AnimatedSection>
+          
+          <div className="relative group">
+            <div className="absolute -inset-10 bg-secondary/10 blur-[80px] rounded-full z-0" />
+            <PhoneMockup color="secondary" animationClass="" animationDelay="0s" className="relative z-10 hover:scale-105 transition-transform duration-500 shadow-2xl">
+              <SocialScreen />
+            </PhoneMockup>
+          </div>
+        </MotionSection>
       </div>
     </section>
 
     {/* Team Grid */}
-    <section className="py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-card to-background" />
-      <div className="absolute -bottom-32 -right-32 w-80 h-80 rounded-full bg-accent/5 blur-3xl animate-pulse" style={{ animationDelay: "1.5s" }} />
+    <section className="py-24 relative overflow-hidden bg-background">
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-card/30 to-background" />
+      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+      
       <div className="container relative">
-        <AnimatedSection className="text-center mb-12">
-          <span className="text-secondary text-sm font-semibold uppercase tracking-widest">The People</span>
-          <h2 className="text-3xl font-heading font-bold mt-2 text-foreground">Meet the Team</h2>
-        </AnimatedSection>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="text-center mb-20">
+          <MotionSection animation="parallax-reveal">
+            <span className="text-secondary text-sm font-bold uppercase tracking-[0.3em]">The People</span>
+            <TextReveal 
+              text="Meet the Team" 
+              className="text-4xl md:text-6xl font-heading font-bold mt-4 justify-center"
+            />
+          </MotionSection>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
           {members.map((m, i) => (
-            <AnimatedSection key={m.name} delay={i * 120} animation={i % 3 === 0 ? "slide-in-left" : i % 3 === 1 ? "fade-in-up" : "slide-in-right"}>
-              <div className="group text-center p-8 rounded-xl glass hover:glow-border-strong transition-all duration-500 hover:-translate-y-3 card-3d">
-                <div className="relative inline-block mb-5">
-                  {/* Orbit ring */}
-                  <div className={`absolute inset-0 rounded-full border border-primary/20 scale-125 animate-spin-slow`} />
-                  <div className={`w-24 h-24 mx-auto rounded-full bg-gradient-to-br ${m.gradient} flex items-center justify-center text-2xl font-heading font-bold text-primary-foreground group-hover:scale-110 group-hover:shadow-[0_0_35px_hsl(var(--primary)/0.35)] transition-all duration-500 relative z-10`}>
-                    {m.initials}
-                    <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-card border-2 border-border flex items-center justify-center">
-                      <m.icon size={12} className="text-primary" />
+            <MotionSection key={m.name} delay={i * 0.1} animation="skew-up">
+              <div className="group text-center p-10 rounded-[3rem] glass hover:glow-border-strong transition-all duration-700 hover:-translate-y-4 card-3d border-white/5 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                
+                <div className="relative inline-block mb-10">
+                  <div className={`absolute -inset-4 rounded-full border border-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                  <div className={`absolute -inset-8 rounded-full border border-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                  
+                  <div className={`w-28 h-24 mx-auto rounded-full bg-gradient-to-br ${m.gradient} flex items-center justify-center text-3xl font-heading font-black text-primary-foreground group-hover:scale-110 group-hover:shadow-[0_0_50px_hsl(var(--primary)/0.5)] transition-all duration-700 relative z-10 overflow-hidden`}>
+                    <span className="group-hover:animate-glitch">{m.initials}</span>
+                    <div className="absolute -bottom-1 -right-1 w-10 h-10 rounded-full bg-card border border-white/10 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-500">
+                      <m.icon size={16} className="text-primary" />
                     </div>
                   </div>
                 </div>
-                <h3 className="font-heading font-semibold text-lg text-foreground group-hover:text-shimmer transition-all">{m.name}</h3>
-                <p className="text-sm text-primary font-medium mb-2">{m.role}</p>
-                <p className="text-sm text-muted-foreground mb-5">{m.bio}</p>
-                <div className="flex justify-center gap-3">
+                
+                <h3 className="font-heading font-bold text-2xl text-foreground mb-2 group-hover:text-primary transition-colors duration-500">{m.name}</h3>
+                <p className="text-sm text-primary font-black uppercase tracking-widest mb-4 opacity-80">{m.role}</p>
+                <p className="text-muted-foreground font-light leading-relaxed mb-8">{m.bio}</p>
+                
+                <div className="flex justify-center gap-4 relative z-10">
                   {[Linkedin, Github, Twitter].map((Icon, j) => (
-                    <div key={j} className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 hover:scale-125 hover:shadow-[0_0_12px_hsl(var(--primary)/0.3)] transition-all duration-200 cursor-pointer">
-                      <Icon size={15} />
-                    </div>
+                    <MagneticButton key={j} distance={30} strength={0.4}>
+                      <div className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300 cursor-pointer border border-white/5">
+                        <Icon size={18} />
+                      </div>
+                    </MagneticButton>
                   ))}
                 </div>
               </div>
-            </AnimatedSection>
+            </MotionSection>
           ))}
         </div>
       </div>
     </section>
 
     {/* Join Us CTA */}
-    <section className="py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-card to-secondary/10" />
-      <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[400px] h-[400px] rounded-full bg-primary/5 blur-3xl animate-pulse" />
-      <AnimatedSection animation="scale-in" className="container text-center relative z-10">
-        <h2 className="text-3xl font-heading font-bold mb-4 text-foreground">Want to Join Our Team?</h2>
-        <p className="text-muted-foreground mb-8 max-w-lg mx-auto">We're always looking for talented people who are passionate about technology.</p>
-        <a href="/career" className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-primary text-primary-foreground font-semibold hover:shadow-[0_0_30px_hsl(var(--primary)/0.4)] transition-all duration-300 hover:scale-105">
-          View Open Positions
-        </a>
-      </AnimatedSection>
+    <section className="py-32 relative overflow-hidden bg-background">
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-card/50 to-secondary/20" />
+      
+      <MotionSection animation="zoom-out" className="container text-center relative z-10">
+        <TextReveal 
+          text="Want to Join Our Team?" 
+          className="text-4xl md:text-7xl font-heading font-black mb-8 justify-center"
+        />
+        <p className="text-muted-foreground mb-12 max-w-2xl mx-auto text-xl font-light leading-relaxed">
+          We're always looking for talented people who are passionate about technology and innovation.
+        </p>
+        <Link to="/career">
+          <GooeyButton color="primary">
+            View Open Positions <ArrowRight size={22} className="inline ml-2" />
+          </GooeyButton>
+        </Link>
+      </MotionSection>
     </section>
   </Layout>
 );

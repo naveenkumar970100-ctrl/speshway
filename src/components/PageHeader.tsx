@@ -1,5 +1,5 @@
 const PageHeader = ({ title, subtitle }: { title: string; subtitle?: string }) => (
-  <section className="relative h-64 md:h-80 flex items-center justify-center text-center overflow-hidden">
+  <section className="relative h-72 md:h-96 flex items-center justify-center text-center overflow-hidden">
     {/* Gradient background */}
     <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-accent/10" />
     

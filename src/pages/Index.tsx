@@ -3,8 +3,13 @@ import AnimatedSection from "@/components/AnimatedSection";
 import HeroCarousel from "@/components/HeroCarousel";
 import CounterAnimation from "@/components/CounterAnimation";
 import MobileShowcase from "@/components/MobileShowcase";
+import TextReveal from "@/components/TextReveal";
+import GooeyButton from "@/components/GooeyButton";
+import MotionSection from "@/components/MotionSection";
 import { ArrowRight, Code, Cloud, Shield, Cpu, Users, Zap, CheckCircle, Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
 const stats = [
   { num: 50, suffix: "+", label: "Projects Delivered" },
@@ -37,149 +42,214 @@ const testimonials = [
   { name: "Ravi K.", role: "Founder, FinEdge", text: "Professional team, transparent process, and outstanding results.", rating: 5 },
 ];
 
-const Index = () => (
-  <Layout>
-    <HeroCarousel />
+const Index = () => {
+  const progressRef = useRef<HTMLDivElement>(null);
 
-    {/* Stats */}
-    <section className="py-16 relative">
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-card to-secondary/5" />
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent animate-line-grow origin-left" />
-      <div className="relative container grid grid-cols-2 md:grid-cols-4 gap-8">
-        {stats.map((s, i) => (
-          <AnimatedSection key={s.label} delay={i * 120} animation="fade-in-up">
-            <div className="text-center group relative">
-              <div className="absolute inset-0 rounded-xl bg-primary/5 scale-0 group-hover:scale-100 transition-transform duration-500 rounded-xl" />
-              <div className="relative text-3xl md:text-4xl font-heading font-bold text-gradient">
-                <CounterAnimation target={s.num} suffix={s.suffix} />
-              </div>
-              <div className="text-sm text-muted-foreground mt-1 group-hover:text-foreground transition-colors">{s.label}</div>
-            </div>
-          </AnimatedSection>
-        ))}
-      </div>
-    </section>
+  useEffect(() => {
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+          if (progressRef.current && scrollHeight) {
+            progressRef.current.style.width = `${(window.scrollY / scrollHeight) * 100}%`;
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-    {/* Services */}
-    <section className="py-20 bg-background relative">
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-      <div className="container">
-        <AnimatedSection className="text-center mb-12">
-          <span className="text-primary text-sm font-semibold uppercase tracking-widest">What We Do</span>
-          <h2 className="text-3xl md:text-4xl font-heading font-bold mt-2 mb-3">Our Services</h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">End-to-end IT solutions tailored to your business needs.</p>
-        </AnimatedSection>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((s, i) => (
-            <AnimatedSection key={s.title} delay={i * 100} animation="scale-in">
-              <div className="group h-full p-6 rounded-xl glass hover:glow-border-strong hover:shadow-xl transition-all duration-500 card-3d">
-                <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 group-hover:scale-110 group-hover:shadow-[0_0_25px_hsl(var(--primary)/0.35)] transition-all duration-300 border border-primary/10">
-                  <s.icon className="text-primary" size={28} />
+  return (
+    <Layout>
+      {/* Scroll Progress Bar — direct DOM mutation, zero re-renders */}
+      <div
+        ref={progressRef}
+        className="fixed top-0 left-0 h-[3px] bg-gradient-to-r from-primary via-accent to-secondary z-[100]"
+        style={{ width: "0%" }}
+      />
+
+      <HeroCarousel />
+
+      {/* Stats */}
+      <section className="relative py-24 overflow-hidden bg-background">
+        <MotionSection animation="zoom-out" className="relative container grid grid-cols-2 md:grid-cols-4 gap-8">
+          {stats.map((s, i) => (
+            <AnimatedSection key={s.label} delay={i * 100} animation="scale-up">
+              <div className="text-center group relative p-8 rounded-3xl hover:bg-primary/5 transition-all duration-500 overflow-hidden border border-border">
+                <div className="text-5xl md:text-6xl font-heading font-black text-gradient mb-3">
+                  <CounterAnimation target={s.num} suffix={s.suffix} />
                 </div>
-                <h3 className="font-heading font-semibold text-lg mb-2 text-foreground">{s.title}</h3>
-                <p className="text-sm text-muted-foreground">{s.desc}</p>
-                <Link to="/services" className="inline-flex items-center gap-1 text-primary text-sm font-medium mt-4 opacity-0 group-hover:opacity-100 group-hover:gap-2 transition-all duration-300">
-                  Learn More <ArrowRight size={14} />
-                </Link>
+                <div className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+                  {s.label}
+                </div>
               </div>
             </AnimatedSection>
           ))}
-        </div>
-      </div>
-    </section>
+        </MotionSection>
+      </section>
 
-    <MobileShowcase />
-
-    {/* Why Choose Us */}
-    <section className="py-20 bg-background relative">
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-      <div className="container grid md:grid-cols-2 gap-12 items-center">
-        <AnimatedSection animation="slide-in-left">
-          <span className="text-secondary font-semibold text-sm uppercase tracking-widest">Why Choose Us</span>
-          <h2 className="text-3xl md:text-4xl font-heading font-bold mt-2 mb-6 text-foreground">
-            We Deliver Excellence in Every Project
-          </h2>
-          <div className="space-y-4">
-            {whyUs.map((item, i) => (
-              <div key={i} className="flex items-center gap-3 group">
-                <div className="w-6 h-6 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 group-hover:bg-secondary/20 group-hover:scale-110 transition-all">
-                  <CheckCircle className="text-secondary" size={14} />
+      {/* Services Grid */}
+      <section className="py-24 bg-background relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+        <div className="container relative z-10">
+          <div className="text-center mb-16">
+            <AnimatedSection animation="fade-in-up">
+              <span className="text-primary text-sm font-black uppercase tracking-[0.3em]">What We Do</span>
+            </AnimatedSection>
+            <TextReveal text="Innovation & Excellence" className="text-4xl md:text-6xl font-heading font-black mt-4 mb-6 justify-center leading-tight" />
+            <AnimatedSection delay={200}>
+              <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-light leading-relaxed">
+                End-to-end IT solutions tailored to your business needs, powered by innovation and expertise.
+              </p>
+            </AnimatedSection>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {services.map((s, i) => (
+              <AnimatedSection key={s.title} delay={i * 80} animation="card-rise">
+                <div className="group h-full p-8 rounded-3xl glass hover:glow-border hover:shadow-xl transition-all duration-400 border-border relative overflow-hidden">
+                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300 border border-primary/20">
+                    <s.icon className="text-primary" size={28} />
+                  </div>
+                  <h3 className="font-heading font-bold text-xl mb-3 text-foreground group-hover:text-primary transition-colors duration-300">{s.title}</h3>
+                  <p className="text-muted-foreground font-light leading-relaxed mb-6">{s.desc}</p>
+                  <Link to="/services" className="inline-flex items-center gap-2 text-primary text-sm font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300">
+                    Explore <ArrowRight size={16} />
+                  </Link>
                 </div>
-                <span className="text-muted-foreground group-hover:text-foreground transition-colors">{item}</span>
-              </div>
+              </AnimatedSection>
             ))}
           </div>
-        </AnimatedSection>
-        <AnimatedSection animation="slide-in-right">
-          <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-tr from-primary/10 via-transparent to-secondary/10 rounded-2xl blur-xl" />
-            <div className="relative grid grid-cols-2 gap-4">
-              {[
-                { val: "99%", label: "Client Satisfaction", color: "primary" },
-                { val: "24/7", label: "Support Available", color: "secondary" },
-                { val: "100+", label: "Technologies Used", color: "accent" },
-                { val: "50+", label: "Happy Clients", color: "primary" },
-              ].map((item, i) => (
-                <div key={i} className={`glass rounded-xl p-6 hover:glow-border transition-all duration-300 hover:-translate-y-1 ${i % 2 === 1 ? "mt-6" : ""}`}>
-                  <div className={`text-3xl font-heading font-bold text-${item.color} mb-1`}>{item.val}</div>
-                  <div className="text-xs text-muted-foreground">{item.label}</div>
+        </div>
+      </section>
+
+      <MobileShowcase />
+
+      {/* Why Choose Us with Rotate-In and Skew */}
+      <section className="py-32 bg-background relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+        <div className="container grid md:grid-cols-2 gap-24 items-center">
+          <MotionSection animation="skew-up">
+            <span className="text-secondary font-black text-sm uppercase tracking-[0.3em] mb-6 block">Why Choose Us</span>
+            <TextReveal 
+              text="Delivering Excellence In Every Project" 
+              className="text-4xl md:text-6xl font-heading font-black mb-12 leading-tight"
+            />
+            <div className="grid sm:grid-cols-2 gap-8">
+              {whyUs.map((item, i) => (
+                <div key={i} className="flex items-start gap-5 group">
+                  <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0 group-hover:bg-secondary/20 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 border border-secondary/20">
+                    <CheckCircle className="text-secondary" size={24} />
+                  </div>
+                  <span className="text-muted-foreground group-hover:text-foreground transition-colors duration-500 font-medium text-lg leading-tight">{item}</span>
                 </div>
               ))}
             </div>
-          </div>
-        </AnimatedSection>
-      </div>
-    </section>
-
-    {/* Testimonials */}
-    <section className="py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-card to-background" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-accent/5 blur-3xl" />
-      <div className="relative container">
-        <AnimatedSection className="text-center mb-12">
-          <span className="text-accent text-sm font-semibold uppercase tracking-widest">Testimonials</span>
-          <h2 className="text-3xl md:text-4xl font-heading font-bold mt-2">What Our Clients Say</h2>
-        </AnimatedSection>
-        <div className="grid md:grid-cols-3 gap-6">
-          {testimonials.map((t, i) => (
-            <AnimatedSection key={i} delay={i * 150} animation="fade-in-up">
-              <div className="glass rounded-xl p-6 hover:glow-border-strong transition-all duration-500 hover:-translate-y-3 h-full flex flex-col card-3d">
-                <div className="flex gap-1 mb-4">
-                  {[...Array(t.rating)].map((_, j) => (
-                    <Star key={j} size={16} className="text-primary fill-primary" />
-                  ))}
-                </div>
-                <p className="text-muted-foreground text-sm flex-1 italic">"{t.text}"</p>
-                <div className="mt-4 pt-4 border-t border-border/50">
-                  <div className="font-semibold text-sm text-foreground">{t.name}</div>
-                  <div className="text-xs text-muted-foreground">{t.role}</div>
-                </div>
+          </MotionSection>
+          
+          <AnimatedSection animation="rotate-in">
+            <div className="relative">
+              <div className="absolute -inset-20 bg-gradient-to-tr from-primary/15 via-transparent to-secondary/15 rounded-full blur-[120px]" />
+              <div className="relative grid grid-cols-2 gap-8">
+                {[
+                  { val: "99%", label: "Satisfaction", color: "primary", delay: 0 },
+                  { val: "24/7", label: "Support", color: "secondary", delay: 100 },
+                  { val: "100+", label: "Tech Stack", color: "accent", delay: 200 },
+                  { val: "50+", label: "Partners", color: "primary", delay: 300 },
+                ].map((item, i) => (
+                  <div 
+                    key={i} 
+                    className={cn(
+                      "glass rounded-[2.5rem] p-10 hover:glow-border transition-all duration-700 hover:-translate-y-4 hover:shadow-2xl border-border",
+                      i % 2 === 1 ? "mt-12" : ""
+                    )}
+                    style={{ transitionDelay: `${item.delay}ms` }}
+                  >
+                    <div className={`text-5xl font-heading font-black text-${item.color} mb-4 group-hover:animate-glitch`}>{item.val}</div>
+                    <div className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">{item.label}</div>
+                  </div>
+                ))}
               </div>
-            </AnimatedSection>
-          ))}
+            </div>
+          </AnimatedSection>
         </div>
-      </div>
-    </section>
+      </section>
 
-    {/* CTA */}
-    <section className="py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-accent/5 to-secondary/10" />
-      <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-primary/10 blur-3xl animate-pulse" />
-      <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-secondary/10 blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
-      <AnimatedSection className="container text-center relative z-10">
-        <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4 text-foreground">Ready to Transform Your Business?</h2>
-        <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
-          Let's discuss how Speshway Solutions can accelerate your digital journey.
-        </p>
-        <Link
-          to="/contact"
-          className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-primary text-primary-foreground font-semibold hover:shadow-[0_0_30px_hsl(var(--primary)/0.4)] transition-all duration-300 hover:scale-105"
-        >
-          Contact Us Today <ArrowRight size={16} />
-        </Link>
-      </AnimatedSection>
-    </section>
-  </Layout>
-);
+      {/* Testimonials with Card-Rise */}
+      <section className="py-32 relative overflow-hidden bg-background">
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-card/40 to-background" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[200px]" />
+        <div className="relative container">
+          <div className="text-center mb-24">
+            <AnimatedSection animation="reveal-text">
+              <span className="text-accent text-sm font-black uppercase tracking-[0.3em]">Testimonials</span>
+            </AnimatedSection>
+            <TextReveal 
+              text="What Our Clients Say" 
+              className="text-4xl md:text-5xl font-heading font-black mt-6 justify-center"
+            />
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-10">
+            {testimonials.map((t, i) => (
+              <AnimatedSection key={i} delay={i * 200} animation="card-rise">
+                <div className="glass rounded-[2.5rem] p-10 hover:glow-border-strong transition-all duration-700 hover:-translate-y-6 h-full flex flex-col card-3d border-border group relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-8 text-primary/10 group-hover:text-primary/20 transition-colors">
+                    <Zap size={60} fill="currentColor" />
+                  </div>
+                  
+                  <div className="flex gap-2 mb-8 relative z-10">
+                    {[...Array(t.rating)].map((_, j) => (
+                      <Star key={j} size={22} className="text-primary fill-primary group-hover:scale-125 transition-transform" style={{ transitionDelay: `${j * 50}ms` }} />
+                    ))}
+                  </div>
+                  <p className="text-muted-foreground text-xl flex-1 italic leading-relaxed group-hover:text-foreground transition-colors duration-700 relative z-10 font-light">
+                    "{t.text}"
+                  </p>
+                  <div className="mt-10 pt-8 border-t border-border flex items-center gap-6 relative z-10">
+                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center font-heading font-black text-2xl text-primary group-hover:rotate-12 transition-transform duration-500">
+                      {t.name.charAt(0)}
+                    </div>
+                    <div>
+                      <div className="font-black text-lg text-foreground group-hover:text-primary transition-colors">{t.name}</div>
+                      <div className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">{t.role}</div>
+                    </div>
+                  </div>
+                </div>
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-32 relative overflow-hidden bg-background">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-accent/10 to-secondary/20" />
+        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-primary/10 blur-[150px]" />
+        <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full bg-secondary/10 blur-[150px]" />
+        <MotionSection animation="parallax-reveal" className="container text-center relative z-10">
+          <TextReveal
+            text="Ready to Transform Your Business?"
+            className="text-4xl md:text-7xl font-heading font-black mb-8 justify-center leading-tight tracking-tighter"
+          />
+          <p className="text-muted-foreground mb-12 max-w-3xl mx-auto text-xl font-light leading-relaxed">
+            Let's discuss how Speshway Solutions can accelerate your digital journey and bring your vision to life.
+          </p>
+          <div className="flex justify-center">
+            <GooeyButton color="primary">
+              <Link to="/contact" className="inline-flex items-center gap-3 px-10 py-5 font-black text-lg uppercase tracking-widest">
+                Get Started Now <ArrowRight size={22} />
+              </Link>
+            </GooeyButton>
+          </div>
+        </MotionSection>
+      </section>
+    </Layout>
+  );
+};
+
 
 export default Index;

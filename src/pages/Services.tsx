@@ -1,11 +1,17 @@
 import Layout from "@/components/Layout";
 import PageHeader from "@/components/PageHeader";
 import AnimatedSection from "@/components/AnimatedSection";
+import MotionSection from "@/components/MotionSection";
+import GooeyButton from "@/components/GooeyButton";
 import PhoneMockup from "@/components/PhoneMockup";
 import EcommerceScreen from "@/components/phone-screens/EcommerceScreen";
 import DashboardScreen from "@/components/phone-screens/DashboardScreen";
+import TextReveal from "@/components/TextReveal";
+import MagneticButton from "@/components/MagneticButton";
 import { Code, Cloud, Shield, Cpu, Smartphone, Database, Globe, Settings, BarChart, ArrowRight, CheckCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 import webShowcase from "@/assets/web-showcase.png";
+import { cn } from "@/lib/utils";
 
 const services = [
   { icon: Code, title: "Web Development", desc: "Custom web applications using React, Node.js, and modern frameworks.", color: "primary" },
@@ -31,138 +37,217 @@ const Services = () => (
     <PageHeader title="Our Services" subtitle="Comprehensive IT solutions to power your business growth." />
 
     {/* Services Grid */}
-    <section className="py-20 bg-background relative overflow-hidden">
-      <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-primary/5 blur-3xl animate-pulse" />
-      <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-secondary/5 blur-3xl animate-pulse" style={{ animationDelay: "2s" }} />
+    <section className="py-24 bg-background relative overflow-hidden">
       <div className="container relative">
-        <AnimatedSection className="text-center mb-12">
-          <span className="text-primary text-sm font-semibold uppercase tracking-widest">What We Offer</span>
-          <h2 className="text-3xl md:text-4xl font-heading font-bold mt-2 mb-3">End-to-End IT Solutions</h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">From strategy to execution, we cover every aspect of your digital journey.</p>
-        </AnimatedSection>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="text-center mb-20">
+          <MotionSection animation="parallax-reveal">
+            <span className="text-primary text-sm font-bold uppercase tracking-[0.3em]">What We Offer</span>
+            <TextReveal 
+              text="End-to-End IT Solutions" 
+              className="text-4xl md:text-6xl font-heading font-bold mt-4 mb-6 justify-center"
+            />
+            <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-light leading-relaxed">
+              From strategy to execution, we cover every aspect of your digital journey with cutting-edge technology.
+            </p>
+          </MotionSection>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((s, i) => (
-            <AnimatedSection key={s.title} delay={i * 80} animation={i % 3 === 0 ? "slide-in-left" : i % 3 === 1 ? "scale-in" : "slide-in-right"}>
-              <div className="group h-full p-6 rounded-xl glass hover:glow-border-strong hover:shadow-xl transition-all duration-500 card-3d">
-                <div className={`w-14 h-14 rounded-xl bg-${s.color}/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:shadow-[0_0_25px_hsl(var(--${s.color})/0.35)] transition-all duration-300 border border-${s.color}/10`}>
-                  <s.icon className={`text-${s.color}`} size={28} />
+            <MotionSection 
+              key={s.title} 
+              delay={i * 0.1} 
+              animation="skew-up"
+            >
+              <div className="group h-full p-8 rounded-3xl glass hover:glow-border-strong hover:shadow-2xl transition-all duration-700 ease-out-expo card-3d border-white/5 relative overflow-hidden">
+                {/* Spotlight effect on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+                
+                <div className={`w-16 h-16 rounded-2xl bg-${s.color}/10 flex items-center justify-center mb-8 group-hover:bg-${s.color}/20 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-[0_0_40px_hsl(var(--${s.color})/0.4)] transition-all duration-500 border border-${s.color}/10 relative z-10`}>
+                  <s.icon className={`text-${s.color}`} size={32} />
                 </div>
-                <h3 className="font-heading font-semibold text-lg mb-2 text-foreground">{s.title}</h3>
-                <p className="text-sm text-muted-foreground mb-4">{s.desc}</p>
-                <span className={`inline-flex items-center gap-1 text-${s.color} text-sm font-medium opacity-0 group-hover:opacity-100 group-hover:gap-2 transition-all duration-300`}>
-                  Learn More <ArrowRight size={14} />
-                </span>
+                
+                <h3 className="font-heading font-bold text-2xl mb-4 text-foreground group-hover:text-primary transition-colors duration-500 relative z-10">{s.title}</h3>
+                <p className="text-muted-foreground leading-relaxed mb-8 relative z-10">{s.desc}</p>
+                
+                <MagneticButton distance={30} strength={0.2} className="relative z-10">
+                  <span className={`inline-flex items-center gap-2 text-${s.color} text-[13px] font-bold uppercase tracking-[0.15em] opacity-70 group-hover:opacity-100 group-hover:gap-3 transition-all duration-500`}>
+                    Learn More <ArrowRight size={16} />
+                  </span>
+                </MagneticButton>
               </div>
-            </AnimatedSection>
+            </MotionSection>
           ))}
         </div>
       </div>
     </section>
 
-    {/* Process */}
-    <section className="py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-card to-background" />
+    {/* Process with Mask Reveal */}
+    <section className="py-24 relative overflow-hidden bg-background">
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-card/20 to-background" />
       <div className="relative container">
-        <AnimatedSection className="text-center mb-12">
-          <span className="text-secondary text-sm font-semibold uppercase tracking-widest">How We Work</span>
-          <h2 className="text-3xl font-heading font-bold mt-2 text-foreground">Our Process</h2>
-        </AnimatedSection>
-        <div className="grid md:grid-cols-4 gap-6 relative">
-          <div className="hidden md:block absolute top-8 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-primary via-secondary to-accent animate-line-grow origin-left" />
+        <div className="text-center mb-20">
+          <MotionSection animation="parallax-reveal">
+            <span className="text-secondary text-sm font-bold uppercase tracking-[0.3em]">How We Work</span>
+            <TextReveal 
+              text="Our Seamless Process" 
+              className="text-4xl md:text-5xl font-heading font-bold mt-4 justify-center"
+            />
+          </MotionSection>
+        </div>
+
+        <div className="grid md:grid-cols-4 gap-12 relative">
+          {/* Animated path line */}
+          <div className="hidden md:block absolute top-10 left-[10%] right-[10%] h-[2px] bg-white/5 overflow-hidden z-0">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-accent animate-line-grow origin-left" />
+          </div>
+
           {process.map((p, i) => (
-            <AnimatedSection key={p.step} delay={i * 150} animation="fade-in-up">
-              <div className="text-center group">
-                <div className="relative w-16 h-16 mx-auto mb-4 z-10">
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary to-secondary opacity-20 animate-ping-slow" style={{ animationDelay: `${i * 0.4}s` }} />
-                  <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-primary-foreground font-bold text-lg group-hover:scale-110 group-hover:shadow-[0_0_30px_hsl(var(--primary)/0.5)] transition-all duration-300">
+            <MotionSection 
+              key={p.step} 
+              delay={i * 0.1} 
+              animation="zoom-out"
+            >
+              <div className="text-center group relative z-10">
+                <div className="relative w-20 h-20 mx-auto mb-8">
+                  <div className="absolute -inset-4 rounded-full bg-gradient-to-br from-primary to-secondary opacity-0 group-hover:opacity-20 group-hover:scale-125 group-hover:animate-ping-slow transition-all duration-700" />
+                  <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-primary-foreground font-bold text-2xl group-hover:scale-110 group-hover:rotate-[360deg] group-hover:shadow-[0_0_50px_hsl(var(--primary)/0.6)] transition-all duration-1000 ease-in-out-expo">
                     {p.step}
                   </div>
                 </div>
-                <h3 className="font-heading font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">{p.title}</h3>
-                <p className="text-sm text-muted-foreground">{p.desc}</p>
+                <h3 className="font-heading font-bold text-xl text-foreground mb-4 group-hover:text-primary transition-colors duration-500 tracking-tight">{p.title}</h3>
+                <p className="text-muted-foreground font-light leading-relaxed">{p.desc}</p>
               </div>
-            </AnimatedSection>
+            </MotionSection>
           ))}
         </div>
       </div>
     </section>
 
     {/* Mobile App Showcase with phone mockups */}
-    <section className="py-20 relative overflow-hidden">
+    <section className="py-24 relative overflow-hidden bg-background">
       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-background to-secondary/5" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-secondary/5 blur-3xl" />
-      <div className="relative container grid md:grid-cols-2 gap-12 items-center">
-        <AnimatedSection animation="slide-in-left">
-          <span className="text-secondary text-sm font-semibold uppercase tracking-widest">Mobile Excellence</span>
-          <h2 className="text-3xl font-heading font-bold mt-2 mb-4 text-foreground">We Build Apps People Love</h2>
-          <p className="text-muted-foreground leading-relaxed mb-6">
+      
+      <div className="relative container grid md:grid-cols-2 gap-20 items-center">
+        <MotionSection animation="slide-horizontal">
+          <span className="text-secondary text-sm font-bold uppercase tracking-[0.3em]">Mobile Excellence</span>
+          <h2 className="text-4xl md:text-5xl font-heading font-bold mt-4 mb-8 text-foreground leading-tight">We Build Apps <br />People <span className="text-secondary">Love</span></h2>
+          <p className="text-muted-foreground text-lg leading-relaxed mb-10 font-light">
             From concept to launch, we create mobile experiences that engage users and drive business results. Our apps are built for performance, security, and scalability.
           </p>
-          <div className="flex flex-col gap-3 mb-6">
-            {["Cross-platform iOS & Android", "Offline-first architecture", "Real-time sync & push notifications", "App Store optimization"].map((f, i) => (
-              <AnimatedSection key={f} delay={i * 80} animation="slide-in-left">
-                <div className="flex items-center gap-3 group">
-                  <CheckCircle className="text-secondary shrink-0 group-hover:scale-110 transition-transform" size={16} />
-                  <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{f}</span>
+          <div className="grid sm:grid-cols-2 gap-6 mb-12">
+            {["Cross-platform iOS & Android", "Offline-first architecture", "Real-time sync", "Push notifications"].map((f, i) => (
+              <AnimatedSection key={f} delay={i * 100} animation="slide-in-left">
+                <div className="flex items-center gap-4 group">
+                  <div className="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 group-hover:rotate-12 transition-all duration-500">
+                    <CheckCircle className="text-secondary" size={18} />
+                  </div>
+                  <span className="text-muted-foreground group-hover:text-foreground transition-colors font-medium">{f}</span>
                 </div>
               </AnimatedSection>
             ))}
           </div>
-          <div className="flex gap-4">
-            {[{ val: "200+", label: "Apps Built", color: "primary" }, { val: "4.8★", label: "Avg Rating", color: "secondary" }, { val: "1M+", label: "Downloads", color: "accent" }].map((s, i) => (
-              <AnimatedSection key={s.label} delay={i * 100} animation="scale-in">
-                <div className="glass rounded-xl p-4 text-center hover:glow-border transition-all duration-300 hover:-translate-y-1">
-                  <div className={`text-2xl font-bold text-${s.color}`}>{s.val}</div>
-                  <div className="text-xs text-muted-foreground">{s.label}</div>
+          <div className="flex gap-6">
+            {[{ val: "200+", label: "Apps Built", color: "primary" }, { val: "4.8★", label: "Rating", color: "secondary" }, { val: "1M+", label: "Downloads", color: "accent" }].map((s, i) => (
+              <AnimatedSection key={s.label} delay={i * 150} animation="scale-up">
+                <div className="glass rounded-2xl p-6 text-center hover:glow-border transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl border-white/5">
+                  <div className={`text-3xl font-bold text-${s.color} mb-1`}>{s.val}</div>
+                  <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{s.label}</div>
                 </div>
               </AnimatedSection>
             ))}
           </div>
-        </AnimatedSection>
+        </MotionSection>
 
-        {/* Phone mockups */}
-        <AnimatedSection animation="slide-in-right" className="flex justify-center items-end gap-4">
-          <PhoneMockup color="primary" animationClass="animate-float" animationDelay="0s">
-            <EcommerceScreen />
-          </PhoneMockup>
-          <PhoneMockup color="secondary" animationClass="animate-float" animationDelay="1.2s" className="mb-8">
-            <DashboardScreen />
-          </PhoneMockup>
-        </AnimatedSection>
+        {/* Phone mockups with entrance + float animations */}
+        <MotionSection animation="zoom-out" className="flex justify-center items-end gap-6 relative">
+          <div className="absolute -inset-10 bg-primary/10 blur-[100px] rounded-full z-0 animate-pulse" />
+          <div className="relative z-10 animate-slide-in-bottom hover:scale-105 transition-transform duration-500" style={{ animationDelay: "0s" }}>
+            <PhoneMockup color="primary" animationClass="animate-float" animationDelay="0s">
+              <EcommerceScreen />
+            </PhoneMockup>
+          </div>
+          <div className="mb-12 relative z-10 animate-slide-in-bottom hover:scale-105 transition-transform duration-500" style={{ animationDelay: "0.15s" }}>
+            <PhoneMockup color="secondary" animationClass="animate-float" animationDelay="0.4s">
+              <DashboardScreen />
+            </PhoneMockup>
+          </div>
+        </MotionSection>
       </div>
     </section>
 
-    {/* Web showcase */}
-    <section className="py-20 bg-background relative overflow-hidden">
+    {/* Web showcase with interactive image */}
+    <section className="py-24 bg-background relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-      <div className="container grid md:grid-cols-2 gap-12 items-center">
-        <AnimatedSection animation="slide-in-left" className="order-2 md:order-1">
+      <div className="container grid md:grid-cols-2 gap-20 items-center">
+        <MotionSection animation="zoom-out" className="order-2 md:order-1">
           <div className="relative group">
-            <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-            <img
-              src={webShowcase}
-              alt="Web development showcase"
-              className="relative rounded-2xl w-full object-cover shadow-2xl group-hover:scale-[1.02] transition-transform duration-500 animate-tilt"
-              loading="lazy"
-            />
-          </div>
-        </AnimatedSection>
-        <AnimatedSection animation="slide-in-right" className="order-1 md:order-2">
-          <span className="text-accent text-sm font-semibold uppercase tracking-widest">Web Development</span>
-          <h2 className="text-3xl font-heading font-bold mt-2 mb-4 text-foreground">Powerful Web Experiences</h2>
-          <p className="text-muted-foreground leading-relaxed mb-6">
-            We craft responsive, high-performance web applications that look stunning and convert visitors into customers.
-          </p>
-          {["React, Next.js & TypeScript", "REST & GraphQL APIs", "SEO-optimized & accessible", "CI/CD & cloud deployment"].map((f, i) => (
-            <AnimatedSection key={f} delay={i * 80} animation="slide-in-right">
-              <div className="flex items-center gap-3 mb-3 group">
-                <CheckCircle className="text-accent shrink-0 group-hover:scale-110 transition-transform" size={16} />
-                <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{f}</span>
+            <div className="absolute -inset-8 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-[2rem] blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+            <div className="relative overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl group-hover:border-primary/30 transition-colors duration-700">
+              <img
+                src={webShowcase}
+                alt="Web development showcase"
+                className="w-full h-auto object-cover group-hover:scale-110 group-hover:rotate-2 transition-all duration-1000 ease-out-expo"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex items-end p-8">
+                <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-700">
+                  <h4 className="text-2xl font-bold text-foreground mb-2">Modern Web Apps</h4>
+                  <p className="text-muted-foreground">Built for performance and scalability.</p>
+                </div>
               </div>
-            </AnimatedSection>
-          ))}
-        </AnimatedSection>
+            </div>
+          </div>
+        </MotionSection>
+
+        <MotionSection animation="skew-up" className="order-1 md:order-2">
+          <span className="text-primary text-sm font-bold uppercase tracking-[0.3em]">Web Development</span>
+          <h2 className="text-4xl md:text-5xl font-heading font-bold mt-4 mb-8 text-foreground leading-tight">Future-Proof <br /><span className="text-primary">Web Applications</span></h2>
+          <p className="text-muted-foreground text-lg leading-relaxed mb-10 font-light">
+            We build high-performance web applications that provide seamless user experiences across all devices. Our tech stack includes React, Next.js, Node.js, and other modern technologies.
+          </p>
+          <ul className="space-y-4 mb-12">
+            {[
+              "Progressive Web Apps (PWA)",
+              "Server-side Rendering (SSR)",
+              "Static Site Generation (SSG)",
+              "Headless CMS Integration"
+            ].map((item, i) => (
+              <AnimatedSection key={item} delay={i * 100} animation="slide-in-right">
+                <li className="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors group">
+                  <div className="w-2 h-2 rounded-full bg-primary group-hover:scale-150 transition-transform duration-300" />
+                  <span className="font-medium">{item}</span>
+                </li>
+              </AnimatedSection>
+            ))}
+          </ul>
+          
+          <Link to="/contact">
+            <GooeyButton color="primary">
+              Discuss Your Project
+            </GooeyButton>
+          </Link>
+        </MotionSection>
       </div>
+    </section>
+
+    {/* Final CTA */}
+    <section className="py-32 relative overflow-hidden bg-background">
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-card/50 to-secondary/10" />
+      <MotionSection animation="zoom-out" className="container text-center relative z-10">
+        <TextReveal 
+          text="Ready to Transform Your Business?" 
+          className="text-4xl md:text-7xl font-heading font-black mb-8 justify-center leading-tight"
+        />
+        <p className="text-muted-foreground mb-12 max-w-2xl mx-auto text-xl font-light leading-relaxed">
+          Partner with Speshway Solutions to leverage the power of technology and drive your business forward.
+        </p>
+        <Link to="/contact">
+          <GooeyButton color="secondary" className="!px-12 !py-5 text-lg">
+            Get a Free Consultation <ArrowRight size={22} className="inline ml-2" />
+          </GooeyButton>
+        </Link>
+      </MotionSection>
     </section>
   </Layout>
 );

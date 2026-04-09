@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import heroSlide1 from "@/assets/hero-slide-1.jpg";
 import heroSlide2 from "@/assets/hero-slide-2.jpg";
 import heroSlide3 from "@/assets/hero-slide-3.jpg";
+import { useTheme } from "@/context/ThemeContext";
 
 const slides = [
   {
@@ -37,122 +38,122 @@ const slides = [
 
 const HeroCarousel = () => {
   const [current, setCurrent] = useState(0);
-  const [animating, setAnimating] = useState(false);
+  const [prevIdx, setPrevIdx] = useState<number | null>(null);
+  const [transitioning, setTransitioning] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const { theme } = useTheme();
+  const isLight = theme === "light";
 
-  const goTo = useCallback(
-    (index: number) => {
-      if (animating) return;
-      setAnimating(true);
-      setCurrent(index);
-      setTimeout(() => setAnimating(false), 800);
-    },
-    [animating]
-  );
+  const goTo = useCallback((index: number) => {
+    if (transitioning) return;
+    setTransitioning(true);
+    setPrevIdx(current);
+    setCurrent(index);
+    setTimeout(() => { setPrevIdx(null); setTransitioning(false); }, 600);
+  }, [current, transitioning]);
 
   const next = useCallback(() => goTo((current + 1) % slides.length), [current, goTo]);
   const prev = useCallback(() => goTo((current - 1 + slides.length) % slides.length), [current, goTo]);
 
   useEffect(() => {
-    const timer = setInterval(next, 5000);
-    return () => clearInterval(timer);
+    timerRef.current = setInterval(next, 2000);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [next]);
 
   const slide = slides[current];
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center text-center overflow-hidden">
-      {/* Background slides */}
+    <section className="relative min-h-[95vh] flex items-center justify-center text-center overflow-hidden bg-background -mt-20">
       {slides.map((s, i) => (
         <div
           key={i}
-          className="absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out"
+          className="absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage: `url(${s.image})`,
             opacity: i === current ? 1 : 0,
-            transform: i === current ? "scale(1)" : "scale(1.1)",
+            filter: isLight ? "brightness(0.75) saturate(0.9)" : "brightness(0.55)",
+            transition: (i === current || i === prevIdx) ? "opacity 0.6s ease" : "none",
           }}
         />
       ))}
-      <div className="absolute inset-0 bg-background/80 backdrop-blur-[2px]" />
 
-      {/* Gradient overlays */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50" />
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
-
-      {/* Animated orbs */}
-      <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-primary/15 blur-3xl animate-pulse" />
-      <div className="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-secondary/15 blur-3xl animate-pulse" style={{ animationDelay: "1.5s" }} />
-      <div className="absolute top-1/4 right-1/4 w-64 h-64 rounded-full bg-accent/10 blur-3xl animate-pulse" style={{ animationDelay: "3s" }} />
+      {/* Overlay — darker in light mode so text stays readable */}
+      <div className={isLight ? "absolute inset-0 bg-black/45" : "absolute inset-0 bg-background/40"} />
+      <div className={`absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t ${isLight ? "from-black/60" : "from-background"} to-transparent`} />
+      <div className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b ${isLight ? "from-black/40" : "from-background/50"} to-transparent`} />
 
       {/* Content */}
       <div className="relative z-10 container px-4">
-        <div key={current} className="animate-fade-in-up">
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-foreground/80 text-sm mb-6">
-            {slide.badge} <ArrowRight size={14} className="text-primary" />
+        <div key={`badge-${current}`} className="animate-fade-in-up mb-8">
+          <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/15 border border-white/30 text-white text-sm backdrop-blur-sm">
+            <span className="w-2 h-2 rounded-full bg-primary" />
+            {slide.badge}
+            <ArrowRight size={14} className="text-primary" />
           </span>
         </div>
+
         <h1
           key={`title-${current}`}
-          className="animate-fade-in-up text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-foreground leading-tight mb-6"
-          style={{ animationDelay: "200ms" }}
+          className="animate-fade-in-up text-5xl md:text-7xl lg:text-8xl font-heading font-bold text-white leading-[1.1] mb-6 tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
+          style={{ animationDelay: "80ms" }}
         >
           {slide.title}
           <br />
           <span className="text-gradient">{slide.highlight}</span>
         </h1>
+
         <p
           key={`desc-${current}`}
-          className="animate-fade-in-up text-muted-foreground max-w-2xl mx-auto text-base md:text-lg mb-8"
-          style={{ animationDelay: "400ms" }}
+          className="animate-fade-in-up text-white/85 max-w-2xl mx-auto text-lg md:text-xl mb-10 font-light leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]"
+          style={{ animationDelay: "160ms" }}
         >
           {slide.desc}
         </p>
+
         <div
           key={`cta-${current}`}
-          className="animate-fade-in-up flex flex-col sm:flex-row gap-4 justify-center"
-          style={{ animationDelay: "600ms" }}
+          className="animate-fade-in-up flex flex-col sm:flex-row gap-4 justify-center items-center"
+          style={{ animationDelay: "240ms" }}
         >
           <Link
             to={slide.cta.to}
-            className="px-8 py-3 rounded-full bg-primary text-primary-foreground font-semibold hover:shadow-[0_0_30px_hsl(var(--primary)/0.4)] transition-all duration-300 hover:scale-105"
+            className="px-8 py-3.5 rounded-full bg-primary text-primary-foreground font-bold uppercase tracking-widest hover:shadow-[0_0_25px_hsl(var(--primary)/0.5)] hover:scale-105 transition-all duration-300"
           >
             {slide.cta.text}
           </Link>
           <Link
             to={slide.cta2.to}
-            className="px-8 py-3 rounded-full glass text-foreground font-semibold hover:bg-muted transition-all"
+            className="px-8 py-3.5 rounded-full bg-white/15 border border-white/30 text-white font-bold hover:bg-white/25 backdrop-blur-sm transition-all duration-300"
           >
             {slide.cta2.text}
           </Link>
         </div>
       </div>
 
-      {/* Navigation arrows */}
+      {/* Prev / Next */}
       <button
         onClick={prev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full glass flex items-center justify-center text-foreground hover:text-primary hover:border-primary/50 transition-all"
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 hidden md:flex w-11 h-11 rounded-full bg-white/15 border border-white/30 items-center justify-center text-white hover:text-primary hover:bg-white/25 backdrop-blur-sm transition-all duration-200"
         aria-label="Previous slide"
       >
-        <ChevronLeft size={20} />
+        <ChevronLeft size={22} />
       </button>
       <button
         onClick={next}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full glass flex items-center justify-center text-foreground hover:text-primary hover:border-primary/50 transition-all"
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 hidden md:flex w-11 h-11 rounded-full bg-white/15 border border-white/30 items-center justify-center text-white hover:text-primary hover:bg-white/25 backdrop-blur-sm transition-all duration-200"
         aria-label="Next slide"
       >
-        <ChevronRight size={20} />
+        <ChevronRight size={22} />
       </button>
 
       {/* Dots */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex gap-2">
         {slides.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i)}
-            className={`h-2 rounded-full transition-all duration-500 ${
-              i === current ? "w-8 bg-primary shadow-[0_0_10px_hsl(var(--primary)/0.5)]" : "w-2 bg-muted-foreground/40"
-            }`}
-            aria-label={`Go to slide ${i + 1}`}
+            className={`h-1.5 rounded-full transition-all duration-400 ${i === current ? "w-10 bg-primary" : "w-3 bg-white/30 hover:bg-white/50"}`}
+            aria-label={`Slide ${i + 1}`}
           />
         ))}
       </div>

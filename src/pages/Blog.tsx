@@ -62,7 +62,7 @@ const Blog = () => (
             <img
               src={webShowcase}
               alt="Blog featured"
-              className="relative rounded-2xl w-full object-cover shadow-2xl group-hover:scale-[1.02] transition-transform duration-500 animate-tilt"
+              className="relative rounded-2xl w-full object-cover shadow-2xl animate-blur-in group-hover:scale-[1.02] group-hover:drop-shadow-[0_0_30px_hsl(var(--primary)/0.3)] transition-all duration-500"
               loading="lazy"
             />
           </div>
@@ -72,8 +72,8 @@ const Blog = () => (
 
     {/* All Posts */}
     <section className="py-12 pb-20 bg-background relative overflow-hidden">
-      <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-secondary/5 blur-3xl animate-pulse" />
-      <div className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-accent/5 blur-3xl animate-pulse" style={{ animationDelay: "2s" }} />
+      <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-secondary/5 blur-3xl" />
+      <div className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-accent/5 blur-3xl" />
       <div className="container relative">
         <AnimatedSection className="mb-10">
           <span className="text-secondary text-sm font-semibold uppercase tracking-widest">All Articles</span>
@@ -104,7 +104,7 @@ const Blog = () => (
     {/* Newsletter + phone */}
     <section className="py-20 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-card to-secondary/10" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-accent/5 blur-3xl animate-pulse" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-accent/5 blur-3xl" />
       <div className="relative container grid md:grid-cols-2 gap-12 items-center">
         <AnimatedSection animation="slide-in-left" className="text-center md:text-left">
           <span className="text-accent text-sm font-semibold uppercase tracking-widest">Stay Updated</span>
@@ -122,9 +122,11 @@ const Blog = () => (
           </div>
         </AnimatedSection>
         <AnimatedSection animation="slide-in-right" className="flex justify-center">
-          <PhoneMockup color="accent" animationClass="animate-float" animationDelay="0s">
-            <SocialScreen />
-          </PhoneMockup>
+          <div className="animate-slide-in-bottom" style={{ animationDelay: "0.1s" }}>
+            <PhoneMockup color="accent" animationClass="animate-float" animationDelay="0.3s">
+              <SocialScreen />
+            </PhoneMockup>
+          </div>
         </AnimatedSection>
       </div>
     </section>

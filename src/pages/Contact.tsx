@@ -26,8 +26,8 @@ const Contact = () => {
       <PageHeader title="Contact Us" subtitle="Get in touch with our team." />
 
       <section className="py-20 bg-background relative overflow-hidden">
-        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-primary/5 blur-3xl animate-pulse" />
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-secondary/5 blur-3xl animate-pulse" style={{ animationDelay: "1.5s" }} />
+        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-secondary/5 blur-3xl" />
         <div className="container grid md:grid-cols-2 gap-12 relative">
 
           {/* Form */}
