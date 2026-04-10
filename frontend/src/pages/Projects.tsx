@@ -4,11 +4,19 @@ import PageHeader from "@/components/PageHeader";
 import AnimatedSection from "@/components/AnimatedSection";
 import MotionSection from "@/components/MotionSection";
 import GooeyButton from "@/components/GooeyButton";
+import PhoneMockup from "@/components/PhoneMockup";
+import EcommerceScreen from "@/components/phone-screens/EcommerceScreen";
+import HealthScreen from "@/components/phone-screens/HealthScreen";
+import FoodScreen from "@/components/phone-screens/FoodScreen";
+import FitnessScreen from "@/components/phone-screens/FitnessScreen";
+import FintechScreen from "@/components/phone-screens/FintechScreen";
+import SocialScreen from "@/components/phone-screens/SocialScreen";
 import TextReveal from "@/components/TextReveal";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
-interface Project {
+interface ApiProject {
   _id: string; title: string; category: string; description: string;
   tech: string[]; liveUrl: string; status: string; client: string; image: string;
 }
@@ -20,6 +28,63 @@ const stats = [
   { val: "4.9★", label: "Average Rating", color: "primary" },
 ];
 
+const builtInProjects = [
+  {
+    title: "E-Commerce Platform",
+    category: "Web & Mobile",
+    desc: "A full-featured online store with payment integration, inventory management, and real-time order tracking.",
+    screen: <EcommerceScreen />,
+    phoneColor: "primary" as const,
+    tag: "primary",
+    tech: ["React", "Node.js", "MongoDB"],
+  },
+  {
+    title: "HealthCare App",
+    category: "Mobile Development",
+    desc: "Telemedicine platform connecting patients with doctors in real-time with vitals tracking and appointment booking.",
+    screen: <HealthScreen />,
+    phoneColor: "secondary" as const,
+    tag: "secondary",
+    tech: ["React Native", "Firebase", "WebRTC"],
+  },
+  {
+    title: "Food Delivery App",
+    category: "Mobile Development",
+    desc: "Fast food ordering & delivery platform with real-time GPS tracking and restaurant management dashboard.",
+    screen: <FoodScreen />,
+    phoneColor: "accent" as const,
+    tag: "accent",
+    tech: ["Flutter", "Node.js", "Redis"],
+  },
+  {
+    title: "Fitness Tracker",
+    category: "Mobile App",
+    desc: "Personal fitness tracking with AI-powered workout plans, progress analytics, and wearable integration.",
+    screen: <FitnessScreen />,
+    phoneColor: "primary" as const,
+    tag: "primary",
+    tech: ["React Native", "Python", "TensorFlow"],
+  },
+  {
+    title: "FinTech Dashboard",
+    category: "Web & Mobile",
+    desc: "Banking and investment app with real-time portfolio management, analytics, and secure transactions.",
+    screen: <FintechScreen />,
+    phoneColor: "secondary" as const,
+    tag: "secondary",
+    tech: ["React", "Django", "PostgreSQL"],
+  },
+  {
+    title: "Social Network",
+    category: "Mobile Development",
+    desc: "Community-driven social platform with feeds, stories, messaging, and content monetization.",
+    screen: <SocialScreen />,
+    phoneColor: "accent" as const,
+    tag: "accent",
+    tech: ["React Native", "GraphQL", "AWS"],
+  },
+];
+
 const statusColors: Record<string, string> = {
   Completed: "bg-green-500/10 text-green-400 border-green-500/20",
   Active: "bg-primary/10 text-primary border-primary/20",
@@ -29,14 +94,13 @@ const statusColors: Record<string, string> = {
 const tagColors = ["primary", "secondary", "accent"];
 
 const Projects = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [apiProjects, setApiProjects] = useState<ApiProject[]>([]);
 
   useEffect(() => {
     fetch("http://localhost:5000/api/projects")
       .then(r => r.json())
-      .then(data => { setProjects(Array.isArray(data) ? data : []); setLoading(false); })
-      .catch(() => setLoading(false));
+      .then(data => setApiProjects(Array.isArray(data) ? data : []))
+      .catch(() => {});
   }, []);
 
   return (
@@ -58,102 +122,145 @@ const Projects = () => {
         </div>
       </section>
 
-      {/* Projects Grid */}
+      {/* Built-in Projects — alternating phone mockup layout */}
       <section className="py-24 bg-background relative overflow-hidden">
-        <div className="container">
+        <div className="container relative space-y-32">
           <div className="text-center mb-20">
             <MotionSection animation="parallax-reveal">
               <span className="text-primary text-sm font-bold uppercase tracking-[0.3em]">Portfolio</span>
-              <TextReveal text="Featured Work" className="text-4xl md:text-6xl font-heading font-bold mt-4 justify-center" />
+              <TextReveal
+                text="Featured Work"
+                className="text-4xl md:text-6xl font-heading font-bold mt-4 justify-center"
+              />
             </MotionSection>
           </div>
 
-          {loading ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="glass rounded-3xl overflow-hidden border-border animate-pulse">
-                  <div className="h-52 bg-muted" />
-                  <div className="p-6 space-y-3">
-                    <div className="h-4 bg-muted rounded w-3/4" />
-                    <div className="h-3 bg-muted rounded w-full" />
-                    <div className="h-3 bg-muted rounded w-2/3" />
+          {builtInProjects.map((p, i) => (
+            <MotionSection key={p.title} animation={i % 2 === 0 ? "slide-horizontal" : "skew-up"} delay={i * 0.05}>
+              <div className={`grid md:grid-cols-2 gap-20 items-center ${i % 2 !== 0 ? "md:[&>*:first-child]:order-2" : ""}`}>
+                {/* Phone mockup */}
+                <div className="flex justify-center relative">
+                  <div className="relative group">
+                    <div className={`absolute inset-0 rounded-full bg-${p.phoneColor}/10 blur-[80px] scale-150 -z-10 group-hover:bg-${p.phoneColor}/25 transition-colors duration-700`} />
+                    <div className="animate-slide-in-bottom">
+                      <PhoneMockup
+                        color={p.phoneColor}
+                        animationClass="animate-float"
+                        animationDelay={`${i * 0.25}s`}
+                      >
+                        {p.screen}
+                      </PhoneMockup>
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : projects.length === 0 ? (
-            <div className="text-center py-24 text-muted-foreground">
-              <div className="text-6xl mb-4">🚀</div>
-              <p className="text-xl">No projects yet. Check back soon!</p>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {projects.map((p, i) => (
-                <AnimatedSection key={p._id} delay={i * 80} animation="card-rise">
-                  <div className="group glass rounded-3xl overflow-hidden border-border hover:glow-border-strong transition-all duration-500 hover:-translate-y-3 card-3d h-full flex flex-col">
-                    {/* Image */}
-                    <div className="relative h-52 overflow-hidden bg-muted">
-                      {p.image ? (
-                        <img src={p.image} alt={p.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                          <div className="text-5xl">🖼️</div>
-                        </div>
-                      )}
-                      {/* Status badge */}
-                      <div className="absolute top-3 left-3">
-                        <span className={`px-3 py-1 rounded-full text-[11px] font-bold border ${statusColors[p.status] || "bg-muted text-muted-foreground border-border"}`}>
-                          {p.status}
-                        </span>
-                      </div>
+
+                {/* Content */}
+                <div className="relative">
+                  <MotionSection animation="parallax-reveal" delay={0.15}>
+                    <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-${p.tag}/10 text-${p.tag} text-[10px] font-bold uppercase tracking-widest mb-6 border border-${p.tag}/10`}>
+                      <span className={`w-1.5 h-1.5 rounded-full bg-${p.tag} animate-pulse`} />
+                      {p.category}
                     </div>
+                  </MotionSection>
+                  <h3 className="text-3xl md:text-5xl font-heading font-bold text-foreground mb-6 leading-tight">{p.title}</h3>
+                  <p className="text-muted-foreground text-lg leading-relaxed mb-8 font-light">{p.desc}</p>
+                  <div className="flex flex-wrap gap-3 mb-10">
+                    {p.tech.map(t => (
+                      <span key={t} className="px-4 py-1.5 rounded-xl glass text-[11px] font-bold text-muted-foreground uppercase tracking-wider border border-border hover:border-primary/30 hover:text-primary transition-all duration-300">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                  <GooeyButton color={p.tag as "primary" | "secondary" | "accent"}>
+                    View Case Study <ArrowRight size={16} className="inline ml-2" />
+                  </GooeyButton>
+                </div>
+              </div>
+            </MotionSection>
+          ))}
+        </div>
+      </section>
 
-                    {/* Content */}
-                    <div className="p-6 flex flex-col flex-1">
-                      <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-${tagColors[i % 3]}/10 text-${tagColors[i % 3]} text-[10px] font-bold uppercase tracking-widest mb-3 border border-${tagColors[i % 3]}/10 w-fit`}>
-                        <span className={`w-1.5 h-1.5 rounded-full bg-${tagColors[i % 3]} animate-pulse`} />
-                        {p.category}
-                      </div>
+      {/* API Projects from admin — same alternating layout style */}
+      {apiProjects.length > 0 && (
+        <section className="py-24 bg-background relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+          <div className="container relative space-y-32">
+            <div className="text-center mb-20">
+              <MotionSection animation="parallax-reveal">
+                <span className="text-secondary text-sm font-bold uppercase tracking-[0.3em]">Latest Work</span>
+                <TextReveal text="Recent Projects" className="text-4xl md:text-5xl font-heading font-bold mt-4 justify-center" />
+              </MotionSection>
+            </div>
 
-                      <h3 className="text-xl font-heading font-bold text-foreground mb-2 group-hover:text-primary transition-colors">{p.title}</h3>
-                      {p.client && <p className="text-xs text-muted-foreground mb-2 font-medium">Client: {p.client}</p>}
-                      <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-1 line-clamp-3">{p.description}</p>
+            {apiProjects.map((p, i) => (
+              <MotionSection key={p._id} animation={i % 2 === 0 ? "slide-horizontal" : "skew-up"} delay={i * 0.05}>
+                <div className={`grid md:grid-cols-2 gap-20 items-center ${i % 2 !== 0 ? "md:[&>*:first-child]:order-2" : ""}`}>
 
-                      {/* Tech tags */}
-                      <div className="flex flex-wrap gap-2 mb-5">
-                        {p.tech.slice(0, 4).map(t => (
-                          <span key={t} className="px-2.5 py-1 rounded-lg glass text-[11px] font-bold text-muted-foreground border-border">
-                            {t}
+                  {/* Project image — styled like phone mockup side */}
+                  <div className="flex justify-center relative">
+                    <div className="relative group">
+                      <div className={`absolute inset-0 rounded-full bg-${tagColors[i % 3]}/10 blur-[80px] scale-150 -z-10 group-hover:bg-${tagColors[i % 3]}/25 transition-colors duration-700`} />
+                      <div className="animate-float relative">
+                        {/* Status badge */}
+                        <div className="absolute top-3 left-3 z-10">
+                          <span className={`px-3 py-1 rounded-full text-[11px] font-bold border ${statusColors[p.status] || "bg-muted text-muted-foreground border-border"}`}>
+                            {p.status}
                           </span>
-                        ))}
-                      </div>
-
-                      <div className="flex gap-3 mt-auto">
-                        {p.liveUrl ? (
-                          <a href={p.liveUrl} target="_blank" rel="noopener noreferrer">
-                            <GooeyButton color={tagColors[i % 3] as "primary" | "secondary" | "accent"}>
-                              <span className="flex items-center gap-2 px-4 py-2 text-sm font-bold">
-                                <ExternalLink size={14} /> Live Demo
-                              </span>
-                            </GooeyButton>
-                          </a>
+                        </div>
+                        {p.image ? (
+                          <img
+                            src={p.image}
+                            alt={p.title}
+                            className="w-[320px] rounded-[2rem] shadow-[0_0_60px_hsl(var(--primary)/0.2)] group-hover:shadow-[0_0_80px_hsl(var(--primary)/0.4)] group-hover:scale-[1.03] transition-all duration-700 object-cover aspect-[4/3]"
+                          />
                         ) : (
-                          <GooeyButton color={tagColors[i % 3] as "primary" | "secondary" | "accent"}>
-                            <span className="flex items-center gap-2 px-4 py-2 text-sm font-bold">
-                              View Case Study <ArrowRight size={14} />
-                            </span>
-                          </GooeyButton>
+                          <div className="w-[320px] aspect-[4/3] rounded-[2rem] glass border-border flex items-center justify-center text-6xl">
+                            🖼️
+                          </div>
                         )}
                       </div>
                     </div>
                   </div>
-                </AnimatedSection>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
+
+                  {/* Content — same style as built-in */}
+                  <div className="relative">
+                    <MotionSection animation="parallax-reveal" delay={0.15}>
+                      <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-${tagColors[i % 3]}/10 text-${tagColors[i % 3]} text-[10px] font-bold uppercase tracking-widest mb-6 border border-${tagColors[i % 3]}/10`}>
+                        <span className={`w-1.5 h-1.5 rounded-full bg-${tagColors[i % 3]} animate-pulse`} />
+                        {p.category}
+                      </div>
+                    </MotionSection>
+                    <h3 className="text-3xl md:text-5xl font-heading font-bold text-foreground mb-6 leading-tight">{p.title}</h3>
+                    {p.client && <p className="text-muted-foreground text-sm mb-4 font-medium">Client: {p.client}</p>}
+                    <p className="text-muted-foreground text-lg leading-relaxed mb-8 font-light">{p.description}</p>
+                    <div className="flex flex-wrap gap-3 mb-10">
+                      {p.tech.map(t => (
+                        <span key={t} className="px-4 py-1.5 rounded-xl glass text-[11px] font-bold text-muted-foreground uppercase tracking-wider border border-border hover:border-primary/30 hover:text-primary transition-all duration-300">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                    {p.liveUrl ? (
+                      <a href={p.liveUrl} target="_blank" rel="noopener noreferrer">
+                        <GooeyButton color={tagColors[i % 3] as "primary" | "secondary" | "accent"}>
+                          <span className="flex items-center gap-2 px-2">
+                            <ExternalLink size={16} /> Live Demo
+                          </span>
+                        </GooeyButton>
+                      </a>
+                    ) : (
+                      <GooeyButton color={tagColors[i % 3] as "primary" | "secondary" | "accent"}>
+                        View Case Study <ArrowRight size={16} className="inline ml-2" />
+                      </GooeyButton>
+                    )}
+                  </div>
+                </div>
+              </MotionSection>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* CTA */}
       <section className="py-32 relative overflow-hidden bg-background">
