@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Speshway Admin</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Login Page -->
+  <div id="login-page" class="login-bg">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="logo-icon">S</div>
+        <div>
+          <div class="logo-title">SPESHWAY SOLUTIONS</div>
+          <div class="logo-sub">PRIVATE LIMITED — Admin Panel</div>
+        </div>
+      </div>
+      <h2 class="login-heading">Welcome Back</h2>
+      <p class="login-sub">Sign in to your admin dashboard</p>
+      <div id="login-error" class="error-msg hidden"></div>
+      <form id="login-form">
+        <div class="field">
+          <label>Email Address</label>
+          <input type="email" id="email" placeholder="admin@speshway.com" required />
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="password" placeholder="••••••••" required />
+        </div>
+        <button type="submit" id="login-btn" class="btn-primary">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dashboard Page -->
+  <div id="dashboard-page" class="hidden">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon sm">S</div>
+        <span>Speshway Admin</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-section="overview">📊 Overview</a>
+        <a href="#" class="nav-item" data-section="projects">🚀 Projects</a>
+        <a href="#" class="nav-item" data-section="activity">🔔 Activity</a>
+        <a href="#" class="nav-item" data-section="settings">⚙️ Settings</a>
+      </nav>
+      <button id="logout-btn" class="logout-btn">🚪 Logout</button>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1 id="section-title">Overview</h1>
+          <p id="admin-greeting" class="greeting"></p>
+        </div>
+        <div class="topbar-right">
+          <span id="admin-badge" class="badge"></span>
+        </div>
+      </header>
+
+      <!-- Overview Section -->
+      <section id="section-overview" class="section">
+        <div class="stats-grid" id="stats-grid"></div>
+        <div class="card mt">
+          <h3>Projects</h3>
+          <div id="projects-table-container"></div>
+        </div>
+      </section>
+
+      <!-- Projects Section -->
+      <section id="section-projects" class="section hidden">
+        <div class="card">
+          <h3>All Projects</h3>
+          <div id="projects-table-container-2"></div>
+        </div>
+      </section>
+
+      <!-- Activity Section -->
+      <section id="section-activity" class="section hidden">
+        <div class="card">
+          <h3>Recent Activity</h3>
+          <div id="activity-list"></div>
+        </div>
+      </section>
+
+      <!-- Settings Section -->
+      <section id="section-settings" class="section hidden">
+        <div class="card">
+          <h3>Admin Settings</h3>
+          <div class="settings-info">
+            <p><strong>Email:</strong> <span id="settings-email"></span></p>
+            <p><strong>Role:</strong> <span id="settings-role"></span></p>
+            <p><strong>Session:</strong> Active (8h token)</p>
+            <p><strong>API Base:</strong> <code>http://localhost:5000/api</code></p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
