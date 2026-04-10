@@ -34,11 +34,20 @@ const defaults = [
   // Appearance
   { key: "footer_copyright", label: "Footer Copyright Text", value: "SPESHWAY SOLUTIONS PRIVATE LIMITED. All rights reserved.", group: "appearance", type: "text" },
   { key: "maintenance_mode", label: "Maintenance Mode", value: "false", group: "appearance", type: "toggle" },
+  // Brand Colors
+  { key: "color_primary", label: "Primary Color", value: "#7c3aed", group: "appearance", type: "color" },
+  { key: "color_secondary", label: "Secondary Color", value: "#06b6d4", group: "appearance", type: "color" },
+  { key: "color_accent", label: "Accent Color", value: "#f59e0b", group: "appearance", type: "color" },
 ];
 
 // Seed defaults
 const seedSettings = async () => {
+  // Remove any appearance keys not in current defaults (cleans up old duplicates)
+  const validKeys = defaults.map(d => d.key);
+  await Settings.deleteMany({ key: { $nin: validKeys } });
+
   for (const d of defaults) {
+    await Settings.findOneAndUpdate({ key: d.key }, { label: d.label, group: d.group, type: d.type }, { upsert: false });
     await Settings.findOneAndUpdate({ key: d.key }, d, { upsert: true });
   }
 };

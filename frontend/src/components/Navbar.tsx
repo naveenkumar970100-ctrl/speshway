@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Sun, Moon, ChevronDown, LogIn } from "lucide-react";
+import { Menu, X, Sun, Moon, ChevronDown } from "lucide-react";
 import logo from "@/assets/logo-speshway.png";
 import MagneticButton from "./MagneticButton";
 import { cn } from "@/lib/utils";
@@ -285,14 +285,6 @@ const Navbar = () => {
               {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
             </button>
 
-            {/* Admin Login */}
-            <Link
-              to="/admin"
-              className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/40 text-primary text-[13px] font-bold uppercase tracking-widest hover:bg-primary/10 transition-all duration-300 hover:scale-105"
-            >
-              <LogIn size={15} /> Login
-            </Link>
-
             <Link
               to="/contact"
               className="px-6 py-2.5 rounded-full bg-primary text-primary-foreground text-[13px] font-bold uppercase tracking-widest hover:shadow-[0_0_30px_hsl(var(--primary)/0.5)] transition-all duration-500 hover:scale-105 inline-block"
@@ -347,13 +339,6 @@ const Navbar = () => {
               )} />
             </Link>
           ))}
-          <Link
-            to="/admin"
-            onClick={() => setOpen(false)}
-            className="mt-4 flex items-center justify-center gap-2 px-8 py-4 rounded-2xl border-2 border-primary text-primary font-bold text-xl"
-          >
-            <LogIn size={20} /> Admin Login
-          </Link>
           <Link
             to="/contact"
             onClick={() => setOpen(false)}

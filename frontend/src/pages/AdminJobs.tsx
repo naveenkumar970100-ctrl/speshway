@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "@/assets/logo-speshway.png";
+import AdminSidebar from "@/components/AdminSidebar";
 
 interface Job {
   _id: string; title: string; location: string; type: string; salary: string;
@@ -71,24 +71,7 @@ export default function AdminJobs() {
   return (
     <div className="flex min-h-screen bg-gray-50 font-sans">
       {/* Sidebar */}
-      <aside className="w-56 bg-[#1e1b2e] text-white flex flex-col fixed top-0 left-0 h-full z-50 py-6 px-4">
-        <div className="flex items-center gap-2 mb-8">
-          <img src={logo} alt="" className="w-8 h-8 object-contain" />
-          <span className="font-bold text-sm">Speshway Admin</span>
-        </div>
-        <nav className="flex flex-col gap-1 flex-1">
-          {[
-            { path: "/admin/dashboard", icon: "🚀", label: "Projects" },
-            { path: "/admin/dashboard", icon: "⚙️", label: "Services" },
-            { path: "/admin/carousel", icon: "🎠", label: "Carousel" },
-          ].map(n => (
-            <button key={n.label} onClick={() => navigate(n.path)} className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-purple-300 hover:bg-purple-600/20 hover:text-white text-sm font-medium text-left">{n.icon} {n.label}</button>
-          ))}
-          <button className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-purple-600/40 text-white text-sm font-medium text-left">💼 Jobs</button>
-        </nav>
-        <button onClick={() => { localStorage.removeItem("speshway_admin_token"); navigate("/admin"); }}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-red-400 hover:bg-red-500/15 text-sm font-medium">🚪 Logout</button>
-      </aside>
+      <AdminSidebar active="Jobs" />
 
       <main className="ml-56 flex-1 p-8">
         <div className="flex items-center justify-between mb-8">

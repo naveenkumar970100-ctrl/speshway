@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import logo from "@/assets/logo-speshway.png";
+import SiteSettingsPanel from "@/components/SiteSettingsPanel";
 
 interface Admin { name: string; email: string; role: string; }
 interface Project {
@@ -27,8 +28,9 @@ const emptyServiceForm = { title: "", description: "", icon: "Code", color: "pri
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [admin, setAdmin] = useState<Admin | null>(null);
-  const [section, setSection] = useState("projects");
+  const [section, setSection] = useState((location.state as { section?: string })?.section || "projects");
 
   // Projects state
   const [projects, setProjects] = useState<Project[]>([]);
@@ -214,7 +216,6 @@ export default function AdminDashboard() {
   const navItems = [
     { key: "projects", icon: "🚀", label: "Projects" },
     { key: "services", icon: "⚙️", label: "Services" },
-    { key: "settings", icon: "🔧", label: "Settings" },
   ];
 
   const extraNav = [
@@ -222,7 +223,6 @@ export default function AdminDashboard() {
     { path: "/admin/jobs", icon: "💼", label: "Jobs" },
     { path: "/admin/team", icon: "👥", label: "Team" },
     { path: "/admin/blog", icon: "📝", label: "Blog" },
-    { path: "/admin/settings", icon: "🔧", label: "Settings" },
   ];
 
   const hour = new Date().getHours();
@@ -243,13 +243,16 @@ export default function AdminDashboard() {
               {n.icon} {n.label}
             </button>
           ))}
-          <div className="my-2 border-t border-white/10" />
           {extraNav.map(n => (
             <button key={n.path} onClick={() => navigate(n.path)}
               className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-purple-300 hover:bg-purple-600/20 hover:text-white text-sm font-medium text-left transition-all">
               {n.icon} {n.label}
             </button>
           ))}
+          <button onClick={() => setSection("settings")}
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-left transition-all ${section === "settings" ? "bg-purple-600/40 text-white" : "text-purple-300 hover:bg-purple-600/20 hover:text-white"}`}>
+            🔧 Settings
+          </button>
         </nav>
         <button onClick={logout} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-red-400 hover:bg-red-500/15 text-sm font-medium">
           🚪 Logout
@@ -379,15 +382,7 @@ export default function AdminDashboard() {
 
         {/* Settings */}
         {section === "settings" && (
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 max-w-lg">
-            <h3 className="font-bold text-gray-800 mb-4">Admin Settings</h3>
-            {[{ label: "Email", val: admin?.email }, { label: "Role", val: admin?.role }, { label: "API", val: "http://localhost:5000/api" }].map(r => (
-              <div key={r.label} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-                <span className="text-sm font-semibold text-gray-500">{r.label}</span>
-                <span className="text-sm text-gray-800">{r.val}</span>
-              </div>
-            ))}
-          </div>
+          <SiteSettingsPanel admin={admin} />
         )}
       </main>
 

@@ -63,8 +63,8 @@ app.use("/api/blog", blogRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/dashboard", verifyToken, dashboardRoutes);
 
-// Catch-all: serve admin index for /admin/*
-app.get("/admin/*", (req, res) => {
+// Catch-all: serve admin index for /admin/* (Express 5 requires named wildcard)
+app.get("/admin/*path", (req, res) => {
   res.sendFile(path.join(__dirname, "../admin/index.html"));
 });
 
