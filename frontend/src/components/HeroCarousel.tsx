@@ -6,35 +6,19 @@ import heroSlide2 from "@/assets/hero-slide-2.jpg";
 import heroSlide3 from "@/assets/hero-slide-3.jpg";
 import { useTheme } from "@/context/ThemeContext";
 
-const slides = [
-  {
-    image: heroSlide1,
-    badge: "Welcome to the Future of IT",
-    title: "Build Your Digital Future",
-    highlight: "Speshway Solutions",
-    desc: "Full-stack software, automation, and IT solutions that drive real business growth.",
-    cta: { text: "Our Services", to: "/services" },
-    cta2: { text: "Get in Touch", to: "/contact" },
-  },
-  {
-    image: heroSlide2,
-    badge: "Mobile App Development",
-    title: "Stunning Mobile Apps",
-    highlight: "For Every Platform",
-    desc: "We build beautiful, high-performance mobile applications for iOS and Android.",
-    cta: { text: "View Projects", to: "/projects" },
-    cta2: { text: "Get a Quote", to: "/contact" },
-  },
-  {
-    image: heroSlide3,
-    badge: "Cloud & Security Solutions",
-    title: "Secure & Scalable",
-    highlight: "Cloud Infrastructure",
-    desc: "Enterprise-grade cybersecurity and cloud solutions to protect and grow your business.",
-    cta: { text: "Learn More", to: "/services" },
-    cta2: { text: "Contact Us", to: "/contact" },
-  },
+interface ApiSlide {
+  _id: string; badge: string; title: string; highlight: string; desc: string;
+  ctaText: string; ctaLink: string; cta2Text: string; cta2Link: string;
+  image: string; isActive: boolean; order: number;
+}
+
+const defaultSlides = [
+  { image: heroSlide1, badge: "Welcome to the Future of IT", title: "Build Your Digital Future", highlight: "Speshway Solutions", desc: "Full-stack software, automation, and IT solutions that drive real business growth.", cta: { text: "Our Services", to: "/services" }, cta2: { text: "Get in Touch", to: "/contact" } },
+  { image: heroSlide2, badge: "Mobile App Development", title: "Stunning Mobile Apps", highlight: "For Every Platform", desc: "We build beautiful, high-performance mobile applications for iOS and Android.", cta: { text: "View Projects", to: "/projects" }, cta2: { text: "Get a Quote", to: "/contact" } },
+  { image: heroSlide3, badge: "Cloud & Security Solutions", title: "Secure & Scalable", highlight: "Cloud Infrastructure", desc: "Enterprise-grade cybersecurity and cloud solutions to protect and grow your business.", cta: { text: "Learn More", to: "/services" }, cta2: { text: "Contact Us", to: "/contact" } },
 ];
+
+const defaultImages = [heroSlide1, heroSlide2, heroSlide3];
 
 const HeroCarousel = () => {
   const [current, setCurrent] = useState(0);
@@ -43,6 +27,27 @@ const HeroCarousel = () => {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { theme } = useTheme();
   const isLight = theme === "light";
+  const [slides, setSlides] = useState(defaultSlides);
+
+  // Fetch slides from API, fall back to defaults
+  useEffect(() => {
+    fetch("http://localhost:5000/api/carousel")
+      .then(r => r.json())
+      .then((data: ApiSlide[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setSlides(data.map((s, i) => ({
+            image: s.image || defaultImages[i % 3],
+            badge: s.badge,
+            title: s.title,
+            highlight: s.highlight,
+            desc: s.desc,
+            cta: { text: s.ctaText, to: s.ctaLink },
+            cta2: { text: s.cta2Text, to: s.cta2Link },
+          })));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const goTo = useCallback((index: number) => {
     if (transitioning) return;

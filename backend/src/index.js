@@ -8,6 +8,13 @@ const authRoutes = require("./routes/auth");
 const dashboardRoutes = require("./routes/dashboard");
 const contactRoutes = require("./routes/contact");
 const projectRoutes = require("./routes/projects");
+const serviceRoutes = require("./routes/services");
+const siteContentRoutes = require("./routes/siteContent");
+const carouselRoutes = require("./routes/carousel");
+const jobRoutes = require("./routes/jobs");
+const teamRoutes = require("./routes/team");
+const blogRoutes = require("./routes/blog");
+const settingsRoutes = require("./routes/settings");
 const { verifyToken } = require("./middleware/auth");
 
 const app = express();
@@ -34,7 +41,7 @@ app.use(cors({
     }
   },
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
@@ -47,6 +54,13 @@ app.use("/admin", express.static(path.join(__dirname, "../admin")));
 app.use("/api/auth", authRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/projects", projectRoutes);
+app.use("/api/services", serviceRoutes);
+app.use("/api/site-content", siteContentRoutes);
+app.use("/api/carousel", carouselRoutes);
+app.use("/api/jobs", jobRoutes);
+app.use("/api/team", teamRoutes);
+app.use("/api/blog", blogRoutes);
+app.use("/api/settings", settingsRoutes);
 app.use("/api/dashboard", verifyToken, dashboardRoutes);
 
 // Catch-all: serve admin index for /admin/*

@@ -8,6 +8,10 @@ interface Project {
   tech: string[]; liveUrl: string; features: string[]; status: string;
   client: string; image: string; order: number;
 }
+interface Service {
+  _id: string; title: string; description: string; icon: string;
+  color: string; features: string[]; order: number; isActive: boolean;
+}
 
 const API = "http://localhost:5000/api";
 const getToken = () => localStorage.getItem("speshway_admin_token");
@@ -18,22 +22,33 @@ const statusColors: Record<string, string> = {
   "In Progress": "bg-yellow-100 text-yellow-700",
 };
 
-const emptyForm = { title: "", category: "", description: "", tech: "", liveUrl: "", features: "", status: "In Progress", client: "", order: "0" };
+const emptyProjectForm = { title: "", category: "", description: "", tech: "", liveUrl: "", features: "", status: "In Progress", client: "", order: "0" };
+const emptyServiceForm = { title: "", description: "", icon: "Code", color: "primary", features: "", order: "0" };
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const [admin, setAdmin] = useState<Admin | null>(null);
   const [section, setSection] = useState("projects");
+
+  // Projects state
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editProject, setEditProject] = useState<Project | null>(null);
-  const [form, setForm] = useState(emptyForm);
+  const [form, setForm] = useState(emptyProjectForm);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Services state
+  const [services, setServices] = useState<Service[]>([]);
+  const [showServiceModal, setShowServiceModal] = useState(false);
+  const [editService, setEditService] = useState<Service | null>(null);
+  const [serviceForm, setServiceForm] = useState(emptyServiceForm);
+  const [serviceSaving, setServiceSaving] = useState(false);
+  const [serviceError, setServiceError] = useState("");
 
   useEffect(() => {
     const t = getToken();
@@ -41,6 +56,7 @@ export default function AdminDashboard() {
     const u = localStorage.getItem("speshway_admin_user");
     if (u) setAdmin(JSON.parse(u));
     fetchProjects();
+    fetchServices();
   }, [navigate]);
 
   const apiFetch = async (path: string, opts: RequestInit = {}) => {
@@ -62,6 +78,14 @@ export default function AdminDashboard() {
     setLoading(false);
   };
 
+  const fetchServices = async () => {
+    try {
+      const res = await fetch(`${API}/services`);
+      const data = await res.json();
+      setServices(Array.isArray(data) ? data : []);
+    } catch { setServices([]); }
+  };
+
   const logout = () => {
     localStorage.removeItem("speshway_admin_token");
     localStorage.removeItem("speshway_admin_user");
@@ -70,7 +94,7 @@ export default function AdminDashboard() {
 
   const openAdd = () => {
     setEditProject(null);
-    setForm(emptyForm);
+    setForm(emptyProjectForm);
     setImageFile(null);
     setImagePreview("");
     setError("");
@@ -135,9 +159,70 @@ export default function AdminDashboard() {
     } catch {}
   };
 
+  // Service handlers
+  const openAddService = () => {
+    setEditService(null);
+    setServiceForm(emptyServiceForm);
+    setServiceError("");
+    setShowServiceModal(true);
+  };
+
+  const openEditService = (s: Service) => {
+    setEditService(s);
+    setServiceForm({
+      title: s.title, description: s.description, icon: s.icon,
+      color: s.color, features: s.features.join("\n"), order: String(s.order),
+    });
+    setServiceError("");
+    setShowServiceModal(true);
+  };
+
+  const handleServiceSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setServiceSaving(true);
+    setServiceError("");
+    try {
+      const body = {
+        title: serviceForm.title,
+        description: serviceForm.description,
+        icon: serviceForm.icon,
+        color: serviceForm.color,
+        features: serviceForm.features,
+        order: serviceForm.order,
+      };
+      const res = await apiFetch(
+        editService ? `/services/${editService._id}` : "/services",
+        { method: editService ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }
+      );
+      if (!res.ok) { const d = await res.json(); throw new Error(d.message); }
+      setShowServiceModal(false);
+      fetchServices();
+    } catch (err: unknown) {
+      setServiceError(err instanceof Error ? err.message : "Failed to save");
+    }
+    setServiceSaving(false);
+  };
+
+  const handleDeleteService = async (id: string) => {
+    if (!confirm("Delete this service?")) return;
+    try {
+      await apiFetch(`/services/${id}`, { method: "DELETE" });
+      fetchServices();
+    } catch {}
+  };
+
   const navItems = [
     { key: "projects", icon: "🚀", label: "Projects" },
-    { key: "settings", icon: "⚙️", label: "Settings" },
+    { key: "services", icon: "⚙️", label: "Services" },
+    { key: "settings", icon: "🔧", label: "Settings" },
+  ];
+
+  const extraNav = [
+    { path: "/admin/carousel", icon: "🎠", label: "Carousel" },
+    { path: "/admin/jobs", icon: "💼", label: "Jobs" },
+    { path: "/admin/team", icon: "👥", label: "Team" },
+    { path: "/admin/blog", icon: "📝", label: "Blog" },
+    { path: "/admin/settings", icon: "🔧", label: "Settings" },
   ];
 
   const hour = new Date().getHours();
@@ -155,6 +240,13 @@ export default function AdminDashboard() {
           {navItems.map(n => (
             <button key={n.key} onClick={() => setSection(n.key)}
               className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-left transition-all ${section === n.key ? "bg-purple-600/40 text-white" : "text-purple-300 hover:bg-purple-600/20 hover:text-white"}`}>
+              {n.icon} {n.label}
+            </button>
+          ))}
+          <div className="my-2 border-t border-white/10" />
+          {extraNav.map(n => (
+            <button key={n.path} onClick={() => navigate(n.path)}
+              className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-purple-300 hover:bg-purple-600/20 hover:text-white text-sm font-medium text-left transition-all">
               {n.icon} {n.label}
             </button>
           ))}
@@ -233,6 +325,53 @@ export default function AdminDashboard() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Services Section */}
+        {section === "services" && (
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between p-6 border-b border-gray-100">
+              <h3 className="font-bold text-gray-800 text-lg">All Services ({services.length})</h3>
+              <button onClick={openAddService}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-600 text-white text-sm font-bold hover:bg-purple-700 transition-colors">
+                + Add New Service
+              </button>
+            </div>
+            {services.length === 0 ? (
+              <div className="p-12 text-center text-gray-400">No services yet. Add your first one!</div>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
+                {services.map(s => (
+                  <div key={s._id} className="border border-gray-100 rounded-2xl p-5 hover:shadow-md transition-shadow">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold ${s.color === "primary" ? "bg-purple-100 text-purple-600" : s.color === "secondary" ? "bg-emerald-100 text-emerald-600" : "bg-pink-100 text-pink-600"}`}>
+                        {s.icon?.charAt(0) || "S"}
+                      </div>
+                      <div className="flex gap-2">
+                        <button onClick={() => openEditService(s)}
+                          className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 text-xs font-bold hover:bg-blue-100 transition-colors">
+                          Edit
+                        </button>
+                        <button onClick={() => handleDeleteService(s._id)}
+                          className="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 text-xs font-bold hover:bg-red-100 transition-colors">
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                    <h4 className="font-bold text-gray-800 mb-1">{s.title}</h4>
+                    <p className="text-gray-500 text-xs leading-relaxed line-clamp-2">{s.description}</p>
+                    {s.features.length > 0 && (
+                      <div className="mt-3 flex flex-wrap gap-1">
+                        {s.features.slice(0, 3).map((f, i) => (
+                          <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">{f}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -327,6 +466,57 @@ export default function AdminDashboard() {
           </div>
         </div>
       )}
+      {/* Service Modal */}
+      {showServiceModal && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-gray-100">
+              <h2 className="text-lg font-black text-gray-900">{editService ? "Edit Service" : "Add New Service"}</h2>
+              <button onClick={() => setShowServiceModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
+            </div>
+            <form onSubmit={handleServiceSave} className="p-6 flex flex-col gap-4">
+              {serviceError && <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">{serviceError}</div>}
+
+              <SField label="Title *" value={serviceForm.title} onChange={v => setServiceForm(f => ({ ...f, title: v }))} required />
+              <div>
+                <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Description *</label>
+                <textarea value={serviceForm.description} onChange={e => setServiceForm(f => ({ ...f, description: e.target.value }))} required rows={3}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm resize-none" />
+              </div>
+              <div>
+                <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Features (one per line)</label>
+                <textarea value={serviceForm.features} onChange={e => setServiceForm(f => ({ ...f, features: e.target.value }))} rows={4}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm resize-none"
+                  placeholder={"Feature 1\nFeature 2\nFeature 3"} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <SField label="Icon Name" value={serviceForm.icon} onChange={v => setServiceForm(f => ({ ...f, icon: v }))} placeholder="Code" />
+                <div>
+                  <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Color</label>
+                  <select value={serviceForm.color} onChange={e => setServiceForm(f => ({ ...f, color: e.target.value }))}
+                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm">
+                    <option value="primary">Primary (Purple)</option>
+                    <option value="secondary">Secondary (Green)</option>
+                    <option value="accent">Accent (Pink)</option>
+                  </select>
+                </div>
+              </div>
+              <SField label="Order" value={serviceForm.order} onChange={v => setServiceForm(f => ({ ...f, order: v }))} type="number" />
+
+              <div className="flex gap-3 pt-2">
+                <button type="submit" disabled={serviceSaving}
+                  className="flex-1 py-3 rounded-xl bg-purple-600 text-white font-bold text-sm hover:bg-purple-700 transition-colors disabled:opacity-60">
+                  {serviceSaving ? "Saving…" : editService ? "Update Service" : "Create Service"}
+                </button>
+                <button type="button" onClick={() => setShowServiceModal(false)}
+                  className="px-6 py-3 rounded-xl border-2 border-gray-200 text-gray-600 font-bold text-sm hover:bg-gray-50 transition-colors">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -341,3 +531,5 @@ const Field = ({ label, value, onChange, required, placeholder, type = "text" }:
       className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm transition-all" />
   </div>
 );
+
+const SField = Field;

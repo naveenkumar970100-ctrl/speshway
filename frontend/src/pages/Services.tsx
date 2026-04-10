@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import PageHeader from "@/components/PageHeader";
 import AnimatedSection from "@/components/AnimatedSection";
@@ -8,12 +9,21 @@ import EcommerceScreen from "@/components/phone-screens/EcommerceScreen";
 import DashboardScreen from "@/components/phone-screens/DashboardScreen";
 import TextReveal from "@/components/TextReveal";
 import MagneticButton from "@/components/MagneticButton";
-import { Code, Cloud, Shield, Cpu, Smartphone, Database, Globe, Settings, BarChart, ArrowRight, CheckCircle } from "lucide-react";
+import { Code, Cloud, Shield, Cpu, Smartphone, Database, Globe, Settings, BarChart, ArrowRight, CheckCircle, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import webShowcase from "@/assets/web-showcase.png";
 import { cn } from "@/lib/utils";
 
-const services = [
+interface ApiService {
+  _id: string; title: string; description: string; icon: string;
+  color: string; features: string[]; order: number;
+}
+
+const iconMap: Record<string, React.ElementType> = {
+  Code, Cloud, Shield, Cpu, Smartphone, Database, Globe, Settings, BarChart, Zap,
+};
+
+const defaultServices = [
   { icon: Code, title: "Web Development", desc: "Custom web applications using React, Node.js, and modern frameworks.", color: "primary" },
   { icon: Smartphone, title: "Mobile Development", desc: "Native and cross-platform mobile apps for iOS and Android.", color: "secondary" },
   { icon: Cloud, title: "Cloud Solutions", desc: "AWS, Azure, and GCP cloud architecture, migration, and management.", color: "accent" },
@@ -32,7 +42,28 @@ const process = [
   { step: "04", title: "Delivery", desc: "Testing, deployment, and post-launch support." },
 ];
 
-const Services = () => (
+const Services = () => {
+  const [apiServices, setApiServices] = useState<ApiService[]>([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/services")
+      .then(r => r.json())
+      .then(data => setApiServices(Array.isArray(data) ? data : []))
+      .catch(() => {});
+  }, []);
+
+  // Use API services if available, otherwise fall back to defaults
+  const displayServices = apiServices.length > 0
+    ? apiServices.map(s => ({
+        icon: iconMap[s.icon] || Code,
+        title: s.title,
+        desc: s.description,
+        color: s.color,
+        features: s.features,
+      }))
+    : defaultServices.map(s => ({ ...s, features: [] }));
+
+  return (
   <Layout>
     <PageHeader title="Our Services" subtitle="Comprehensive IT solutions to power your business growth." />
 
@@ -53,10 +84,10 @@ const Services = () => (
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((s, i) => (
-            <MotionSection 
-              key={s.title} 
-              delay={i * 0.1} 
+          {displayServices.map((s, i) => (
+            <MotionSection
+              key={s.title}
+              delay={i * 0.1}
               animation="skew-up"
             >
               <div className="group h-full p-8 rounded-3xl glass hover:glow-border-strong hover:shadow-2xl transition-all duration-700 ease-out-expo card-3d border-white/5 relative overflow-hidden">
@@ -250,6 +281,7 @@ const Services = () => (
       </MotionSection>
     </section>
   </Layout>
-);
+  );
+};
 
 export default Services;

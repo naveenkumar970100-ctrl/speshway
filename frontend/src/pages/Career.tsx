@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import PageHeader from "@/components/PageHeader";
 import AnimatedSection from "@/components/AnimatedSection";
@@ -8,12 +9,17 @@ import FitnessScreen from "@/components/phone-screens/FitnessScreen";
 import DashboardScreen from "@/components/phone-screens/DashboardScreen";
 import TextReveal from "@/components/TextReveal";
 import MagneticButton from "@/components/MagneticButton";
-import { MapPin, Clock, ArrowRight, DollarSign, Zap, Heart, Coffee, BookOpen } from "lucide-react";
+import { MapPin, Clock, ArrowRight, DollarSign, Zap, Heart, Coffee, BookOpen, Briefcase } from "lucide-react";
 import { Link } from "react-router-dom";
 import aboutTeam from "@/assets/about-team.jpg";
 import { cn } from "@/lib/utils";
 
-const jobs = [
+interface ApiJob {
+  _id: string; title: string; location: string; type: string; salary: string;
+  department: string; experience: string; desc: string; requirements: string[]; status: string;
+}
+
+const defaultJobs = [
   { title: "Senior React Developer", location: "Hyderabad", type: "Full-time", salary: "₹12-18 LPA", desc: "Build modern web applications with React, TypeScript, and Node.js." },
   { title: "Cloud Engineer", location: "Remote", type: "Full-time", salary: "₹15-22 LPA", desc: "Design and manage cloud infrastructure on AWS and Azure." },
   { title: "UI/UX Designer", location: "Hyderabad", type: "Full-time", salary: "₹8-14 LPA", desc: "Create beautiful, user-centered designs for web and mobile." },
@@ -28,7 +34,19 @@ const perks = [
   { icon: BookOpen, label: "Learning budget", color: "primary" },
 ];
 
-const Career = () => (
+const Career = () => {
+  const [apiJobs, setApiJobs] = useState<ApiJob[]>([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/jobs")
+      .then(r => r.json())
+      .then(data => setApiJobs(Array.isArray(data) ? data : []))
+      .catch(() => {});
+  }, []);
+
+  const jobs = apiJobs.length > 0 ? apiJobs : defaultJobs;
+
+  return (
   <Layout>
     <PageHeader title="Careers" subtitle="Join our team and shape the future of technology." />
 
@@ -147,21 +165,27 @@ const Career = () => (
             <MotionSection key={j.title} delay={i * 0.1} animation="skew-up">
               <div className="group p-8 rounded-[2.5rem] glass hover:glow-border-strong transition-all duration-700 ease-out-expo flex flex-col sm:flex-row sm:items-center justify-between gap-8 hover:-translate-y-2 card-3d border-white/5 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-                
                 <div className="relative z-10">
                   <h3 className="font-heading font-bold text-2xl text-foreground group-hover:text-primary transition-colors duration-500">{j.title}</h3>
                   <div className="flex flex-wrap items-center gap-6 text-sm font-medium text-muted-foreground mt-4">
-                    <span className="flex items-center gap-2 group/item"><MapPin size={16} className="text-primary group-hover/item:scale-125 transition-transform" /> {j.location}</span>
-                    <span className="flex items-center gap-2 group/item"><Clock size={16} className="text-secondary group-hover/item:scale-125 transition-transform" /> {j.type}</span>
-                    <span className="flex items-center gap-2 group/item"><DollarSign size={16} className="text-accent group-hover/item:scale-125 transition-transform" /> {j.salary}</span>
+                    {j.location && <span className="flex items-center gap-2"><MapPin size={16} className="text-primary" /> {j.location}</span>}
+                    {j.type && <span className="flex items-center gap-2"><Clock size={16} className="text-secondary" /> {j.type}</span>}
+                    {j.salary && <span className="flex items-center gap-2"><DollarSign size={16} className="text-accent" /> {j.salary}</span>}
+                    {(j as ApiJob).department && <span className="flex items-center gap-2"><Briefcase size={16} className="text-primary" /> {(j as ApiJob).department}</span>}
                   </div>
                   <p className="text-muted-foreground mt-4 font-light leading-relaxed max-w-xl">{j.desc}</p>
                 </div>
-                
-                <div className="relative z-10 shrink-0">
-                  <GooeyButton color="primary" className="!px-10 !py-4 text-[13px]">
-                    Apply Now <ArrowRight size={18} className="inline ml-2" />
-                  </GooeyButton>
+                <div className="relative z-10 shrink-0 flex flex-col gap-3">
+                  <Link to={`/career/${(j as ApiJob)._id || ""}`}>
+                    <GooeyButton color="secondary">
+                      View Details <ArrowRight size={16} className="inline ml-1" />
+                    </GooeyButton>
+                  </Link>
+                  <Link to={`/career/${(j as ApiJob)._id || ""}/apply`}>
+                    <GooeyButton color="primary" className="!px-10 !py-4 text-[13px]">
+                      Apply Now <ArrowRight size={18} className="inline ml-2" />
+                    </GooeyButton>
+                  </Link>
                 </div>
               </div>
             </MotionSection>
@@ -203,6 +227,7 @@ const Career = () => (
       </div>
     </section>
   </Layout>
-);
+  );
+};
 
 export default Career;

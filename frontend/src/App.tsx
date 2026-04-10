@@ -18,6 +18,15 @@ import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
+import ProjectDetail from "./pages/ProjectDetail";
+import AdminCarousel from "./pages/AdminCarousel";
+import AdminJobs from "./pages/AdminJobs";
+import AdminTeam from "./pages/AdminTeam";
+import AdminBlog from "./pages/AdminBlog";
+import AdminSettings from "./pages/AdminSettings";
+import BlogDetail from "./pages/BlogDetail";
+import JobDetail from "./pages/JobDetail";
+import JobApply from "./pages/JobApply";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +51,15 @@ const App = () => (
               <Route path="/contact" element={<Contact />} />
               <Route path="/admin" element={<AdminLogin />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/admin/carousel" element={<AdminCarousel />} />
+              <Route path="/admin/jobs" element={<AdminJobs />} />
+              <Route path="/admin/team" element={<AdminTeam />} />
+              <Route path="/admin/blog" element={<AdminBlog />} />
+              <Route path="/admin/settings" element={<AdminSettings />} />
+              <Route path="/blog/:id" element={<BlogDetail />} />
+              <Route path="/career/:id" element={<JobDetail />} />
+              <Route path="/career/:id/apply" element={<JobApply />} />
+              <Route path="/projects/:id" element={<ProjectDetail />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

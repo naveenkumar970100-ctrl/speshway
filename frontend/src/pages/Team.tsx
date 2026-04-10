@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import PageHeader from "@/components/PageHeader";
 import AnimatedSection from "@/components/AnimatedSection";
@@ -12,13 +13,18 @@ import { Link } from "react-router-dom";
 import aboutTeam from "@/assets/about-team.jpg";
 import { cn } from "@/lib/utils";
 
-const members = [
-  { name: "Rajesh Kumar", role: "CEO & Founder", bio: "15+ years in IT leadership and digital strategy.", initials: "RK", gradient: "from-primary to-accent", icon: Briefcase },
-  { name: "Priya Sharma", role: "CTO", bio: "Expert in cloud architecture and AI/ML systems.", initials: "PS", gradient: "from-secondary to-primary", icon: Cloud },
-  { name: "Vikram Patel", role: "Lead Developer", bio: "Full-stack engineer specializing in React and Node.js.", initials: "VP", gradient: "from-accent to-secondary", icon: Code },
-  { name: "Ananya Reddy", role: "UX Designer", bio: "Creating intuitive user experiences for complex systems.", initials: "AR", gradient: "from-primary to-secondary", icon: Palette },
-  { name: "Karthik Nair", role: "DevOps Engineer", bio: "Infrastructure automation and CI/CD specialist.", initials: "KN", gradient: "from-secondary to-accent", icon: Settings },
-  { name: "Meera Gupta", role: "Project Manager", bio: "Agile practitioner delivering projects on time and budget.", initials: "MG", gradient: "from-accent to-primary", icon: BarChart2 },
+interface ApiMember {
+  _id: string; name: string; role: string; bio: string; initials: string;
+  gradient: string; linkedin: string; github: string; twitter: string; image: string;
+}
+
+const defaultMembers = [
+  { name: "Rajesh Kumar", role: "CEO & Founder", bio: "15+ years in IT leadership and digital strategy.", initials: "RK", gradient: "from-primary to-accent", icon: Briefcase, linkedin: "", github: "", twitter: "", image: "" },
+  { name: "Priya Sharma", role: "CTO", bio: "Expert in cloud architecture and AI/ML systems.", initials: "PS", gradient: "from-secondary to-primary", icon: Cloud, linkedin: "", github: "", twitter: "", image: "" },
+  { name: "Vikram Patel", role: "Lead Developer", bio: "Full-stack engineer specializing in React and Node.js.", initials: "VP", gradient: "from-accent to-secondary", icon: Code, linkedin: "", github: "", twitter: "", image: "" },
+  { name: "Ananya Reddy", role: "UX Designer", bio: "Creating intuitive user experiences for complex systems.", initials: "AR", gradient: "from-primary to-secondary", icon: Palette, linkedin: "", github: "", twitter: "", image: "" },
+  { name: "Karthik Nair", role: "DevOps Engineer", bio: "Infrastructure automation and CI/CD specialist.", initials: "KN", gradient: "from-secondary to-accent", icon: Settings, linkedin: "", github: "", twitter: "", image: "" },
+  { name: "Meera Gupta", role: "Project Manager", bio: "Agile practitioner delivering projects on time and budget.", initials: "MG", gradient: "from-accent to-primary", icon: BarChart2, linkedin: "", github: "", twitter: "", image: "" },
 ];
 
 const culture = [
@@ -27,7 +33,19 @@ const culture = [
   { icon: Globe, title: "Inclusive", desc: "Diverse perspectives make us stronger and more innovative.", color: "accent" },
 ];
 
-const Team = () => (
+const Team = () => {
+  const [apiMembers, setApiMembers] = useState<ApiMember[]>([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/team")
+      .then(r => r.json())
+      .then(data => setApiMembers(Array.isArray(data) ? data : []))
+      .catch(() => {});
+  }, []);
+
+  const members = apiMembers.length > 0 ? apiMembers.map(m => ({ ...m, icon: Briefcase })) : defaultMembers;
+
+  return (
   <Layout>
     <PageHeader title="Our Team" subtitle="Meet the talented people behind Speshway Solutions." />
 
@@ -135,12 +153,16 @@ const Team = () => (
                   <div className={`absolute -inset-4 rounded-full border border-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                   <div className={`absolute -inset-8 rounded-full border border-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                   
-                  <div className={`w-28 h-24 mx-auto rounded-full bg-gradient-to-br ${m.gradient} flex items-center justify-center text-3xl font-heading font-black text-primary-foreground group-hover:scale-110 group-hover:shadow-[0_0_50px_hsl(var(--primary)/0.5)] transition-all duration-700 relative z-10 overflow-hidden`}>
-                    <span className="group-hover:animate-glitch">{m.initials}</span>
-                    <div className="absolute -bottom-1 -right-1 w-10 h-10 rounded-full bg-card border border-white/10 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-500">
-                      <m.icon size={16} className="text-primary" />
+                  {m.image ? (
+                    <img src={m.image} alt={m.name} className="w-44 h-44 mx-auto rounded-full object-cover object-center group-hover:scale-110 group-hover:shadow-[0_0_50px_hsl(var(--primary)/0.5)] transition-all duration-700 relative z-10 border-4 border-primary/30 group-hover:border-primary/70" />
+                  ) : (
+                    <div className={`w-44 h-44 mx-auto rounded-full bg-gradient-to-br ${m.gradient} flex items-center justify-center text-5xl font-heading font-black text-primary-foreground group-hover:scale-110 group-hover:shadow-[0_0_50px_hsl(var(--primary)/0.5)] transition-all duration-700 relative z-10 overflow-hidden`}>
+                      <span className="group-hover:animate-glitch">{m.initials}</span>
+                      <div className="absolute -bottom-1 -right-1 w-12 h-12 rounded-full bg-card border border-white/10 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-500">
+                        <m.icon size={18} className="text-primary" />
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
                 
                 <h3 className="font-heading font-bold text-2xl text-foreground mb-2 group-hover:text-primary transition-colors duration-500">{m.name}</h3>
@@ -148,11 +170,16 @@ const Team = () => (
                 <p className="text-muted-foreground font-light leading-relaxed mb-8">{m.bio}</p>
                 
                 <div className="flex justify-center gap-4 relative z-10">
-                  {[Linkedin, Github, Twitter].map((Icon, j) => (
+                  {[
+                    { Icon: Linkedin, url: m.linkedin },
+                    { Icon: Github, url: m.github },
+                    { Icon: Twitter, url: m.twitter },
+                  ].map(({ Icon, url }, j) => (
                     <MagneticButton key={j} distance={30} strength={0.4}>
-                      <div className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300 cursor-pointer border border-white/5">
+                      <a href={url || "#"} target={url ? "_blank" : undefined} rel="noopener noreferrer"
+                        className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300 cursor-pointer border border-white/5">
                         <Icon size={18} />
-                      </div>
+                      </a>
                     </MagneticButton>
                   ))}
                 </div>
@@ -183,6 +210,7 @@ const Team = () => (
       </MotionSection>
     </section>
   </Layout>
-);
+  );
+};
 
 export default Team;

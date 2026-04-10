@@ -8,7 +8,7 @@ import GooeyButton from "@/components/GooeyButton";
 import MotionSection from "@/components/MotionSection";
 import { ArrowRight, Code, Cloud, Shield, Cpu, Users, Zap, CheckCircle, Star } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const stats = [
@@ -44,6 +44,17 @@ const testimonials = [
 
 const Index = () => {
   const progressRef = useRef<HTMLDivElement>(null);
+  const [content, setContent] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    // Fetch dynamic site content
+    fetch("http://localhost:5000/api/site-content")
+      .then(r => r.json())
+      .then(data => setContent(data))
+      .catch(() => {});
+  }, []);
+
+  const t = (key: string, fallback: string) => content[key] || fallback;
 
   useEffect(() => {
     let ticking = false;
@@ -98,9 +109,9 @@ const Index = () => {
         <div className="container relative z-10">
           <div className="text-center mb-16">
             <AnimatedSection animation="fade-in-up">
-              <span className="text-primary text-sm font-black uppercase tracking-[0.3em]">What We Do</span>
+              <span className="text-primary text-sm font-black uppercase tracking-[0.3em]">{t("services_label", "What We Do")}</span>
             </AnimatedSection>
-            <TextReveal text="Innovation & Excellence" className="text-4xl md:text-6xl font-heading font-black mt-4 mb-6 justify-center leading-tight" />
+            <TextReveal text={t("services_title", "Innovation & Excellence")} className="text-4xl md:text-6xl font-heading font-black mt-4 mb-6 justify-center leading-tight" />
             <AnimatedSection delay={200}>
               <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-light leading-relaxed">
                 End-to-end IT solutions tailored to your business needs, powered by innovation and expertise.
@@ -133,9 +144,9 @@ const Index = () => {
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
         <div className="container grid md:grid-cols-2 gap-24 items-center">
           <MotionSection animation="skew-up">
-            <span className="text-secondary font-black text-sm uppercase tracking-[0.3em] mb-6 block">Why Choose Us</span>
+            <span className="text-secondary font-black text-sm uppercase tracking-[0.3em] mb-6 block">{t("whyus_label", "Why Choose Us")}</span>
             <TextReveal 
-              text="Delivering Excellence In Every Project" 
+              text={t("whyus_title", "Delivering Excellence In Every Project")} 
               className="text-4xl md:text-6xl font-heading font-black mb-12 leading-tight"
             />
             <div className="grid sm:grid-cols-2 gap-8">
@@ -185,10 +196,10 @@ const Index = () => {
         <div className="relative container">
           <div className="text-center mb-24">
             <AnimatedSection animation="reveal-text">
-              <span className="text-accent text-sm font-black uppercase tracking-[0.3em]">Testimonials</span>
+              <span className="text-accent text-sm font-black uppercase tracking-[0.3em]">{t("testimonials_label", "Testimonials")}</span>
             </AnimatedSection>
             <TextReveal 
-              text="What Our Clients Say" 
+              text={t("testimonials_title", "What Our Clients Say")} 
               className="text-4xl md:text-5xl font-heading font-black mt-6 justify-center"
             />
           </div>
@@ -232,11 +243,11 @@ const Index = () => {
         <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full bg-secondary/10 blur-[150px]" />
         <MotionSection animation="parallax-reveal" className="container text-center relative z-10">
           <TextReveal
-            text="Ready to Transform Your Business?"
+            text={t("cta_title", "Ready to Transform Your Business?")}
             className="text-4xl md:text-7xl font-heading font-black mb-8 justify-center leading-tight tracking-tighter"
           />
           <p className="text-muted-foreground mb-12 max-w-3xl mx-auto text-xl font-light leading-relaxed">
-            Let's discuss how Speshway Solutions can accelerate your digital journey and bring your vision to life.
+            {t("cta_subtitle", "Let's discuss how Speshway Solutions can accelerate your digital journey and bring your vision to life.")}
           </p>
           <div className="flex justify-center">
             <GooeyButton color="primary">
