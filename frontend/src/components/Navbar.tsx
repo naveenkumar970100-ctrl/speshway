@@ -55,7 +55,7 @@ const Navbar = () => {
         if (Array.isArray(data)) {
           setProjectLinks(data.slice(0, 6).map((p: { title: string; _id: string }) => ({
             name: p.title,
-            path: `/projects`,
+            path: `/projects/${p._id}`,
           })));
         }
       })
