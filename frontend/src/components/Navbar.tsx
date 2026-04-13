@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Sun, Moon, ChevronDown } from "lucide-react";
 import logo from "@/assets/logo-speshway.png";
 import MagneticButton from "./MagneticButton";
+import { toSlug } from "@/pages/ServiceDetail";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/context/ThemeContext";
 
@@ -11,15 +12,16 @@ const mainLinks = [
 ];
 
 const serviceLinks = [
-  "Web Development",
-  "Mobile Development",
-  "Cloud Solutions",
+  "SAP",
+  "Power BI",
+  "Full Stack Python",
+  "Full Stack Java",
   "Cybersecurity",
-  "AI & Machine Learning",
-  "Data Engineering",
+  "Cloud Deployment & DevOps",
   "Digital Marketing",
-  "DevOps & CI/CD",
-  "IT Consulting",
+  "E-Commerce Solutions",
+  "Mobile App Development",
+  "Website Development",
 ];
 
 const projectLinks = [
@@ -110,7 +112,7 @@ const Navbar = () => {
             />
             <div className="absolute inset-0 bg-primary/20 blur-xl scale-0 group-hover:scale-150 transition-transform duration-700 rounded-full opacity-0 group-hover:opacity-100" />
           </div>
-          <div className="group-hover:animate-glitch transition-all">
+          <div>
             <span className="block text-base font-black tracking-[0.12em] text-foreground uppercase leading-tight">SPESHWAY SOLUTIONS</span>
             <span className="block text-[10px] text-primary/80 tracking-[0.3em] font-bold uppercase">PRIVATE LIMITED</span>
           </div>
@@ -171,7 +173,7 @@ const Navbar = () => {
               {serviceLinks.map((name) => (
                 <Link
                   key={name}
-                  to="/services"
+                  to={`/services/${toSlug(name)}`}
                   onClick={() => setServicesOpen(false)}
                   className="flex items-center gap-3 px-5 py-3 text-[13px] font-semibold transition-all duration-200 group text-muted-foreground hover:text-primary hover:bg-primary/5"
                 >

@@ -1,11 +1,11 @@
 import { ReactNode, useEffect } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import CursorFollower from "./CursorFollower";
 import { motion, AnimatePresence } from "framer-motion";
 import Lenis from "@studio-freight/lenis";
 import { useTheme } from "@/context/ThemeContext";
 import { Phone } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 const PHONE = "919100006020";
 const WHATSAPP_URL = `https://wa.me/${PHONE}`;
@@ -13,6 +13,13 @@ const CALL_URL = `tel:+${PHONE}`;
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const { theme } = useTheme();
+  const { pathname } = useLocation();
+
+  // Scroll to top on every route change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [pathname]);
+
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.0,
@@ -41,7 +48,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative selection:bg-primary/30 overflow-x-hidden transition-colors duration-300">
-      <CursorFollower />
       
       {/* Dynamic Background Elements */}
       <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">

@@ -13,6 +13,7 @@ import { Code, Cloud, Shield, Cpu, Smartphone, Database, Globe, Settings, BarCha
 import { Link } from "react-router-dom";
 import webShowcase from "@/assets/web-showcase.png";
 import { cn } from "@/lib/utils";
+import { toSlug } from "./ServiceDetail";
 
 interface ApiService {
   _id: string; title: string; description: string; icon: string;
@@ -48,7 +49,9 @@ const Services = () => {
   useEffect(() => {
     fetch("http://localhost:5000/api/services")
       .then(r => r.json())
-      .then(data => setApiServices(Array.isArray(data) ? data : []))
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) setApiServices(data);
+      })
       .catch(() => {});
   }, []);
 
@@ -90,7 +93,7 @@ const Services = () => {
               delay={i * 0.1}
               animation="skew-up"
             >
-              <div className="group h-full p-8 rounded-3xl glass hover:glow-border-strong hover:shadow-2xl transition-all duration-700 ease-out-expo card-3d border-white/5 relative overflow-hidden">
+              <Link to={`/services/${toSlug(s.title)}`} className="block h-full group p-8 rounded-3xl glass hover:glow-border-strong hover:shadow-2xl transition-all duration-700 ease-out-expo card-3d border-white/5 relative overflow-hidden cursor-pointer">
                 {/* Spotlight effect on hover */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                 
@@ -106,7 +109,7 @@ const Services = () => {
                     Learn More <ArrowRight size={16} />
                   </span>
                 </MagneticButton>
-              </div>
+              </Link>
             </MotionSection>
           ))}
         </div>
@@ -262,24 +265,6 @@ const Services = () => {
       </div>
     </section>
 
-    {/* Final CTA */}
-    <section className="py-32 relative overflow-hidden bg-background">
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-card/50 to-secondary/10" />
-      <MotionSection animation="zoom-out" className="container text-center relative z-10">
-        <TextReveal 
-          text="Ready to Transform Your Business?" 
-          className="text-4xl md:text-7xl font-heading font-black mb-8 justify-center leading-tight"
-        />
-        <p className="text-muted-foreground mb-12 max-w-2xl mx-auto text-xl font-light leading-relaxed">
-          Partner with Speshway Solutions to leverage the power of technology and drive your business forward.
-        </p>
-        <Link to="/contact">
-          <GooeyButton color="secondary" className="!px-12 !py-5 text-lg">
-            Get a Free Consultation <ArrowRight size={22} className="inline ml-2" />
-          </GooeyButton>
-        </Link>
-      </MotionSection>
-    </section>
   </Layout>
   );
 };
