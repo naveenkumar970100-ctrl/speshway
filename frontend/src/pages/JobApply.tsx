@@ -26,11 +26,26 @@ export default function JobApply() {
     e.preventDefault();
     if (!resumeFile) { toast.error("Please upload your resume"); return; }
     setSubmitting(true);
-    // Simulate submission (integrate with email/storage as needed)
-    await new Promise(r => setTimeout(r, 1500));
-    toast.success("Resume sent! We'll get back to you soon.");
+    try {
+      const fd = new FormData();
+      fd.append("name", form.name);
+      fd.append("email", form.email);
+      fd.append("phone", form.phone);
+      fd.append("coverLetter", form.coverLetter);
+      fd.append("resume", resumeFile);
+
+      const res = await fetch(`http://localhost:5000/api/jobs/${id}/apply`, {
+        method: "POST",
+        body: fd,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Submission failed");
+      toast.success("Application submitted! We'll get back to you soon.");
+      navigate("/career");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Failed to submit. Please try again.");
+    }
     setSubmitting(false);
-    navigate("/career");
   };
 
   const f = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>

@@ -8,6 +8,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// Image upload (projects, blog, team, carousel)
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
@@ -16,7 +17,17 @@ const storage = new CloudinaryStorage({
     transformation: [{ width: 1200, height: 800, crop: "limit", quality: "auto" }],
   },
 });
-
 const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } });
 
-module.exports = { cloudinary, upload };
+// Resume upload (raw files — PDF, DOC, DOCX)
+const resumeStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "speshway/resumes",
+    resource_type: "raw",
+    allowed_formats: ["pdf", "doc", "docx"],
+  },
+});
+const uploadResume = multer({ storage: resumeStorage, limits: { fileSize: 5 * 1024 * 1024 } });
+
+module.exports = { cloudinary, upload, uploadResume };

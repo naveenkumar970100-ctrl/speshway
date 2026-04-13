@@ -8,9 +8,18 @@ interface Job {
   status: string; order: number;
 }
 
+interface Application {
+  _id: string; jobTitle: string; name: string; email: string; phone: string;
+  coverLetter: string; resumeUrl: string; resumeOriginalName: string;
+  status: string; createdAt: string;
+}
+
 const API = "http://localhost:5000/api";
 const getToken = () => localStorage.getItem("speshway_admin_token");
-const emptyForm = { title: "", location: "", type: "Full-time", salary: "", department: "", experience: "", desc: "", requirements: "", status: "Open", order: "0" };
+const emptyForm = {
+  title: "", location: "", type: "Full-time", salary: "",
+  department: "", experience: "", desc: "", requirements: "", status: "Open", order: "0",
+};
 
 const statusColors: Record<string, string> = {
   Open: "bg-green-100 text-green-700",
@@ -18,9 +27,18 @@ const statusColors: Record<string, string> = {
   Draft: "bg-gray-100 text-gray-600",
 };
 
+const appStatusColors: Record<string, string> = {
+  New: "bg-blue-100 text-blue-700",
+  Reviewed: "bg-yellow-100 text-yellow-700",
+  Shortlisted: "bg-green-100 text-green-700",
+  Rejected: "bg-red-100 text-red-700",
+};
+
 export default function AdminJobs() {
   const navigate = useNavigate();
+  const [tab, setTab] = useState<"jobs" | "applications">("jobs");
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [applications, setApplications] = useState<Application[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [editJob, setEditJob] = useState<Job | null>(null);
   const [form, setForm] = useState(emptyForm);
@@ -30,6 +48,7 @@ export default function AdminJobs() {
   useEffect(() => {
     if (!getToken()) return navigate("/admin", { replace: true });
     fetchJobs();
+    fetchApplications();
   }, [navigate]);
 
   const fetchJobs = async () => {
@@ -38,25 +57,58 @@ export default function AdminJobs() {
     setJobs(Array.isArray(data) ? data : []);
   };
 
-  const openAdd = () => { setEditJob(null); setForm(emptyForm); setError(""); setShowModal(true); };
+  const fetchApplications = async () => {
+    const res = await fetch(`${API}/jobs/applications/all`, { headers: { Authorization: `Bearer ${getToken()}` } });
+    const data = await res.json();
+    setApplications(Array.isArray(data) ? data : []);
+  };
+
+  const updateAppStatus = async (appId: string, status: string) => {
+    await fetch(`${API}/jobs/applications/${appId}/status`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` },
+      body: JSON.stringify({ status }),
+    });
+    fetchApplications();
+  };
+
+  const openAdd = () => {
+    setEditJob(null);
+    setForm(emptyForm);
+    setError("");
+    setShowModal(true);
+  };
 
   const openEdit = (j: Job) => {
     setEditJob(j);
-    setForm({ title: j.title, location: j.location, type: j.type, salary: j.salary, department: j.department, experience: j.experience, desc: j.desc, requirements: j.requirements.join("\n"), status: j.status, order: String(j.order) });
-    setError(""); setShowModal(true);
+    setForm({
+      title: j.title, location: j.location, type: j.type, salary: j.salary,
+      department: j.department, experience: j.experience, desc: j.desc,
+      requirements: j.requirements.join("\n"), status: j.status, order: String(j.order),
+    });
+    setError("");
+    setShowModal(true);
   };
 
   const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault(); setSaving(true); setError("");
+    e.preventDefault();
+    setSaving(true);
+    setError("");
     try {
       const res = await fetch(`${API}/jobs${editJob ? `/${editJob._id}` : ""}`, {
         method: editJob ? "PUT" : "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` },
-        body: JSON.stringify({ ...form, requirements: form.requirements }),
+        body: JSON.stringify({ ...form }),
       });
-      if (!res.ok) { const d = await res.json(); throw new Error(d.message); }
-      setShowModal(false); fetchJobs();
-    } catch (err: unknown) { setError(err instanceof Error ? err.message : "Failed"); }
+      if (!res.ok) {
+        const d = await res.json();
+        throw new Error(d.message);
+      }
+      setShowModal(false);
+      fetchJobs();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed");
+    }
     setSaving(false);
   };
 
@@ -70,47 +122,107 @@ export default function AdminJobs() {
 
   return (
     <div className="flex min-h-screen bg-gray-50 font-sans">
-      {/* Sidebar */}
       <AdminSidebar active="Jobs" />
 
       <main className="ml-56 flex-1 p-8">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-black text-gray-900">Job Postings ({jobs.length})</h1>
-            <p className="text-gray-400 text-sm mt-1">Create and manage career opportunities</p>
+            <h1 className="text-2xl font-black text-gray-900">Jobs & Applications</h1>
+            <p className="text-gray-400 text-sm mt-1">Manage job postings and review applicants</p>
           </div>
-          <button onClick={openAdd} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-600 text-white text-sm font-bold hover:bg-purple-700 transition-colors">
-            + Add New Job
+          {tab === "jobs" && (
+            <button onClick={openAdd} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-600 text-white text-sm font-bold hover:bg-purple-700 transition-colors">
+              + Add New Job
+            </button>
+          )}
+        </div>
+
+        {/* Tabs */}
+        <div className="flex gap-2 mb-6">
+          <button onClick={() => setTab("jobs")}
+            className={`px-5 py-2 rounded-xl text-sm font-bold transition-colors ${tab === "jobs" ? "bg-purple-600 text-white" : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"}`}>
+            Job Postings ({jobs.length})
+          </button>
+          <button onClick={() => setTab("applications")}
+            className={`px-5 py-2 rounded-xl text-sm font-bold transition-colors ${tab === "applications" ? "bg-purple-600 text-white" : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"}`}>
+            Applications ({applications.length})
           </button>
         </div>
 
-        {jobs.length === 0 ? (
-          <div className="bg-white rounded-2xl p-12 text-center text-gray-400 border border-gray-100">No jobs yet. Add your first posting!</div>
-        ) : (
-          <div className="space-y-4">
-            {jobs.map(j => (
-              <div key={j._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:shadow-md transition-shadow">
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <h3 className="font-bold text-gray-800 text-lg">{j.title}</h3>
-                    <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-bold ${statusColors[j.status] || "bg-gray-100 text-gray-600"}`}>{j.status}</span>
+        {/* Jobs Tab */}
+        {tab === "jobs" && (
+          jobs.length === 0 ? (
+            <div className="bg-white rounded-2xl p-12 text-center text-gray-400 border border-gray-100">No jobs yet. Add your first posting!</div>
+          ) : (
+            <div className="space-y-4">
+              {jobs.map(j => (
+                <div key={j._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:shadow-md transition-shadow">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <h3 className="font-bold text-gray-800 text-lg">{j.title}</h3>
+                      <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-bold ${statusColors[j.status] || "bg-gray-100 text-gray-600"}`}>{j.status}</span>
+                      <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-600 font-bold">
+                        {applications.filter(a => a.jobTitle === j.title).length} applicants
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-4 text-sm text-gray-500 mb-2">
+                      {j.location && <span>📍 {j.location}</span>}
+                      {j.type && <span>⏱ {j.type}</span>}
+                      {j.salary && <span>💰 {j.salary}</span>}
+                      {j.department && <span>🏢 {j.department}</span>}
+                    </div>
+                    <p className="text-gray-500 text-sm line-clamp-2">{j.desc}</p>
                   </div>
-                  <div className="flex flex-wrap gap-4 text-sm text-gray-500 mb-2">
-                    {j.location && <span>📍 {j.location}</span>}
-                    {j.type && <span>⏱ {j.type}</span>}
-                    {j.salary && <span>💰 {j.salary}</span>}
-                    {j.department && <span>🏢 {j.department}</span>}
-                    {j.experience && <span>🎯 {j.experience} yrs exp</span>}
+                  <div className="flex gap-2 shrink-0">
+                    <button onClick={() => setTab("applications")} className="px-4 py-2 rounded-xl bg-purple-50 text-purple-600 text-sm font-bold hover:bg-purple-100 transition-colors">Applications</button>
+                    <button onClick={() => openEdit(j)} className="px-4 py-2 rounded-xl bg-blue-50 text-blue-600 text-sm font-bold hover:bg-blue-100 transition-colors">Edit</button>
+                    <button onClick={() => handleDelete(j._id)} className="px-4 py-2 rounded-xl bg-red-50 text-red-600 text-sm font-bold hover:bg-red-100 transition-colors">Delete</button>
                   </div>
-                  <p className="text-gray-500 text-sm line-clamp-2">{j.desc}</p>
                 </div>
-                <div className="flex gap-2 shrink-0">
-                  <button onClick={() => openEdit(j)} className="px-4 py-2 rounded-xl bg-blue-50 text-blue-600 text-sm font-bold hover:bg-blue-100 transition-colors">Edit</button>
-                  <button onClick={() => handleDelete(j._id)} className="px-4 py-2 rounded-xl bg-red-50 text-red-600 text-sm font-bold hover:bg-red-100 transition-colors">Delete</button>
+              ))}
+            </div>
+          )
+        )}
+
+        {/* Applications Tab */}
+        {tab === "applications" && (
+          applications.length === 0 ? (
+            <div className="bg-white rounded-2xl p-12 text-center text-gray-400 border border-gray-100">No applications yet.</div>
+          ) : (
+            <div className="space-y-4">
+              {applications.map(a => (
+                <div key={a._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 hover:shadow-md transition-shadow">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <h3 className="font-bold text-gray-800">{a.name}</h3>
+                        <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-bold ${appStatusColors[a.status] || "bg-gray-100 text-gray-600"}`}>{a.status}</span>
+                      </div>
+                      <div className="flex flex-wrap gap-4 text-sm text-gray-500 mb-2">
+                        <span>📧 {a.email}</span>
+                        {a.phone && <span>📞 {a.phone}</span>}
+                        <span>💼 {a.jobTitle}</span>
+                        <span>📅 {new Date(a.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
+                      </div>
+                      {a.coverLetter && <p className="text-gray-500 text-sm line-clamp-2 mt-1">{a.coverLetter}</p>}
+                    </div>
+                    <div className="flex flex-col gap-2 shrink-0">
+                      {a.resumeUrl && (
+                        <a href={a.resumeUrl} target="_blank" rel="noopener noreferrer"
+                          className="px-4 py-2 rounded-xl bg-green-50 text-green-700 text-sm font-bold hover:bg-green-100 transition-colors text-center">
+                          Download Resume
+                        </a>
+                      )}
+                      <select value={a.status} onChange={e => updateAppStatus(a._id, e.target.value)}
+                        className="px-3 py-2 rounded-xl border-2 border-gray-200 text-sm font-bold focus:border-purple-500 focus:outline-none">
+                        {["New", "Reviewed", "Shortlisted", "Rejected"].map(s => <option key={s}>{s}</option>)}
+                      </select>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )
         )}
       </main>
 
@@ -120,11 +232,10 @@ export default function AdminJobs() {
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-6 border-b border-gray-100">
               <h2 className="text-lg font-black text-gray-900">{editJob ? "Edit Job" : "Add New Job"}</h2>
-              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl">x</button>
             </div>
             <form onSubmit={handleSave} className="p-6 flex flex-col gap-4">
               {error && <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">{error}</div>}
-
               <JField label="Job Title *" value={form.title} onChange={f("title")} required />
               <div>
                 <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Description *</label>
@@ -142,11 +253,11 @@ export default function AdminJobs() {
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <JField label="Salary" value={form.salary} onChange={f("salary")} placeholder="₹12-18 LPA" />
+                <JField label="Salary" value={form.salary} onChange={f("salary")} placeholder="12-18 LPA" />
                 <JField label="Department" value={form.department} onChange={f("department")} placeholder="Engineering" />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <JField label="Experience (years)" value={form.experience} onChange={f("experience")} placeholder="2-4" />
+                <JField label="Experience" value={form.experience} onChange={f("experience")} placeholder="2-4 years" />
                 <div>
                   <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Status</label>
                   <select value={form.status} onChange={e => setForm(p => ({ ...p, status: e.target.value }))}
@@ -158,13 +269,11 @@ export default function AdminJobs() {
               <div>
                 <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Requirements (one per line)</label>
                 <textarea value={form.requirements} onChange={e => setForm(p => ({ ...p, requirements: e.target.value }))} rows={4}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm resize-none"
-                  placeholder={"3+ years React experience\nStrong TypeScript skills"} />
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm resize-none" />
               </div>
-
               <div className="flex gap-3 pt-2">
                 <button type="submit" disabled={saving} className="flex-1 py-3 rounded-xl bg-purple-600 text-white font-bold text-sm hover:bg-purple-700 disabled:opacity-60">
-                  {saving ? "Saving…" : editJob ? "Update Job" : "Create Job"}
+                  {saving ? "Saving..." : editJob ? "Update Job" : "Create Job"}
                 </button>
                 <button type="button" onClick={() => setShowModal(false)} className="px-6 py-3 rounded-xl border-2 border-gray-200 text-gray-600 font-bold text-sm">Cancel</button>
               </div>
@@ -177,11 +286,20 @@ export default function AdminJobs() {
 }
 
 const JField = ({ label, value, onChange, required, placeholder }: {
-  label: string; value: string; onChange: (v: string) => void; required?: boolean; placeholder?: string;
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  required?: boolean;
+  placeholder?: string;
 }) => (
   <div>
     <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">{label}</label>
-    <input value={value} onChange={e => onChange(e.target.value)} required={required} placeholder={placeholder}
-      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm" />
+    <input
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      required={required}
+      placeholder={placeholder}
+      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm"
+    />
   </div>
 );

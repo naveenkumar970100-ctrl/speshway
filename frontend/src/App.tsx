@@ -25,6 +25,7 @@ import AdminJobs from "./pages/AdminJobs";
 import AdminTeam from "./pages/AdminTeam";
 import AdminBlog from "./pages/AdminBlog";
 import AdminSettings from "./pages/AdminSettings";
+import AdminSubmissions from "./pages/AdminSubmissions";
 import BlogDetail from "./pages/BlogDetail";
 import JobDetail from "./pages/JobDetail";
 import JobApply from "./pages/JobApply";
@@ -88,6 +89,7 @@ const App = () => {
                 <Route path="/admin/team" element={<AdminTeam />} />
                 <Route path="/admin/blog" element={<AdminBlog />} />
                 <Route path="/admin/settings" element={<AdminSettings />} />
+              <Route path="/admin/submissions" element={<AdminSubmissions />} />
                 <Route path="/blog/:id" element={<BlogDetail />} />
                 <Route path="/career/:id" element={<JobDetail />} />
                 <Route path="/career/:id/apply" element={<JobApply />} />

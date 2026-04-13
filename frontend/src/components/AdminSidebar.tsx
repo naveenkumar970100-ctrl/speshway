@@ -6,6 +6,7 @@ const navItems = [
   { path: "/admin/dashboard#services", icon: "⚙️", label: "Services" },
   { path: "/admin/carousel", icon: "🎠", label: "Carousel" },
   { path: "/admin/jobs", icon: "💼", label: "Jobs" },
+  { path: "/admin/submissions", icon: "📋", label: "Submissions" },
   { path: "/admin/team", icon: "👥", label: "Team" },
   { path: "/admin/blog", icon: "📝", label: "Blog" },
   { path: "/admin/settings", icon: "🔧", label: "Settings" },
