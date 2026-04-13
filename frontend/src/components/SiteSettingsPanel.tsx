@@ -25,7 +25,7 @@ export default function SiteSettingsPanel({ admin }: { admin?: { email?: string;
   const [activeGroup, setActiveGroup] = useState("stats");
 
   useEffect(() => {
-    fetch(`${API}/settings/all`, { headers: { Authorization: `Bearer ${getToken()}` } })
+    fetch(`${API}/settings/all`, { headers: { Authorization: `Bearer ${getToken()}` }, cache: "no-store" })
       .then(r => r.json())
       .then((data: SettingItem[]) => {
         setItems(Array.isArray(data) ? data : []);

@@ -49,15 +49,17 @@ const defaults = [
   { key: "color_accent", label: "Accent Color", value: "#f59e0b", group: "appearance", type: "color" },
 ];
 
-// Seed defaults
+// Seed defaults — only insert missing keys, NEVER overwrite existing values
 const seedSettings = async () => {
-  // Remove any appearance keys not in current defaults (cleans up old duplicates)
-  const validKeys = defaults.map(d => d.key);
-  await Settings.deleteMany({ key: { $nin: validKeys } });
-
   for (const d of defaults) {
-    await Settings.findOneAndUpdate({ key: d.key }, { label: d.label, group: d.group, type: d.type }, { upsert: false });
-    await Settings.findOneAndUpdate({ key: d.key }, d, { upsert: true });
+    const existing = await Settings.findOne({ key: d.key });
+    if (!existing) {
+      // New key — insert with default value
+      await Settings.create(d);
+    } else {
+      // Existing key — only update metadata (label, group, type), preserve value
+      await Settings.updateOne({ key: d.key }, { $set: { label: d.label, group: d.group, type: d.type } });
+    }
   }
 };
 seedSettings();
@@ -65,6 +67,7 @@ seedSettings();
 // GET /api/settings — public, returns key-value map
 router.get("/", async (req, res) => {
   try {
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate");
     const items = await Settings.find();
     const map = {};
     items.forEach(i => { map[i.key] = i.value; });
@@ -77,6 +80,7 @@ router.get("/", async (req, res) => {
 // GET /api/settings/all — admin, full objects grouped
 router.get("/all", verifyToken, async (req, res) => {
   try {
+    res.set("Cache-Control", "no-store");
     const items = await Settings.find().sort({ group: 1, key: 1 });
     res.json(items);
   } catch {

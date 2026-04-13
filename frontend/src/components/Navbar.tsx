@@ -24,15 +24,6 @@ const serviceLinks = [
   "Website Development",
 ];
 
-const projectLinks = [
-  { name: "E-Commerce Platform", path: "/projects" },
-  { name: "HealthCare App", path: "/projects" },
-  { name: "Food Delivery App", path: "/projects" },
-  { name: "Fitness Tracker", path: "/projects" },
-  { name: "FinTech Dashboard", path: "/projects" },
-  { name: "Social Network", path: "/projects" },
-];
-
 const dropdownLinks = [
   { name: "About", path: "/about" },
   { name: "Blog", path: "/blog" },
@@ -49,11 +40,27 @@ const Navbar = () => {
   const [projectsOpen, setProjectsOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [projectLinks, setProjectLinks] = useState<{ name: string; path: string }[]>([]);
   const { pathname } = useLocation();
   const { theme, toggleTheme } = useTheme();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const projectsRef = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
+
+  // Fetch real projects for dropdown
+  useEffect(() => {
+    fetch("http://localhost:5000/api/projects")
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setProjectLinks(data.slice(0, 6).map((p: { title: string; _id: string }) => ({
+            name: p.title,
+            path: `/projects`,
+          })));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     let ticking = false;

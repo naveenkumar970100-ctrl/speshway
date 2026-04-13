@@ -19,13 +19,7 @@ interface ApiJob {
   department: string; experience: string; desc: string; requirements: string[]; status: string;
 }
 
-const defaultJobs = [
-  { title: "Senior React Developer", location: "Hyderabad", type: "Full-time", salary: "₹12-18 LPA", desc: "Build modern web applications with React, TypeScript, and Node.js." },
-  { title: "Cloud Engineer", location: "Remote", type: "Full-time", salary: "₹15-22 LPA", desc: "Design and manage cloud infrastructure on AWS and Azure." },
-  { title: "UI/UX Designer", location: "Hyderabad", type: "Full-time", salary: "₹8-14 LPA", desc: "Create beautiful, user-centered designs for web and mobile." },
-  { title: "Data Scientist", location: "Remote", type: "Contract", salary: "₹18-25 LPA", desc: "Develop ML models and analytics solutions for enterprise clients." },
-  { title: "DevOps Engineer", location: "Hyderabad", type: "Full-time", salary: "₹14-20 LPA", desc: "Implement CI/CD pipelines and infrastructure automation." },
-];
+const defaultJobs: ApiJob[] = []; // No dummy data — show only real jobs from DB
 
 const perks = [
   { icon: Zap, label: "Flexible work hours", color: "primary" },
@@ -44,7 +38,7 @@ const Career = () => {
       .catch(() => {});
   }, []);
 
-  const jobs = apiJobs.length > 0 ? apiJobs : defaultJobs;
+  const jobs = apiJobs;
 
   return (
   <Layout>
@@ -127,10 +121,10 @@ const Career = () => {
           </p>
           <div className="grid grid-cols-2 gap-6">
             {[
-              { val: "15+", label: "Team Members", color: "primary" },
-              { val: "3", label: "Countries", color: "secondary" },
+              { val: `${apiJobs.length || "0"}+`, label: "Open Positions", color: "primary" },
+              { val: "200+", label: "Team Members", color: "secondary" },
               { val: "100%", label: "Remote OK", color: "accent" },
-              { val: "5★", label: "Glassdoor", color: "primary" },
+              { val: "2017", label: "Founded", color: "primary" },
             ].map((s, i) => (
               <AnimatedSection key={s.label} delay={i * 120} animation="scale-up">
                 <div className="glass rounded-2xl p-8 text-center hover:glow-border-strong transition-all duration-700 hover:-translate-y-2 border-white/5 group">
@@ -161,7 +155,15 @@ const Career = () => {
         </div>
 
         <div className="flex flex-col gap-6">
-          {jobs.map((j, i) => (
+          {jobs.length === 0 ? (
+            <div className="glass rounded-3xl p-16 text-center border-white/5">
+              <div className="text-5xl mb-4">💼</div>
+              <h3 className="text-2xl font-bold text-foreground mb-3">No Open Positions Right Now</h3>
+              <p className="text-muted-foreground font-light mb-8">We don't have any open roles at the moment, but we're always looking for great talent.</p>
+              <Link to="/contact"><GooeyButton color="primary">Send Your Resume <ArrowRight size={16} className="inline ml-1" /></GooeyButton></Link>
+            </div>
+          ) : (
+          jobs.map((j, i) => (
             <MotionSection key={j.title} delay={i * 0.1} animation="skew-up">
               <div className="group p-8 rounded-[2.5rem] glass hover:glow-border-strong transition-all duration-700 ease-out-expo flex flex-col sm:flex-row sm:items-center justify-between gap-8 hover:-translate-y-2 card-3d border-white/5 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
@@ -189,7 +191,8 @@ const Career = () => {
                 </div>
               </div>
             </MotionSection>
-          ))}
+          ))
+          )}
         </div>
       </div>
     </section>

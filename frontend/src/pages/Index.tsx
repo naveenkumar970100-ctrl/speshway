@@ -12,40 +12,35 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const defaultStats = [
-  { num: 50, suffix: "+", label: "Projects Delivered" },
-  { num: 30, suffix: "+", label: "Happy Clients" },
-  { num: 15, suffix: "+", label: "Team Members" },
-  { num: 5, suffix: "+", label: "Years Experience" },
-];
-
-const services = [
-  { icon: Code, title: "Web Development", desc: "Full-stack web applications built with modern frameworks." },
-  { icon: Cloud, title: "Cloud Solutions", desc: "Scalable cloud infrastructure and migration services." },
-  { icon: Shield, title: "Cybersecurity", desc: "Protect your business with enterprise-grade security." },
-  { icon: Cpu, title: "AI & Automation", desc: "Intelligent automation to streamline operations." },
-  { icon: Users, title: "IT Consulting", desc: "Strategic technology consulting for growth." },
-  { icon: Zap, title: "DevOps", desc: "CI/CD pipelines and infrastructure as code." },
+  { num: 100, suffix: "+", label: "Projects Delivered" },
+  { num: 76, suffix: "+", label: "Happy Clients" },
+  { num: 200, suffix: "+", label: "Team Members" },
+  { num: 9, suffix: "+", label: "Years Experience" },
 ];
 
 const whyUs = [
-  "Expert team with 5+ years of experience",
-  "On-time project delivery guarantee",
-  "24/7 support & maintenance",
-  "Agile development methodology",
-  "Transparent communication",
-  "Competitive pricing",
+  "Custom development tailored to your business needs",
+  "Agile methodology with rapid deployment",
+  "Enterprise-grade security & 99.9% uptime",
+  "Scalable architecture from startup to enterprise",
+  "Transparent communication throughout",
+  "Dedicated post-launch support & maintenance",
 ];
 
-const testimonials = [
-  { name: "Arjun M.", role: "CEO, TechStartup", text: "Speshway delivered our platform ahead of schedule with exceptional quality.", rating: 5 },
-  { name: "Sarah L.", role: "CTO, HealthCo", text: "Their mobile app expertise transformed our patient engagement entirely.", rating: 5 },
-  { name: "Ravi K.", role: "Founder, FinEdge", text: "Professional team, transparent process, and outstanding results.", rating: 5 },
+const defaultTestimonials = [
+  { name: "Abdul Hameed", role: "CEO, KSA", text: "Speshway has designed solutions for my business at very reasonable prices. They are mavens in providing quality services and offering customer support.", rating: 5 },
+  { name: "Arjun M.", role: "CEO, TechStartup", text: "Speshway delivered our platform ahead of schedule with exceptional quality. The team was professional and truly understood our vision.", rating: 5 },
+  { name: "Ravi K.", role: "Founder, FinEdge", text: "Professional team, transparent process, and outstanding results. They built our fintech app from scratch and it exceeded all expectations.", rating: 5 },
 ];
+
+const iconMap: Record<string, React.ElementType> = { Code, Cloud, Shield, Cpu, Users, Zap };
 
 const Index = () => {
   const progressRef = useRef<HTMLDivElement>(null);
   const [content, setContent] = useState<Record<string, string>>({});
   const [stats, setStats] = useState(defaultStats);
+  const [apiServices, setApiServices] = useState<{ icon: React.ElementType; title: string; desc: string; color: string }[]>([]);
+  const [testimonials, setTestimonials] = useState(defaultTestimonials);
 
   useEffect(() => {
     // Fetch dynamic site content
@@ -55,16 +50,31 @@ const Index = () => {
       .catch(() => {});
 
     // Fetch stats from settings
-    fetch("http://localhost:5000/api/settings")
+    fetch("http://localhost:5000/api/settings", { cache: "no-store" })
       .then(r => r.json())
       .then((data: Record<string, string>) => {
         if (data.stat_projects) {
           setStats([
-            { num: parseInt(data.stat_projects) || 50, suffix: data.stat_projects_suffix || "+", label: "Projects Delivered" },
-            { num: parseInt(data.stat_clients) || 30, suffix: data.stat_clients_suffix || "+", label: "Happy Clients" },
-            { num: parseInt(data.stat_team) || 15, suffix: data.stat_team_suffix || "+", label: "Team Members" },
-            { num: parseInt(data.stat_experience) || 5, suffix: data.stat_experience_suffix || "+", label: "Years Experience" },
+            { num: parseInt(data.stat_projects) || 100, suffix: data.stat_projects_suffix || "+", label: "Projects Delivered" },
+            { num: parseInt(data.stat_clients) || 76, suffix: data.stat_clients_suffix || "+", label: "Happy Clients" },
+            { num: parseInt(data.stat_team) || 200, suffix: data.stat_team_suffix || "+", label: "Team Members" },
+            { num: parseInt(data.stat_experience) || 9, suffix: data.stat_experience_suffix || "+", label: "Years Experience" },
           ]);
+        }
+      })
+      .catch(() => {});
+
+    // Fetch real services
+    fetch("http://localhost:5000/api/services")
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setApiServices(data.slice(0, 6).map((s: { title: string; description: string; icon: string; color: string }) => ({
+            icon: iconMap[s.icon] || Code,
+            title: s.title,
+            desc: s.description,
+            color: s.color || "primary",
+          })));
         }
       })
       .catch(() => {});
@@ -135,7 +145,7 @@ const Index = () => {
             </AnimatedSection>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((s, i) => (
+            {apiServices.map((s, i) => (
               <AnimatedSection key={s.title} delay={i * 80} animation="card-rise">
                 <div className="group h-full p-8 rounded-3xl glass hover:glow-border hover:shadow-xl transition-all duration-400 border-border relative overflow-hidden">
                   <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300 border border-primary/20">
@@ -221,7 +231,7 @@ const Index = () => {
           </div>
           
           <div className="grid md:grid-cols-3 gap-10">
-            {testimonials.map((t, i) => (
+            {testimonials.map((testimonial, i) => (
               <AnimatedSection key={i} delay={i * 200} animation="card-rise">
                 <div className="glass rounded-[2.5rem] p-10 hover:glow-border-strong transition-all duration-700 hover:-translate-y-6 h-full flex flex-col card-3d border-border group relative overflow-hidden">
                   <div className="absolute top-0 right-0 p-8 text-primary/10 group-hover:text-primary/20 transition-colors">
@@ -229,20 +239,20 @@ const Index = () => {
                   </div>
                   
                   <div className="flex gap-2 mb-8 relative z-10">
-                    {[...Array(t.rating)].map((_, j) => (
+                    {[...Array(testimonial.rating)].map((_, j) => (
                       <Star key={j} size={22} className="text-primary fill-primary group-hover:scale-125 transition-transform" style={{ transitionDelay: `${j * 50}ms` }} />
                     ))}
                   </div>
                   <p className="text-muted-foreground text-xl flex-1 italic leading-relaxed group-hover:text-foreground transition-colors duration-700 relative z-10 font-light">
-                    "{t.text}"
+                    "{testimonial.text}"
                   </p>
                   <div className="mt-10 pt-8 border-t border-border flex items-center gap-6 relative z-10">
                     <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center font-heading font-black text-2xl text-primary group-hover:rotate-12 transition-transform duration-500">
-                      {t.name.charAt(0)}
+                      {testimonial.name.charAt(0)}
                     </div>
                     <div>
-                      <div className="font-black text-lg text-foreground group-hover:text-primary transition-colors">{t.name}</div>
-                      <div className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">{t.role}</div>
+                      <div className="font-black text-lg text-foreground group-hover:text-primary transition-colors">{testimonial.name}</div>
+                      <div className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">{testimonial.role}</div>
                     </div>
                   </div>
                 </div>
