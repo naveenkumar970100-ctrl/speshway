@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
-const stats = [
+const defaultStats = [
   { num: 50, suffix: "+", label: "Projects Delivered" },
   { num: 30, suffix: "+", label: "Happy Clients" },
   { num: 15, suffix: "+", label: "Team Members" },
@@ -45,12 +45,28 @@ const testimonials = [
 const Index = () => {
   const progressRef = useRef<HTMLDivElement>(null);
   const [content, setContent] = useState<Record<string, string>>({});
+  const [stats, setStats] = useState(defaultStats);
 
   useEffect(() => {
     // Fetch dynamic site content
     fetch("http://localhost:5000/api/site-content")
       .then(r => r.json())
       .then(data => setContent(data))
+      .catch(() => {});
+
+    // Fetch stats from settings
+    fetch("http://localhost:5000/api/settings")
+      .then(r => r.json())
+      .then((data: Record<string, string>) => {
+        if (data.stat_projects) {
+          setStats([
+            { num: parseInt(data.stat_projects) || 50, suffix: data.stat_projects_suffix || "+", label: "Projects Delivered" },
+            { num: parseInt(data.stat_clients) || 30, suffix: data.stat_clients_suffix || "+", label: "Happy Clients" },
+            { num: parseInt(data.stat_team) || 15, suffix: data.stat_team_suffix || "+", label: "Team Members" },
+            { num: parseInt(data.stat_experience) || 5, suffix: data.stat_experience_suffix || "+", label: "Years Experience" },
+          ]);
+        }
+      })
       .catch(() => {});
   }, []);
 

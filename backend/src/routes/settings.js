@@ -31,6 +31,15 @@ const defaults = [
   { key: "home_whyus_title", label: "Why Us Title", value: "Delivering Excellence In Every Project", group: "home", type: "text" },
   { key: "home_cta_title", label: "CTA Title", value: "Ready to Transform Your Business?", group: "home", type: "text" },
   { key: "home_cta_subtitle", label: "CTA Subtitle", value: "Let's discuss how Speshway Solutions can accelerate your digital journey.", group: "home", type: "textarea" },
+  // Stats counters
+  { key: "stat_projects", label: "Projects Delivered", value: "50", group: "stats", type: "text" },
+  { key: "stat_clients", label: "Happy Clients", value: "30", group: "stats", type: "text" },
+  { key: "stat_team", label: "Team Members", value: "15", group: "stats", type: "text" },
+  { key: "stat_experience", label: "Years Experience", value: "5", group: "stats", type: "text" },
+  { key: "stat_projects_suffix", label: "Projects Suffix (e.g. +)", value: "+", group: "stats", type: "text" },
+  { key: "stat_clients_suffix", label: "Clients Suffix", value: "+", group: "stats", type: "text" },
+  { key: "stat_team_suffix", label: "Team Suffix", value: "+", group: "stats", type: "text" },
+  { key: "stat_experience_suffix", label: "Experience Suffix", value: "+", group: "stats", type: "text" },
   // Appearance
   { key: "footer_copyright", label: "Footer Copyright Text", value: "SPESHWAY SOLUTIONS PRIVATE LIMITED. All rights reserved.", group: "appearance", type: "text" },
   { key: "maintenance_mode", label: "Maintenance Mode", value: "false", group: "appearance", type: "toggle" },

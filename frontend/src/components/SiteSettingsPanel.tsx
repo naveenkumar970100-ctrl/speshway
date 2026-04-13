@@ -8,6 +8,7 @@ const API = "http://localhost:5000/api";
 const getToken = () => localStorage.getItem("speshway_admin_token");
 
 const groupLabels: Record<string, { icon: string; title: string }> = {
+  stats: { icon: "📊", title: "Stats / Counters" },
   site: { icon: "🌐", title: "Site Information" },
   contact: { icon: "📞", title: "Contact Details" },
   social: { icon: "📱", title: "Social Media Links" },
@@ -21,7 +22,7 @@ export default function SiteSettingsPanel({ admin }: { admin?: { email?: string;
   const [values, setValues] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState<Record<string, boolean>>({});
   const [saved, setSaved] = useState<Record<string, boolean>>({});
-  const [activeGroup, setActiveGroup] = useState("site");
+  const [activeGroup, setActiveGroup] = useState("stats");
 
   useEffect(() => {
     fetch(`${API}/settings/all`, { headers: { Authorization: `Bearer ${getToken()}` } })
@@ -65,7 +66,10 @@ export default function SiteSettingsPanel({ admin }: { admin?: { email?: string;
     setSaving(p => ({ ...p, [group]: false }));
   };
 
-  const groups = [...new Set(items.map(i => i.group))];
+  const groups = [...new Set(items.map(i => i.group))].sort((a, b) => {
+    const order = ["stats", "site", "contact", "social", "seo", "home", "appearance"];
+    return order.indexOf(a) - order.indexOf(b);
+  });
   const groupItems = items.filter(i => i.group === activeGroup);
 
   return (
@@ -82,6 +86,65 @@ export default function SiteSettingsPanel({ admin }: { admin?: { email?: string;
           </div>
         </div>
       )}
+
+      {/* ── Stats Quick Edit ── */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+          <h2 className="font-bold text-gray-800 flex items-center gap-2">
+            📊 Stats / Counters
+            <span className="text-xs text-gray-400 font-normal">— shown on the homepage</span>
+          </h2>
+          <button
+            onClick={() => handleSaveGroup("stats")}
+            disabled={saving["stats"]}
+            className={`px-5 py-2 rounded-xl text-sm font-bold transition-colors ${saved["stats"] ? "bg-green-500 text-white" : "bg-purple-600 text-white hover:bg-purple-700"} disabled:opacity-60`}
+          >
+            {saving["stats"] ? "Saving…" : saved["stats"] ? "✓ Saved" : "Save All Stats"}
+          </button>
+        </div>
+        <div className="p-6 grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            { numKey: "stat_projects", suffixKey: "stat_projects_suffix", label: "Projects Delivered", icon: "🚀", color: "purple" },
+            { numKey: "stat_clients", suffixKey: "stat_clients_suffix", label: "Happy Clients", icon: "😊", color: "blue" },
+            { numKey: "stat_team", suffixKey: "stat_team_suffix", label: "Team Members", icon: "👥", color: "green" },
+            { numKey: "stat_experience", suffixKey: "stat_experience_suffix", label: "Years Experience", icon: "⭐", color: "orange" },
+          ].map(stat => (
+            <div key={stat.numKey} className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-xl">{stat.icon}</span>
+                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">{stat.label}</span>
+              </div>
+              {/* Preview */}
+              <div className="text-3xl font-black text-purple-600 mb-3">
+                {values[stat.numKey] || "0"}{values[stat.suffixKey] || "+"}
+              </div>
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1">Number</label>
+                  <input
+                    type="number"
+                    value={values[stat.numKey] || ""}
+                    onChange={e => setValues(p => ({ ...p, [stat.numKey]: e.target.value }))}
+                    className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm font-bold"
+                    min="0"
+                  />
+                </div>
+                <div className="w-16">
+                  <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1">Suffix</label>
+                  <input
+                    type="text"
+                    value={values[stat.suffixKey] || ""}
+                    onChange={e => setValues(p => ({ ...p, [stat.suffixKey]: e.target.value }))}
+                    className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm font-bold text-center"
+                    maxLength={3}
+                    placeholder="+"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <div className="flex gap-6">
         {/* Group tabs */}
