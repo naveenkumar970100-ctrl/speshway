@@ -22,7 +22,7 @@ export default function SiteSettingsPanel({ admin }: { admin?: { email?: string;
   const [values, setValues] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState<Record<string, boolean>>({});
   const [saved, setSaved] = useState<Record<string, boolean>>({});
-  const [activeGroup, setActiveGroup] = useState("stats");
+  const [activeGroup, setActiveGroup] = useState("site");
 
   useEffect(() => {
     fetch(`${API}/settings/all`, { headers: { Authorization: `Bearer ${getToken()}` }, cache: "no-store" })
@@ -70,6 +70,8 @@ export default function SiteSettingsPanel({ admin }: { admin?: { email?: string;
     const order = ["stats", "site", "contact", "social", "seo", "home", "appearance"];
     return order.indexOf(a) - order.indexOf(b);
   });
+  // stats group is handled by the custom Quick Edit above — exclude from generic tabs
+  const genericGroups = groups.filter(g => g !== "stats");
   const groupItems = items.filter(i => i.group === activeGroup);
 
   return (
@@ -144,13 +146,90 @@ export default function SiteSettingsPanel({ admin }: { admin?: { email?: string;
             </div>
           ))}
         </div>
+
+        {/* Why Choose Us Stats */}
+        <div className="border-t border-gray-100 px-6 py-4">
+          <h3 className="font-bold text-gray-700 text-sm mb-4 flex items-center gap-2">
+            ✅ Why Choose Us — 4 Stat Cards
+            <span className="text-xs text-gray-400 font-normal">(shown on homepage)</span>
+          </h3>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            {[
+              { valKey: "whyus_stat1_val", labelKey: "whyus_stat1_label", color: "purple" },
+              { valKey: "whyus_stat2_val", labelKey: "whyus_stat2_label", color: "blue" },
+              { valKey: "whyus_stat3_val", labelKey: "whyus_stat3_label", color: "yellow" },
+              { valKey: "whyus_stat4_val", labelKey: "whyus_stat4_label", color: "pink" },
+            ].map((stat, i) => (
+              <div key={stat.valKey} className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+                <div className="text-2xl font-black text-purple-600 mb-2">{values[stat.valKey] || "—"}</div>
+                <div className="text-xs text-gray-500 mb-3">{values[stat.labelKey] || "—"}</div>
+                <div className="space-y-2">
+                  <div>
+                    <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1">Value</label>
+                    <input type="text" value={values[stat.valKey] || ""} onChange={e => setValues(p => ({ ...p, [stat.valKey]: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm font-bold" placeholder="99%" />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1">Label</label>
+                    <input type="text" value={values[stat.labelKey] || ""} onChange={e => setValues(p => ({ ...p, [stat.labelKey]: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm" placeholder="Satisfaction" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Why Choose Us Bullet Points */}
+          <h3 className="font-bold text-gray-700 text-sm mb-3 flex items-center gap-2">
+            📋 Why Choose Us — 6 Bullet Points
+          </h3>
+          <div className="grid md:grid-cols-2 gap-3 mb-6">
+            {[1,2,3,4,5,6].map(n => (
+              <div key={n}>
+                <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1">Point {n}</label>
+                <input type="text" value={values[`whyus_point${n}`] || ""} onChange={e => setValues(p => ({ ...p, [`whyus_point${n}`]: e.target.value }))}
+                  className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm" />
+              </div>
+            ))}
+          </div>
+
+          {/* Projects Page Stats */}
+          <h3 className="font-bold text-gray-700 text-sm mb-3 flex items-center gap-2">
+            🚀 Projects Page — 4 Stat Cards
+          </h3>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { valKey: "proj_stat1_val", labelKey: "proj_stat1_label" },
+              { valKey: "proj_stat2_val", labelKey: "proj_stat2_label" },
+              { valKey: "proj_stat3_val", labelKey: "proj_stat3_label" },
+              { valKey: "proj_stat4_val", labelKey: "proj_stat4_label" },
+            ].map((stat, i) => (
+              <div key={stat.valKey} className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+                <div className="text-2xl font-black text-purple-600 mb-2">{values[stat.valKey] || "—"}</div>
+                <div className="text-xs text-gray-500 mb-3">{values[stat.labelKey] || "—"}</div>
+                <div className="space-y-2">
+                  <div>
+                    <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1">Value</label>
+                    <input type="text" value={values[stat.valKey] || ""} onChange={e => setValues(p => ({ ...p, [stat.valKey]: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm font-bold" />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1">Label</label>
+                    <input type="text" value={values[stat.labelKey] || ""} onChange={e => setValues(p => ({ ...p, [stat.labelKey]: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="flex gap-6">
         {/* Group tabs */}
         <div className="w-48 shrink-0">
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            {groups.map(g => {
+            {genericGroups.map(g => {
               const meta = groupLabels[g] || { icon: "⚙️", title: g };
               return (
                 <button key={g} onClick={() => setActiveGroup(g)}

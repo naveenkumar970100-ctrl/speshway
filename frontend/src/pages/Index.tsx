@@ -25,9 +25,7 @@ const whyUs = [
   "Scalable architecture from startup to enterprise",
   "Transparent communication throughout",
   "Dedicated post-launch support & maintenance",
-];
-
-const defaultTestimonials = [
+];const defaultTestimonials = [
   { name: "Abdul Hameed", role: "CEO, KSA", text: "Speshway has designed solutions for my business at very reasonable prices. They are mavens in providing quality services and offering customer support.", rating: 5 },
   { name: "Arjun M.", role: "CEO, TechStartup", text: "Speshway delivered our platform ahead of schedule with exceptional quality. The team was professional and truly understood our vision.", rating: 5 },
   { name: "Ravi K.", role: "Founder, FinEdge", text: "Professional team, transparent process, and outstanding results. They built our fintech app from scratch and it exceeded all expectations.", rating: 5 },
@@ -38,6 +36,7 @@ const iconMap: Record<string, React.ElementType> = { Code, Cloud, Shield, Cpu, U
 const Index = () => {
   const progressRef = useRef<HTMLDivElement>(null);
   const [content, setContent] = useState<Record<string, string>>({});
+  const [settings, setSettings] = useState<Record<string, string>>({});
   const [stats, setStats] = useState(defaultStats);
   const [apiServices, setApiServices] = useState<{ icon: React.ElementType; title: string; desc: string; color: string }[]>([]);
   const [testimonials, setTestimonials] = useState(defaultTestimonials);
@@ -49,10 +48,11 @@ const Index = () => {
       .then(data => setContent(data))
       .catch(() => {});
 
-    // Fetch stats from settings
+    // Fetch settings (stats, whyUs points, colors, etc.)
     fetch("http://localhost:5000/api/settings", { cache: "no-store" })
       .then(r => r.json())
       .then((data: Record<string, string>) => {
+        setSettings(data);
         if (data.stat_projects) {
           setStats([
             { num: parseInt(data.stat_projects) || 100, suffix: data.stat_projects_suffix || "+", label: "Projects Delivered" },
@@ -80,7 +80,10 @@ const Index = () => {
       .catch(() => {});
   }, []);
 
+  // t() reads from site-content API
   const t = (key: string, fallback: string) => content[key] || fallback;
+  // s() reads from settings API
+  const s = (key: string, fallback: string) => settings[key] || fallback;
 
   useEffect(() => {
     let ticking = false;
@@ -170,20 +173,24 @@ const Index = () => {
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
         <div className="container grid md:grid-cols-2 gap-24 items-center">
           <MotionSection animation="skew-up">
-            <span className="text-secondary font-black text-sm uppercase tracking-[0.3em] mb-6 block">{t("whyus_label", "Why Choose Us")}</span>
+            <span className="text-secondary font-black text-sm uppercase tracking-[0.3em] mb-6 block">{s("home_whyus_label", "Why Choose Us")}</span>
             <TextReveal 
-              text={t("whyus_title", "Delivering Excellence In Every Project")} 
+              text={s("home_whyus_title", "Delivering Excellence In Every Project")} 
               className="text-4xl md:text-6xl font-heading font-black mb-12 leading-tight"
             />
             <div className="grid sm:grid-cols-2 gap-8">
-              {whyUs.map((item, i) => (
-                <div key={i} className="flex items-start gap-5 group">
-                  <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0 group-hover:bg-secondary/20 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 border border-secondary/20">
-                    <CheckCircle className="text-secondary" size={24} />
+              {[1,2,3,4,5,6].map(n => {
+                const point = s(`whyus_point${n}`, whyUs[n-1] || "");
+                if (!point) return null;
+                return (
+                  <div key={n} className="flex items-start gap-5 group">
+                    <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0 group-hover:bg-secondary/20 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 border border-secondary/20">
+                      <CheckCircle className="text-secondary" size={24} />
+                    </div>
+                    <span className="text-muted-foreground group-hover:text-foreground transition-colors duration-500 font-medium text-lg leading-tight">{point}</span>
                   </div>
-                  <span className="text-muted-foreground group-hover:text-foreground transition-colors duration-500 font-medium text-lg leading-tight">{item}</span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </MotionSection>
           
@@ -192,10 +199,10 @@ const Index = () => {
               <div className="absolute -inset-20 bg-gradient-to-tr from-primary/15 via-transparent to-secondary/15 rounded-full blur-[120px]" />
               <div className="relative grid grid-cols-2 gap-8">
                 {[
-                  { val: "99%", label: "Satisfaction", color: "primary", delay: 0 },
-                  { val: "24/7", label: "Support", color: "secondary", delay: 100 },
-                  { val: "100+", label: "Tech Stack", color: "accent", delay: 200 },
-                  { val: "50+", label: "Partners", color: "primary", delay: 300 },
+                  { valKey: "whyus_stat1_val", labelKey: "whyus_stat1_label", defaultVal: "99%", defaultLabel: "Satisfaction", color: "primary", delay: 0 },
+                  { valKey: "whyus_stat2_val", labelKey: "whyus_stat2_label", defaultVal: "24/7", defaultLabel: "Support", color: "secondary", delay: 100 },
+                  { valKey: "whyus_stat3_val", labelKey: "whyus_stat3_label", defaultVal: "100+", defaultLabel: "Tech Stack", color: "accent", delay: 200 },
+                  { valKey: "whyus_stat4_val", labelKey: "whyus_stat4_label", defaultVal: "50+", defaultLabel: "Partners", color: "primary", delay: 300 },
                 ].map((item, i) => (
                   <div 
                     key={i} 
@@ -205,8 +212,8 @@ const Index = () => {
                     )}
                     style={{ transitionDelay: `${item.delay}ms` }}
                   >
-                    <div className={`text-5xl font-heading font-black text-${item.color} mb-4 group-hover:animate-glitch`}>{item.val}</div>
-                    <div className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">{item.label}</div>
+                    <div className={`text-5xl font-heading font-black text-${item.color} mb-4`}>{s(item.valKey, item.defaultVal)}</div>
+                    <div className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">{s(item.labelKey, item.defaultLabel)}</div>
                   </div>
                 ))}
               </div>

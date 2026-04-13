@@ -31,7 +31,7 @@ const defaults = [
   { key: "home_whyus_title", label: "Why Us Title", value: "Delivering Excellence In Every Project", group: "home", type: "text" },
   { key: "home_cta_title", label: "CTA Title", value: "Ready to Transform Your Business?", group: "home", type: "text" },
   { key: "home_cta_subtitle", label: "CTA Subtitle", value: "Let's discuss how Speshway Solutions can accelerate your digital journey.", group: "home", type: "textarea" },
-  // Stats counters
+  // Stats counters (homepage hero)
   { key: "stat_projects", label: "Projects Delivered", value: "50", group: "stats", type: "text" },
   { key: "stat_clients", label: "Happy Clients", value: "30", group: "stats", type: "text" },
   { key: "stat_team", label: "Team Members", value: "15", group: "stats", type: "text" },
@@ -40,6 +40,31 @@ const defaults = [
   { key: "stat_clients_suffix", label: "Clients Suffix", value: "+", group: "stats", type: "text" },
   { key: "stat_team_suffix", label: "Team Suffix", value: "+", group: "stats", type: "text" },
   { key: "stat_experience_suffix", label: "Experience Suffix", value: "+", group: "stats", type: "text" },
+  // Why Choose Us — 4 stat cards
+  { key: "whyus_stat1_val", label: "Why Us Stat 1 Value", value: "99%", group: "stats", type: "text" },
+  { key: "whyus_stat1_label", label: "Why Us Stat 1 Label", value: "Satisfaction", group: "stats", type: "text" },
+  { key: "whyus_stat2_val", label: "Why Us Stat 2 Value", value: "24/7", group: "stats", type: "text" },
+  { key: "whyus_stat2_label", label: "Why Us Stat 2 Label", value: "Support", group: "stats", type: "text" },
+  { key: "whyus_stat3_val", label: "Why Us Stat 3 Value", value: "100+", group: "stats", type: "text" },
+  { key: "whyus_stat3_label", label: "Why Us Stat 3 Label", value: "Tech Stack", group: "stats", type: "text" },
+  { key: "whyus_stat4_val", label: "Why Us Stat 4 Value", value: "50+", group: "stats", type: "text" },
+  { key: "whyus_stat4_label", label: "Why Us Stat 4 Label", value: "Partners", group: "stats", type: "text" },
+  // Why Choose Us — 6 bullet points
+  { key: "whyus_point1", label: "Why Us Point 1", value: "Custom development tailored to your business needs", group: "stats", type: "text" },
+  { key: "whyus_point2", label: "Why Us Point 2", value: "Agile methodology with rapid deployment", group: "stats", type: "text" },
+  { key: "whyus_point3", label: "Why Us Point 3", value: "Enterprise-grade security & 99.9% uptime", group: "stats", type: "text" },
+  { key: "whyus_point4", label: "Why Us Point 4", value: "Scalable architecture from startup to enterprise", group: "stats", type: "text" },
+  { key: "whyus_point5", label: "Why Us Point 5", value: "Transparent communication throughout", group: "stats", type: "text" },
+  { key: "whyus_point6", label: "Why Us Point 6", value: "Dedicated post-launch support & maintenance", group: "stats", type: "text" },
+  // Projects page stats
+  { key: "proj_stat1_val", label: "Projects Page Stat 1 Value", value: "50+", group: "stats", type: "text" },
+  { key: "proj_stat1_label", label: "Projects Page Stat 1 Label", value: "Projects Delivered", group: "stats", type: "text" },
+  { key: "proj_stat2_val", label: "Projects Page Stat 2 Value", value: "30+", group: "stats", type: "text" },
+  { key: "proj_stat2_label", label: "Projects Page Stat 2 Label", value: "Happy Clients", group: "stats", type: "text" },
+  { key: "proj_stat3_val", label: "Projects Page Stat 3 Value", value: "98%", group: "stats", type: "text" },
+  { key: "proj_stat3_label", label: "Projects Page Stat 3 Label", value: "On-Time Delivery", group: "stats", type: "text" },
+  { key: "proj_stat4_val", label: "Projects Page Stat 4 Value", value: "4.9★", group: "stats", type: "text" },
+  { key: "proj_stat4_label", label: "Projects Page Stat 4 Label", value: "Average Rating", group: "stats", type: "text" },
   // Appearance
   { key: "footer_copyright", label: "Footer Copyright Text", value: "SPESHWAY SOLUTIONS PRIVATE LIMITED. All rights reserved.", group: "appearance", type: "text" },
   { key: "maintenance_mode", label: "Maintenance Mode", value: "false", group: "appearance", type: "toggle" },
