@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /api/team/all — admin
+// GET /api/team/all — admin (MUST be before /:id)
 router.get("/all", verifyToken, async (req, res) => {
   try {
     const members = await TeamMember.find().sort({ order: 1, createdAt: 1 });

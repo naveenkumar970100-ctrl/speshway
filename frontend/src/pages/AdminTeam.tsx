@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminSidebar from "@/components/AdminSidebar";
+import { adminFetch, clearAdminSession, getToken } from "@/lib/adminFetch";
 
 interface Member {
   _id: string; name: string; role: string; bio: string; initials: string;
@@ -8,8 +9,6 @@ interface Member {
   email: string; image: string; order: number; isActive: boolean;
 }
 
-const API = "http://localhost:5000/api";
-const getToken = () => localStorage.getItem("speshway_admin_token");
 const emptyForm = { name: "", role: "", bio: "", initials: "", gradient: "from-purple-500 to-pink-500", linkedin: "", github: "", twitter: "", email: "", order: "0" };
 
 const gradients = [
@@ -33,15 +32,24 @@ export default function AdminTeam() {
   const [error, setError] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (!getToken()) return navigate("/admin", { replace: true });
     fetchMembers();
   }, [navigate]);
 
   const fetchMembers = async () => {
-    const res = await fetch(`${API}/team/all`, { headers: { Authorization: `Bearer ${getToken()}` } });
-    const data = await res.json();
-    setMembers(Array.isArray(data) ? data : []);
+    setLoading(true);
+    try {
+      const res = await adminFetch("/team/all", {}, () => navigate("/admin", { replace: true }));
+      const data = await res.json();
+      setMembers(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Failed to fetch team members:", err);
+      setMembers([]);
+    }
+    setLoading(false);
   };
 
   const openAdd = () => { setEditMember(null); setForm(emptyForm); setImageFile(null); setImagePreview(""); setError(""); setShowModal(true); };
@@ -58,11 +66,11 @@ export default function AdminTeam() {
       const fd = new FormData();
       Object.entries(form).forEach(([k, v]) => fd.append(k, v));
       if (imageFile) fd.append("image", imageFile);
-      const res = await fetch(`${API}/team${editMember ? `/${editMember._id}` : ""}`, {
-        method: editMember ? "PUT" : "POST",
-        headers: { Authorization: `Bearer ${getToken()}` },
-        body: fd,
-      });
+      const res = await adminFetch(
+        editMember ? `/team/${editMember._id}` : "/team",
+        { method: editMember ? "PUT" : "POST", body: fd },
+        () => navigate("/admin", { replace: true })
+      );
       if (!res.ok) { const d = await res.json(); throw new Error(d.message); }
       setShowModal(false); fetchMembers();
     } catch (err: unknown) { setError(err instanceof Error ? err.message : "Failed"); }
@@ -71,8 +79,17 @@ export default function AdminTeam() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this team member?")) return;
-    await fetch(`${API}/team/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${getToken()}` } });
+    await adminFetch(`/team/${id}`, { method: "DELETE" }, () => navigate("/admin", { replace: true }));
     fetchMembers();
+  };
+
+  const handleToggle = async (id: string, currentActive: boolean) => {
+    try {
+      const fd = new FormData();
+      fd.append("isActive", String(!currentActive));
+      await adminFetch(`/team/${id}`, { method: "PUT", body: fd }, () => navigate("/admin", { replace: true }));
+      fetchMembers();
+    } catch { /* silent */ }
   };
 
   const f = (key: keyof typeof emptyForm) => (v: string) => setForm(p => ({ ...p, [key]: v }));
@@ -92,8 +109,17 @@ export default function AdminTeam() {
           </button>
         </div>
 
-        {members.length === 0 ? (
-          <div className="bg-white rounded-2xl p-12 text-center text-gray-400 border border-gray-100">No team members yet.</div>
+        {loading ? (
+          <div className="bg-white rounded-2xl p-12 text-center border border-gray-100">
+            <div className="w-8 h-8 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+            <p className="text-gray-400 text-sm">Loading team members…</p>
+          </div>
+        ) : members.length === 0 ? (
+          <div className="bg-white rounded-2xl p-12 text-center text-gray-400 border border-gray-100">
+            <div className="text-4xl mb-3">👥</div>
+            <p className="font-semibold">No team members yet.</p>
+            <p className="text-sm mt-1">Click "Add Team Member" to get started.</p>
+          </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {members.map(m => (
@@ -114,6 +140,9 @@ export default function AdminTeam() {
                 {m.bio && <p className="text-gray-500 text-xs line-clamp-2 mb-4">{m.bio}</p>}
                 <div className="flex gap-2">
                   <button onClick={() => openEdit(m)} className="flex-1 py-2 rounded-xl bg-blue-50 text-blue-600 text-xs font-bold hover:bg-blue-100 transition-colors">Edit</button>
+                  <button onClick={() => handleToggle(m._id, m.isActive)} className={`py-2 px-3 rounded-xl text-xs font-bold transition-colors ${m.isActive ? "bg-yellow-50 text-yellow-600 hover:bg-yellow-100" : "bg-green-50 text-green-600 hover:bg-green-100"}`}>
+                    {m.isActive ? "Hide" : "Show"}
+                  </button>
                   <button onClick={() => handleDelete(m._id)} className="flex-1 py-2 rounded-xl bg-red-50 text-red-600 text-xs font-bold hover:bg-red-100 transition-colors">Delete</button>
                 </div>
               </div>

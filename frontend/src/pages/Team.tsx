@@ -18,15 +18,6 @@ interface ApiMember {
   gradient: string; linkedin: string; github: string; twitter: string; image: string;
 }
 
-const defaultMembers = [
-  { name: "Rajesh Kumar", role: "CEO & Founder", bio: "15+ years in IT leadership and digital strategy.", initials: "RK", gradient: "from-primary to-accent", icon: Briefcase, linkedin: "", github: "", twitter: "", image: "" },
-  { name: "Priya Sharma", role: "CTO", bio: "Expert in cloud architecture and AI/ML systems.", initials: "PS", gradient: "from-secondary to-primary", icon: Cloud, linkedin: "", github: "", twitter: "", image: "" },
-  { name: "Vikram Patel", role: "Lead Developer", bio: "Full-stack engineer specializing in React and Node.js.", initials: "VP", gradient: "from-accent to-secondary", icon: Code, linkedin: "", github: "", twitter: "", image: "" },
-  { name: "Ananya Reddy", role: "UX Designer", bio: "Creating intuitive user experiences for complex systems.", initials: "AR", gradient: "from-primary to-secondary", icon: Palette, linkedin: "", github: "", twitter: "", image: "" },
-  { name: "Karthik Nair", role: "DevOps Engineer", bio: "Infrastructure automation and CI/CD specialist.", initials: "KN", gradient: "from-secondary to-accent", icon: Settings, linkedin: "", github: "", twitter: "", image: "" },
-  { name: "Meera Gupta", role: "Project Manager", bio: "Agile practitioner delivering projects on time and budget.", initials: "MG", gradient: "from-accent to-primary", icon: BarChart2, linkedin: "", github: "", twitter: "", image: "" },
-];
-
 const culture = [
   { icon: Users, title: "Collaborative", desc: "We work as one team, sharing knowledge and lifting each other up.", color: "primary" },
   { icon: Award, title: "Excellence", desc: "We hold ourselves to the highest standards in everything we do.", color: "secondary" },
@@ -35,15 +26,19 @@ const culture = [
 
 const Team = () => {
   const [apiMembers, setApiMembers] = useState<ApiMember[]>([]);
+  const [loadingMembers, setLoadingMembers] = useState(true);
 
   useEffect(() => {
     fetch("http://localhost:5000/api/team")
       .then(r => r.json())
-      .then(data => setApiMembers(Array.isArray(data) ? data : []))
-      .catch(() => {});
+      .then(data => {
+        setApiMembers(Array.isArray(data) ? data : []);
+        setLoadingMembers(false);
+      })
+      .catch(() => setLoadingMembers(false));
   }, []);
 
-  const members = apiMembers.length > 0 ? apiMembers.map(m => ({ ...m, icon: Briefcase })) : defaultMembers;
+  const members = apiMembers.map(m => ({ ...m, icon: Briefcase }));
 
   return (
   <Layout>
@@ -144,7 +139,21 @@ const Team = () => {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {members.map((m, i) => (
+          {loadingMembers ? (
+            Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="rounded-[3rem] glass border-white/5 p-10 animate-pulse">
+                <div className="w-44 h-44 rounded-full bg-white/10 mx-auto mb-8" />
+                <div className="h-6 bg-white/10 rounded-full w-3/4 mx-auto mb-3" />
+                <div className="h-4 bg-white/10 rounded-full w-1/2 mx-auto" />
+              </div>
+            ))
+          ) : members.length === 0 ? (
+            <div className="col-span-3 text-center py-16 text-muted-foreground">
+              <div className="text-5xl mb-4">👥</div>
+              <p className="text-xl font-semibold">Team members coming soon.</p>
+            </div>
+          ) : (
+            members.map((m, i) => (
             <MotionSection key={m.name} delay={i * 0.1} animation="skew-up">
               <div className="group text-center p-10 rounded-[3rem] glass hover:glow-border-strong transition-all duration-700 hover:-translate-y-4 card-3d border-white/5 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -185,7 +194,8 @@ const Team = () => {
                 </div>
               </div>
             </MotionSection>
-          ))}
+          ))
+          )}
         </div>
       </div>
     </section>
