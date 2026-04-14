@@ -8,7 +8,7 @@ interface Post {
   createdAt: string;
 }
 
-const API = "http://localhost:5000/api";
+const API = "/api";
 const getToken = () => localStorage.getItem("speshway_admin_token");
 const emptyForm = { title: "", excerpt: "", content: "", tag: "Technology", author: "", readTime: "5 min", status: "Published", featured: "false", order: "0" };
 

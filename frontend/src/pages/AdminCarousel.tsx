@@ -8,7 +8,7 @@ interface Slide {
   image: string; isActive: boolean; order: number;
 }
 
-const API = "http://localhost:5000/api";
+const API = "/api";
 const getToken = () => localStorage.getItem("speshway_admin_token");
 const emptyForm = { badge: "", title: "", highlight: "", desc: "", ctaText: "Learn More", ctaLink: "/services", cta2Text: "Contact Us", cta2Link: "/contact", order: "0" };
 

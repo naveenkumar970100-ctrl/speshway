@@ -16,7 +16,7 @@ export default function JobApply() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/jobs/${id}`)
+    fetch(`/api/jobs/${id}`)
       .then(r => r.json())
       .then(data => setJob(data))
       .catch(() => {});
@@ -34,7 +34,7 @@ export default function JobApply() {
       fd.append("coverLetter", form.coverLetter);
       fd.append("resume", resumeFile);
 
-      const res = await fetch(`http://localhost:5000/api/jobs/${id}/apply`, {
+      const res = await fetch(`/api/jobs/${id}/apply`, {
         method: "POST",
         body: fd,
       });

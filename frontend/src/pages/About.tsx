@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import PageHeader from "@/components/PageHeader";
 import AnimatedSection from "@/components/AnimatedSection";
@@ -38,7 +38,7 @@ const About = () => {
   const [settings, setSettings] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/settings")
+    fetch("/api/settings")
       .then(r => r.json())
       .then(data => setSettings(data))
       .catch(() => {});

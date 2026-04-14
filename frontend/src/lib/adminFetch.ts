@@ -1,4 +1,4 @@
-const API = "http://localhost:5000/api";
+const API = "/api";
 
 export const getToken = () => localStorage.getItem("speshway_admin_token");
 

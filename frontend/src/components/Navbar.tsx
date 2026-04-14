@@ -37,7 +37,7 @@ const Navbar = () => {
 
   // Fetch real projects for dropdown
   useEffect(() => {
-    fetch("http://localhost:5000/api/projects")
+    fetch("/api/projects")
       .then(r => r.json())
       .then(data => {
         if (Array.isArray(data)) {
@@ -50,7 +50,7 @@ const Navbar = () => {
       .catch(() => {});
 
     // Fetch real services for dropdown
-    fetch("http://localhost:5000/api/services")
+    fetch("/api/services")
       .then(r => r.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {

@@ -38,7 +38,7 @@ const Blog = () => {
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/blog")
+    fetch("/api/blog")
       .then(r => r.json())
       .then(data => setPosts(Array.isArray(data) && data.length > 0 ? data : defaultPosts))
       .catch(() => setPosts(defaultPosts));

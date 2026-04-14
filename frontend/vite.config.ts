@@ -19,15 +19,29 @@ export default defineConfig(({ mode }) => ({
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: { "@": path.resolve(__dirname, "./src") },
-    dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime", "@tanstack/react-query", "@tanstack/query-core"],
+    dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime"],
   },
   build: {
+    target: "esnext",
+    minify: "esbuild",
+    cssMinify: true,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ["react", "react-dom", "react-router-dom"],
-          motion: ["framer-motion"],
-          ui: ["@radix-ui/react-accordion", "@radix-ui/react-dialog", "@radix-ui/react-tooltip"],
+        manualChunks: (id) => {
+          // Core React
+          if (id.includes("node_modules/react") || id.includes("node_modules/react-dom") || id.includes("node_modules/react-router-dom")) return "react-core";
+          // Radix UI
+          if (id.includes("@radix-ui")) return "radix";
+          // Framer Motion
+          if (id.includes("framer-motion")) return "motion";
+          // Charts
+          if (id.includes("recharts")) return "charts";
+          // Tanstack
+          if (id.includes("@tanstack")) return "tanstack";
+          // Lucide icons
+          if (id.includes("lucide-react")) return "icons";
+          // Everything else from node_modules
+          if (id.includes("node_modules")) return "vendor";
         },
       },
     },

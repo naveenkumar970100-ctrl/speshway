@@ -32,7 +32,7 @@ const Career = () => {
   const [apiJobs, setApiJobs] = useState<ApiJob[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/jobs")
+    fetch("/api/jobs")
       .then(r => r.json())
       .then(data => setApiJobs(Array.isArray(data) ? data : []))
       .catch(() => {});

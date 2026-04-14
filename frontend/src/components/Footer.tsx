@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
 import logo from "@/assets/logo-speshway.png";
@@ -24,7 +24,7 @@ const Footer = () => {
   const [services, setServices] = useState<{ name: string; path: string }[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/services")
+    fetch("/api/services")
       .then(r => r.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
@@ -114,7 +114,7 @@ const Footer = () => {
     {/* Bottom bar */}
     <div className="relative border-t border-border py-4">
       <div className="container flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
-        <span>© {new Date().getFullYear()} SPESHWAY SOLUTIONS PRIVATE LIMITED. All rights reserved.</span>
+        <span>� {new Date().getFullYear()} SPESHWAY SOLUTIONS PRIVATE LIMITED. All rights reserved.</span>
         <div className="flex gap-4">
           <Link to="/contact" className="hover:text-primary transition-colors">Privacy Policy</Link>
           <Link to="/contact" className="hover:text-primary transition-colors">Terms of Service</Link>

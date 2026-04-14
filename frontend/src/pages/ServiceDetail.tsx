@@ -47,7 +47,7 @@ export default function ServiceDetail() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/services")
+    fetch("/api/services")
       .then(r => r.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {

@@ -29,7 +29,7 @@ const Team = () => {
   const [loadingMembers, setLoadingMembers] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/team")
+    fetch("/api/team")
       .then(r => r.json())
       .then(data => {
         setApiMembers(Array.isArray(data) ? data : []);

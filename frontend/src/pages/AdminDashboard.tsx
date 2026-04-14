@@ -14,7 +14,7 @@ interface Service {
   color: string; features: string[]; order: number; isActive: boolean;
 }
 
-const API = "http://localhost:5000/api";
+const API = "/api";
 const getToken = () => localStorage.getItem("speshway_admin_token");
 
 const statusColors: Record<string, string> = {
@@ -224,6 +224,7 @@ export default function AdminDashboard() {
     { path: "/admin/submissions", icon: "📋", label: "Submissions" },
     { path: "/admin/team", icon: "👥", label: "Team" },
     { path: "/admin/blog", icon: "📝", label: "Blog" },
+    { path: "/admin/testimonials", icon: "💬", label: "Testimonials" },
   ];
 
   const hour = new Date().getHours();

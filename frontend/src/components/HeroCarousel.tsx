@@ -31,7 +31,7 @@ const HeroCarousel = () => {
 
   // Fetch slides from API, fall back to defaults
   useEffect(() => {
-    fetch("http://localhost:5000/api/carousel")
+    fetch("/api/carousel")
       .then(r => r.json())
       .then((data: ApiSlide[]) => {
         if (Array.isArray(data) && data.length > 0) {

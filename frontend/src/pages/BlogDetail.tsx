@@ -21,7 +21,7 @@ export default function BlogDetail() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/blog/${id}`)
+    fetch(`/api/blog/${id}`)
       .then(r => r.json())
       .then(data => { setPost(data); setLoading(false); })
       .catch(() => setLoading(false));

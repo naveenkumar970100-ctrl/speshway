@@ -42,16 +42,17 @@ const Index = () => {
   const [testimonials, setTestimonials] = useState(defaultTestimonials);
 
   useEffect(() => {
-    // Fetch dynamic site content
-    fetch("http://localhost:5000/api/site-content")
-      .then(r => r.json())
-      .then(data => setContent(data))
-      .catch(() => {});
+    // All API calls in parallel — much faster than sequential
+    Promise.allSettled([
+      fetch("/api/site-content").then(r => r.json()),
+      fetch("/api/settings").then(r => r.json()),
+      fetch("/api/services").then(r => r.json()),
+      fetch("/api/testimonials").then(r => r.json()),
+    ]).then(([contentRes, settingsRes, servicesRes, testimonialsRes]) => {
+      if (contentRes.status === "fulfilled") setContent(contentRes.value);
 
-    // Fetch settings (stats, whyUs points, colors, etc.)
-    fetch("http://localhost:5000/api/settings", { cache: "no-store" })
-      .then(r => r.json())
-      .then((data: Record<string, string>) => {
+      if (settingsRes.status === "fulfilled") {
+        const data = settingsRes.value as Record<string, string>;
         setSettings(data);
         if (data.stat_projects) {
           setStats([
@@ -61,23 +62,21 @@ const Index = () => {
             { num: parseInt(data.stat_experience) || 9, suffix: data.stat_experience_suffix || "+", label: "Years Experience" },
           ]);
         }
-      })
-      .catch(() => {});
+      }
 
-    // Fetch real services
-    fetch("http://localhost:5000/api/services")
-      .then(r => r.json())
-      .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          setApiServices(data.slice(0, 6).map((s: { title: string; description: string; icon: string; color: string }) => ({
-            icon: iconMap[s.icon] || Code,
-            title: s.title,
-            desc: s.description,
-            color: s.color || "primary",
-          })));
-        }
-      })
-      .catch(() => {});
+      if (servicesRes.status === "fulfilled" && Array.isArray(servicesRes.value) && servicesRes.value.length > 0) {
+        setApiServices(servicesRes.value.slice(0, 6).map((s: { title: string; description: string; icon: string; color: string }) => ({
+          icon: iconMap[s.icon] || Code,
+          title: s.title,
+          desc: s.description,
+          color: s.color || "primary",
+        })));
+      }
+
+      if (testimonialsRes.status === "fulfilled" && Array.isArray(testimonialsRes.value) && testimonialsRes.value.length > 0) {
+        setTestimonials(testimonialsRes.value);
+      }
+    });
   }, []);
 
   // t() reads from site-content API

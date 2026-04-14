@@ -15,6 +15,7 @@ const jobRoutes = require("./routes/jobs");
 const teamRoutes = require("./routes/team");
 const blogRoutes = require("./routes/blog");
 const settingsRoutes = require("./routes/settings");
+const testimonialRoutes = require("./routes/testimonials");
 const { verifyToken } = require("./middleware/auth");
 
 const app = express();
@@ -61,6 +62,7 @@ app.use("/api/jobs", jobRoutes);
 app.use("/api/team", teamRoutes);
 app.use("/api/blog", blogRoutes);
 app.use("/api/settings", settingsRoutes);
+app.use("/api/testimonials", testimonialRoutes);
 app.use("/api/dashboard", verifyToken, dashboardRoutes);
 
 // Catch-all: serve admin index for /admin/* (Express 5 requires named wildcard)

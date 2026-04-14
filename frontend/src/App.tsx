@@ -1,35 +1,41 @@
+import { lazy, Suspense, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import PageReveal from "@/components/PageReveal";
 import { ThemeProvider } from "@/context/ThemeContext";
-import { useEffect } from "react";
+
+// Eagerly load only the home page — everything else is lazy
 import Index from "./pages/Index";
-import About from "./pages/About";
-import Services from "./pages/Services";
-import ServiceDetail from "./pages/ServiceDetail";
-import Projects from "./pages/Projects";
-import Blog from "./pages/Blog";
-import Team from "./pages/Team";
-import Career from "./pages/Career";
-import FAQ from "./pages/FAQ";
-import Contact from "./pages/Contact";
-import NotFound from "./pages/NotFound";
-import AdminLogin from "./pages/AdminLogin";
-import AdminDashboard from "./pages/AdminDashboard";
-import ProjectDetail from "./pages/ProjectDetail";
-import AdminCarousel from "./pages/AdminCarousel";
-import AdminJobs from "./pages/AdminJobs";
-import AdminTeam from "./pages/AdminTeam";
-import AdminBlog from "./pages/AdminBlog";
-import AdminSettings from "./pages/AdminSettings";
-import AdminSubmissions from "./pages/AdminSubmissions";
-import BlogDetail from "./pages/BlogDetail";
-import JobDetail from "./pages/JobDetail";
-import JobApply from "./pages/JobApply";
+
+// Lazy load all other pages — splits into separate chunks
+const About = lazy(() => import("./pages/About"));
+const Services = lazy(() => import("./pages/Services"));
+const Projects = lazy(() => import("./pages/Projects"));
+const Blog = lazy(() => import("./pages/Blog"));
+const Team = lazy(() => import("./pages/Team"));
+const Career = lazy(() => import("./pages/Career"));
+const FAQ = lazy(() => import("./pages/FAQ"));
+const Contact = lazy(() => import("./pages/Contact"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
+const BlogDetail = lazy(() => import("./pages/BlogDetail"));
+const JobDetail = lazy(() => import("./pages/JobDetail"));
+const JobApply = lazy(() => import("./pages/JobApply"));
+
+// Admin pages — lazy loaded separately
+const AdminLogin = lazy(() => import("./pages/AdminLogin"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const AdminCarousel = lazy(() => import("./pages/AdminCarousel"));
+const AdminJobs = lazy(() => import("./pages/AdminJobs"));
+const AdminTeam = lazy(() => import("./pages/AdminTeam"));
+const AdminBlog = lazy(() => import("./pages/AdminBlog"));
+const AdminSettings = lazy(() => import("./pages/AdminSettings"));
+const AdminSubmissions = lazy(() => import("./pages/AdminSubmissions"));
+const AdminTestimonials = lazy(() => import("./pages/AdminTestimonials"));
 
 const hexToHsl = (hex: string) => {
   const r = parseInt(hex.slice(1, 3), 16) / 255;
@@ -49,11 +55,28 @@ const hexToHsl = (hex: string) => {
   return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
 };
 
-const queryClient = new QueryClient();
+// QueryClient with aggressive caching — data stays fresh for 5 min, cached for 10 min
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+// Minimal spinner for lazy route fallback
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+  </div>
+);
 
 const App = () => {
   useEffect(() => {
-    fetch("http://localhost:5000/api/settings")
+    fetch("/api/settings")
       .then(r => r.json())
       .then((s: Record<string, string>) => {
         const root = document.documentElement;
@@ -73,31 +96,34 @@ const App = () => {
             <Toaster />
             <Sonner />
             <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/services" element={<Services />} />
-              <Route path="/services/:slug" element={<ServiceDetail />} />
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/team" element={<Team />} />
-                <Route path="/career" element={<Career />} />
-                <Route path="/faq" element={<FAQ />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/admin" element={<AdminLogin />} />
-                <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                <Route path="/admin/carousel" element={<AdminCarousel />} />
-                <Route path="/admin/jobs" element={<AdminJobs />} />
-                <Route path="/admin/team" element={<AdminTeam />} />
-                <Route path="/admin/blog" element={<AdminBlog />} />
-                <Route path="/admin/settings" element={<AdminSettings />} />
-              <Route path="/admin/submissions" element={<AdminSubmissions />} />
-                <Route path="/blog/:id" element={<BlogDetail />} />
-                <Route path="/career/:id" element={<JobDetail />} />
-                <Route path="/career/:id/apply" element={<JobApply />} />
-                <Route path="/projects/:id" element={<ProjectDetail />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <Suspense fallback={<PageLoader />}>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/services" element={<Services />} />
+                  <Route path="/projects" element={<Projects />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/team" element={<Team />} />
+                  <Route path="/career" element={<Career />} />
+                  <Route path="/faq" element={<FAQ />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/admin" element={<AdminLogin />} />
+                  <Route path="/admin-dashboard" element={<Navigate to="/admin/dashboard" replace />} />
+                  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                  <Route path="/admin/carousel" element={<AdminCarousel />} />
+                  <Route path="/admin/jobs" element={<AdminJobs />} />
+                  <Route path="/admin/team" element={<AdminTeam />} />
+                  <Route path="/admin/blog" element={<AdminBlog />} />
+                  <Route path="/admin/settings" element={<AdminSettings />} />
+                  <Route path="/admin/submissions" element={<AdminSubmissions />} />
+                  <Route path="/admin/testimonials" element={<AdminTestimonials />} />
+                  <Route path="/blog/:id" element={<BlogDetail />} />
+                  <Route path="/career/:id" element={<JobDetail />} />
+                  <Route path="/career/:id/apply" element={<JobApply />} />
+                  <Route path="/projects/:id" element={<ProjectDetail />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
             </BrowserRouter>
           </TooltipProvider>
         </QueryClientProvider>

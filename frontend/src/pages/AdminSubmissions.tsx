@@ -15,7 +15,7 @@ interface Application {
   createdAt: string;
 }
 
-const API = "http://localhost:5000/api";
+const API = "/api";
 const getToken = () => localStorage.getItem("speshway_admin_token");
 
 const statusColors: Record<string, string> = {

@@ -4,7 +4,7 @@ interface SettingItem {
   _id: string; key: string; label: string; value: string; group: string; type: string;
 }
 
-const API = "http://localhost:5000/api";
+const API = "/api";
 const getToken = () => localStorage.getItem("speshway_admin_token");
 
 const groupLabels: Record<string, { icon: string; title: string }> = {

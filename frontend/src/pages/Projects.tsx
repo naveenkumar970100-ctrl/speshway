@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import PageHeader from "@/components/PageHeader";
 import MotionSection from "@/components/MotionSection";
@@ -25,7 +25,7 @@ const defaultStats = [
   { val: "50+", label: "Projects Delivered", color: "primary" },
   { val: "30+", label: "Happy Clients", color: "secondary" },
   { val: "98%", label: "On-Time Delivery", color: "accent" },
-  { val: "4.9â˜…", label: "Average Rating", color: "primary" },
+  { val: "4.9★", label: "Average Rating", color: "primary" },
 ];
 
 const Projects = () => {
@@ -35,12 +35,12 @@ const Projects = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/projects")
+    fetch("/api/projects")
       .then(r => r.json())
       .then(data => { setProjects(Array.isArray(data) ? data : []); setLoading(false); })
       .catch(() => setLoading(false));
 
-    fetch("http://localhost:5000/api/settings", { cache: "no-store" })
+    fetch("/api/settings", { cache: "no-store" })
       .then(r => r.json())
       .then(data => setSettings(data))
       .catch(() => {});
@@ -91,7 +91,7 @@ const Projects = () => {
             </div>
           ) : projects.length === 0 ? (
             <div className="text-center py-20 text-muted-foreground">
-              <div className="text-5xl mb-4">ðŸš€</div>
+              <div className="text-5xl mb-4">🚀</div>
               <p className="text-xl font-semibold">No projects yet.</p>
               <p className="text-sm mt-2">Add projects from the admin dashboard.</p>
             </div>
@@ -113,7 +113,7 @@ const Projects = () => {
                           loading="lazy"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-5xl">ðŸš€</div>
+                        <div className="w-full h-full flex items-center justify-center text-5xl">🚀</div>
                       )}
                       {/* Overlay on hover */}
                       <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">

@@ -23,7 +23,7 @@ export default function JobDetail() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/jobs/${id}`)
+    fetch(`/api/jobs/${id}`)
       .then(r => r.json())
       .then(data => { setJob(data); setLoading(false); })
       .catch(() => setLoading(false));
