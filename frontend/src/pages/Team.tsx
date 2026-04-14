@@ -77,51 +77,6 @@ const Team = () => {
       </div>
     </section>
 
-    {/* Team photo + social phone */}
-    <section className="py-24 bg-background relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-      <div className="container grid md:grid-cols-2 gap-24 items-center">
-        <MotionSection animation="zoom-out">
-          <div className="relative group">
-            <div className="absolute -inset-10 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-[3rem] blur-[100px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-            <div className="relative overflow-hidden rounded-[3rem] border border-white/10 shadow-2xl">
-              <img
-                src={aboutTeam}
-                alt="Speshway team"
-                className="w-full h-auto object-cover group-hover:scale-110 group-hover:rotate-1 transition-all duration-1000 ease-out-expo"
-                loading="lazy"
-              />
-            </div>
-            
-            <div className="absolute -bottom-8 -right-8 glass rounded-2xl px-8 py-6 glow-border-strong shadow-2xl border-white/10">
-              <div className="text-4xl font-black text-primary">15+</div>
-              <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Global Experts</div>
-            </div>
-          </div>
-        </MotionSection>
-        
-        <MotionSection animation="skew-up" className="flex flex-col items-center md:items-start gap-10">
-          <div>
-            <span className="text-secondary text-sm font-bold uppercase tracking-[0.3em] mb-4 block">Connected Team</span>
-            <TextReveal 
-              text="We Build Together" 
-              className="text-4xl md:text-6xl font-heading font-bold mb-6"
-            />
-            <p className="text-muted-foreground text-lg leading-relaxed font-light max-w-lg">
-              Our team stays connected across time zones, collaborating on cutting-edge projects and sharing knowledge every day to deliver exceptional digital products.
-            </p>
-          </div>
-          
-          <div className="relative group">
-            <div className="absolute -inset-10 bg-secondary/10 blur-[80px] rounded-full z-0" />
-            <PhoneMockup color="secondary" animationClass="" animationDelay="0s" className="relative z-10 hover:scale-105 transition-transform duration-500 shadow-2xl">
-              <SocialScreen />
-            </PhoneMockup>
-          </div>
-        </MotionSection>
-      </div>
-    </section>
-
     {/* Team Grid */}
     <section className="py-24 relative overflow-hidden bg-background">
       <div className="absolute inset-0 bg-gradient-to-b from-background via-card/30 to-background" />

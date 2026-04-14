@@ -114,10 +114,10 @@ const Footer = () => {
     {/* Bottom bar */}
     <div className="relative border-t border-border py-4">
       <div className="container flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
-        <span>© {new Date().getFullYear()} SPESHWAY SOLUTIONS PRIVATE LIMITED. All rights reserved.</span>
+        <span>ï¿½ {new Date().getFullYear()} SPESHWAY SOLUTIONS PRIVATE LIMITED. All rights reserved.</span>
         <div className="flex gap-4">
-          <Link to="/contact" className="hover:text-primary transition-colors">Privacy Policy</Link>
-          <Link to="/contact" className="hover:text-primary transition-colors">Terms of Service</Link>
+          <Link to="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link>
+          <Link to="/terms-of-service" className="hover:text-primary transition-colors">Terms of Service</Link>
         </div>
       </div>
     </div>

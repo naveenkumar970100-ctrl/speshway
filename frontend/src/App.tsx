@@ -14,6 +14,7 @@ import Index from "./pages/Index";
 // Lazy load all other pages — splits into separate chunks
 const About = lazy(() => import("./pages/About"));
 const Services = lazy(() => import("./pages/Services"));
+const ServiceDetail = lazy(() => import("./pages/ServiceDetail"));
 const Projects = lazy(() => import("./pages/Projects"));
 const Blog = lazy(() => import("./pages/Blog"));
 const Team = lazy(() => import("./pages/Team"));
@@ -21,6 +22,8 @@ const Career = lazy(() => import("./pages/Career"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const Contact = lazy(() => import("./pages/Contact"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const TermsOfService = lazy(() => import("./pages/TermsOfService"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
 const BlogDetail = lazy(() => import("./pages/BlogDetail"));
 const JobDetail = lazy(() => import("./pages/JobDetail"));
@@ -101,6 +104,7 @@ const App = () => {
                   <Route path="/" element={<Index />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/services" element={<Services />} />
+                  <Route path="/services/:slug" element={<ServiceDetail />} />
                   <Route path="/projects" element={<Projects />} />
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/team" element={<Team />} />
@@ -121,6 +125,8 @@ const App = () => {
                   <Route path="/career/:id" element={<JobDetail />} />
                   <Route path="/career/:id/apply" element={<JobApply />} />
                   <Route path="/projects/:id" element={<ProjectDetail />} />
+                  <Route path="/terms-of-service" element={<TermsOfService />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
