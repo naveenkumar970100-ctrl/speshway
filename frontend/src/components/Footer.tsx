@@ -1,6 +1,8 @@
+﻿import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
 import logo from "@/assets/logo-speshway.png";
+import { toSlug } from "@/pages/ServiceDetail";
 
 const quickLinks = [
   { name: "Home", path: "/" },
@@ -8,20 +10,34 @@ const quickLinks = [
   { name: "Services", path: "/services" },
   { name: "Projects", path: "/projects" },
   { name: "Career", path: "/career" },
-  { name: "Send Resume", path: "/contact" },
-  { name: "Fraud Alert", path: "/contact" },
+  { name: "Contact", path: "/contact" },
 ];
 
-const services = [
-  { name: "Web Development", path: "/services" },
-  { name: "Mobile Apps", path: "/services" },
-  { name: "Cloud Solutions", path: "/services" },
-  { name: "AI & ML", path: "/services" },
+const socials = [
+  { Icon: Facebook, href: "https://www.facebook.com/profile.php?id=61584485021568" },
+  { Icon: Twitter, href: "https://x.com/SpeshwayM56509" },
+  { Icon: Linkedin, href: "https://www.linkedin.com/company/speshway-solutions-pvt-ltd/" },
+  { Icon: Instagram, href: "https://www.instagram.com/speshwaysolutionsofficial/" },
 ];
 
-const socials = [Facebook, Twitter, Linkedin, Instagram];
+const Footer = () => {
+  const [services, setServices] = useState<{ name: string; path: string }[]>([]);
 
-const Footer = () => (
+  useEffect(() => {
+    fetch("http://localhost:5000/api/services")
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setServices(data.slice(0, 6).map((s: { title: string }) => ({
+            name: s.title,
+            path: `/services/${toSlug(s.title)}`,
+          })));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  return (
   <footer className="relative overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-b from-background to-card" />
     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
@@ -40,10 +56,11 @@ const Footer = () => (
           Delivering innovative IT solutions and driving digital transformation for businesses worldwide.
         </p>
         <div className="flex gap-3">
-          {socials.map((Icon, i) => (
-            <div key={i} className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all cursor-pointer">
+          {socials.map(({ Icon, href }, i) => (
+            <a key={i} href={href} target="_blank" rel="noopener noreferrer"
+              className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all cursor-pointer">
               <Icon size={16} />
-            </div>
+            </a>
           ))}
         </div>
       </div>
@@ -64,11 +81,13 @@ const Footer = () => (
       <div>
         <h4 className="font-semibold mb-4 text-foreground">Services</h4>
         <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-          {services.map((s) => (
+          {services.length > 0 ? services.map((s) => (
             <Link key={s.name} to={s.path} className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 w-fit">
               {s.name}
             </Link>
-          ))}
+          )) : (
+            <Link to="/services" className="hover:text-primary transition-colors">View All Services</Link>
+          )}
         </div>
       </div>
 
@@ -103,6 +122,7 @@ const Footer = () => (
       </div>
     </div>
   </footer>
-);
+  );
+};
 
 export default Footer;

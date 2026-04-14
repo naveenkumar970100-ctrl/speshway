@@ -11,19 +11,6 @@ const mainLinks = [
   { name: "Home", path: "/" },
 ];
 
-const serviceLinks = [
-  "SAP",
-  "Power BI",
-  "Full Stack Python",
-  "Full Stack Java",
-  "Cybersecurity",
-  "Cloud Deployment & DevOps",
-  "Digital Marketing",
-  "E-Commerce Solutions",
-  "Mobile App Development",
-  "Website Development",
-];
-
 const dropdownLinks = [
   { name: "About", path: "/about" },
   { name: "Blog", path: "/blog" },
@@ -41,6 +28,7 @@ const Navbar = () => {
   const [servicesOpen, setServicesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [projectLinks, setProjectLinks] = useState<{ name: string; path: string }[]>([]);
+  const [serviceLinks, setServiceLinks] = useState<string[]>([]);
   const { pathname } = useLocation();
   const { theme, toggleTheme } = useTheme();
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -57,6 +45,16 @@ const Navbar = () => {
             name: p.title,
             path: `/projects/${p._id}`,
           })));
+        }
+      })
+      .catch(() => {});
+
+    // Fetch real services for dropdown
+    fetch("http://localhost:5000/api/services")
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setServiceLinks(data.map((s: { title: string }) => s.title));
         }
       })
       .catch(() => {});
