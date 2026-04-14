@@ -62,15 +62,21 @@ export default function AdminBlog() {
         body: fd,
       });
       if (!res.ok) { const d = await res.json(); throw new Error(d.message); }
-      setShowModal(false); fetchPosts();
+      const saved = await res.json();
+      if (editPost) {
+        setPosts(prev => prev.map(p => p._id === saved._id ? saved : p));
+      } else {
+        setPosts(prev => [saved, ...prev]);
+      }
+      setShowModal(false);
     } catch (err: unknown) { setError(err instanceof Error ? err.message : "Failed"); }
     setSaving(false);
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this blog post?")) return;
-    await fetch(`${API}/blog/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${getToken()}` } });
-    fetchPosts();
+    const res = await fetch(`${API}/blog/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${getToken()}` } });
+    if (res.ok) setPosts(prev => prev.filter(p => p._id !== id));
   };
 
   const f = (key: keyof typeof emptyForm) => (v: string) => setForm(p => ({ ...p, [key]: v }));

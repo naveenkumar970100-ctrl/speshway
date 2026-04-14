@@ -50,11 +50,11 @@ const AnimatedSection = ({
     <div
       ref={ref}
       className={cn(
-        "will-change-transform transition-[transform,opacity] duration-600 ease-out",
+        "transition-[transform,opacity] duration-600 ease-out",
         visible ? vis : hidden,
         className
       )}
-      style={{ transitionDelay: `${delay}ms` }}
+      style={{ transitionDelay: `${delay}ms`, willChange: visible ? "auto" : "transform, opacity" }}
     >
       {children}
     </div>

@@ -1,97 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const BlogPost = require("../models/BlogPost");
-const { cloudinary, upload } = require("../cloudinary");
+const { upload } = require("../config/cloudinary");
 const { verifyToken } = require("../middleware/auth");
+const ctrl = require("../controllers/blogController");
 
-// GET /api/blog — public, published only
-router.get("/", async (req, res) => {
-  try {
-    const posts = await BlogPost.find({ status: "Published" }).sort({ createdAt: -1 });
-    res.json(posts);
-  } catch {
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-// GET /api/blog/all — admin
-router.get("/all", verifyToken, async (req, res) => {
-  try {
-    const posts = await BlogPost.find().sort({ createdAt: -1 });
-    res.json(posts);
-  } catch {
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-// GET /api/blog/:id — public
-router.get("/:id", async (req, res) => {
-  try {
-    const post = await BlogPost.findById(req.params.id);
-    if (!post) return res.status(404).json({ message: "Not found" });
-    res.json(post);
-  } catch {
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-// POST /api/blog — admin
-router.post("/", verifyToken, upload.single("image"), async (req, res) => {
-  try {
-    const { title, excerpt, content, tag, author, readTime, status, featured, order } = req.body;
-    const post = await BlogPost.create({
-      title, excerpt, content: content || "",
-      tag: tag || "General", author: author || "Speshway Team",
-      readTime: readTime || "5 min",
-      status: status || "Published",
-      featured: featured === "true" || featured === true,
-      order: order || 0,
-      image: req.file ? req.file.path : "",
-      imagePublicId: req.file ? req.file.filename : "",
-    });
-    res.status(201).json(post);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-// PUT /api/blog/:id — admin
-router.put("/:id", verifyToken, upload.single("image"), async (req, res) => {
-  try {
-    const existing = await BlogPost.findById(req.params.id);
-    if (!existing) return res.status(404).json({ message: "Not found" });
-    const { title, excerpt, content, tag, author, readTime, status, featured, order } = req.body;
-    const updates = {
-      title, excerpt, content: content || "",
-      tag: tag || "General", author: author || "Speshway Team",
-      readTime: readTime || "5 min",
-      status: status || "Published",
-      featured: featured === "true" || featured === true,
-      order: order || 0,
-    };
-    if (req.file) {
-      if (existing.imagePublicId) await cloudinary.uploader.destroy(existing.imagePublicId).catch(() => {});
-      updates.image = req.file.path;
-      updates.imagePublicId = req.file.filename;
-    }
-    const post = await BlogPost.findByIdAndUpdate(req.params.id, updates, { new: true });
-    res.json(post);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-// DELETE /api/blog/:id — admin
-router.delete("/:id", verifyToken, async (req, res) => {
-  try {
-    const post = await BlogPost.findById(req.params.id);
-    if (!post) return res.status(404).json({ message: "Not found" });
-    if (post.imagePublicId) await cloudinary.uploader.destroy(post.imagePublicId).catch(() => {});
-    await BlogPost.findByIdAndDelete(req.params.id);
-    res.json({ message: "Deleted" });
-  } catch {
-    res.status(500).json({ message: "Server error" });
-  }
-});
+router.get("/", ctrl.getPublic);
+router.get("/all", verifyToken, ctrl.getAll);
+router.get("/:id", ctrl.getOne);
+router.post("/", verifyToken, upload.single("image"), ctrl.create);
+router.put("/:id", verifyToken, upload.single("image"), ctrl.update);
+router.delete("/:id", verifyToken, ctrl.remove);
 
 module.exports = router;

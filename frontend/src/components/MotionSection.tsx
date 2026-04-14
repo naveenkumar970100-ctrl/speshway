@@ -46,8 +46,8 @@ const MotionSection = ({ children, className, animation = "parallax-reveal", del
   return (
     <div
       ref={ref}
-      className={cn("will-change-transform transition-[transform,opacity] duration-700 ease-out", visible ? vis : hidden, className)}
-      style={{ transitionDelay: `${delay}s` }}
+      className={cn("transition-[transform,opacity] duration-700 ease-out", visible ? vis : hidden, className)}
+      style={{ transitionDelay: `${delay}s`, willChange: visible ? "auto" : "transform, opacity" }}
     >
       {children}
     </div>

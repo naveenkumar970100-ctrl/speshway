@@ -8,10 +8,10 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import PageReveal from "@/components/PageReveal";
 import { ThemeProvider } from "@/context/ThemeContext";
 
-// Eagerly load only the home page — everything else is lazy
+// Eagerly load only the home page
 import Index from "./pages/Index";
 
-// Lazy load all other pages — splits into separate chunks
+// Lazy load all other pages
 const About = lazy(() => import("./pages/About"));
 const Services = lazy(() => import("./pages/Services"));
 const ServiceDetail = lazy(() => import("./pages/ServiceDetail"));
@@ -29,7 +29,7 @@ const BlogDetail = lazy(() => import("./pages/BlogDetail"));
 const JobDetail = lazy(() => import("./pages/JobDetail"));
 const JobApply = lazy(() => import("./pages/JobApply"));
 
-// Admin pages — lazy loaded separately
+// Admin pages
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminCarousel = lazy(() => import("./pages/AdminCarousel"));
@@ -58,7 +58,6 @@ const hexToHsl = (hex: string) => {
   return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
 };
 
-// QueryClient with aggressive caching — data stays fresh for 5 min, cached for 10 min
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -70,7 +69,6 @@ const queryClient = new QueryClient({
   },
 });
 
-// Minimal spinner for lazy route fallback
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-background">
     <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
@@ -111,6 +109,8 @@ const App = () => {
                   <Route path="/career" element={<Career />} />
                   <Route path="/faq" element={<FAQ />} />
                   <Route path="/contact" element={<Contact />} />
+                  <Route path="/terms-of-service" element={<TermsOfService />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="/admin" element={<AdminLogin />} />
                   <Route path="/admin-dashboard" element={<Navigate to="/admin/dashboard" replace />} />
                   <Route path="/admin/dashboard" element={<AdminDashboard />} />
@@ -125,8 +125,6 @@ const App = () => {
                   <Route path="/career/:id" element={<JobDetail />} />
                   <Route path="/career/:id/apply" element={<JobApply />} />
                   <Route path="/projects/:id" element={<ProjectDetail />} />
-                  <Route path="/terms-of-service" element={<TermsOfService />} />
-                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>

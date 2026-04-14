@@ -1,6 +1,32 @@
 import { useEffect, useRef, useState } from "react";
 
-export const useScrollAnimation = (threshold = 0.05) => {
+// Shared IntersectionObserver — one observer for all animated elements
+// Much more efficient than creating one per element
+let sharedObserver: IntersectionObserver | null = null;
+const callbacks = new Map<Element, () => void>();
+
+const getObserver = () => {
+  if (!sharedObserver) {
+    sharedObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const cb = callbacks.get(entry.target);
+            if (cb) {
+              cb();
+              callbacks.delete(entry.target);
+              sharedObserver?.unobserve(entry.target);
+            }
+          }
+        });
+      },
+      { threshold: 0.05, rootMargin: "0px 0px -40px 0px" }
+    );
+  }
+  return sharedObserver;
+};
+
+export const useScrollAnimation = (_threshold = 0.05) => {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -8,25 +34,22 @@ export const useScrollAnimation = (threshold = 0.05) => {
     const el = ref.current;
     if (!el) return;
 
-    // Check if already in viewport on mount (above-fold elements)
+    // Already in viewport on mount
     const rect = el.getBoundingClientRect();
     if (rect.top < window.innerHeight && rect.bottom > 0) {
       setVisible(true);
       return;
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold, rootMargin: "0px 0px -40px 0px" }
-    );
+    const observer = getObserver();
+    callbacks.set(el, () => setVisible(true));
     observer.observe(el);
-    return () => observer.disconnect();
-  }, [threshold]);
+
+    return () => {
+      callbacks.delete(el);
+      observer.unobserve(el);
+    };
+  }, []);
 
   return { ref, visible };
 };

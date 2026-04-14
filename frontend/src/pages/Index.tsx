@@ -42,7 +42,7 @@ const Index = () => {
   const [testimonials, setTestimonials] = useState(defaultTestimonials);
 
   useEffect(() => {
-    // All API calls in parallel — much faster than sequential
+    // All API calls in parallel
     Promise.allSettled([
       fetch("/api/site-content").then(r => r.json()),
       fetch("/api/settings").then(r => r.json()),

@@ -72,23 +72,32 @@ export default function AdminTeam() {
         () => navigate("/admin", { replace: true })
       );
       if (!res.ok) { const d = await res.json(); throw new Error(d.message); }
-      setShowModal(false); fetchMembers();
+      const saved = await res.json();
+      if (editMember) {
+        setMembers(prev => prev.map(m => m._id === saved._id ? saved : m));
+      } else {
+        setMembers(prev => [...prev, saved]);
+      }
+      setShowModal(false);
     } catch (err: unknown) { setError(err instanceof Error ? err.message : "Failed"); }
     setSaving(false);
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this team member?")) return;
-    await adminFetch(`/team/${id}`, { method: "DELETE" }, () => navigate("/admin", { replace: true }));
-    fetchMembers();
+    const res = await adminFetch(`/team/${id}`, { method: "DELETE" }, () => navigate("/admin", { replace: true }));
+    if (res.ok) setMembers(prev => prev.filter(m => m._id !== id));
   };
 
   const handleToggle = async (id: string, currentActive: boolean) => {
     try {
       const fd = new FormData();
       fd.append("isActive", String(!currentActive));
-      await adminFetch(`/team/${id}`, { method: "PUT", body: fd }, () => navigate("/admin", { replace: true }));
-      fetchMembers();
+      const res = await adminFetch(`/team/${id}`, { method: "PUT", body: fd }, () => navigate("/admin", { replace: true }));
+      if (res.ok) {
+        const saved = await res.json();
+        setMembers(prev => prev.map(m => m._id === saved._id ? saved : m));
+      }
     } catch { /* silent */ }
   };
 

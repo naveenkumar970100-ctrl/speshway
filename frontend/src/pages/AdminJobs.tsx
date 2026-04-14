@@ -104,8 +104,13 @@ export default function AdminJobs() {
         const d = await res.json();
         throw new Error(d.message);
       }
+      const saved = await res.json();
+      if (editJob) {
+        setJobs(prev => prev.map(j => j._id === saved._id ? saved : j));
+      } else {
+        setJobs(prev => [...prev, saved]);
+      }
       setShowModal(false);
-      fetchJobs();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed");
     }
@@ -114,8 +119,8 @@ export default function AdminJobs() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this job?")) return;
-    await fetch(`${API}/jobs/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${getToken()}` } });
-    fetchJobs();
+    const res = await fetch(`${API}/jobs/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${getToken()}` } });
+    if (res.ok) setJobs(prev => prev.filter(j => j._id !== id));
   };
 
   const f = (key: keyof typeof emptyForm) => (v: string) => setForm(p => ({ ...p, [key]: v }));

@@ -57,7 +57,13 @@ export default function AdminCarousel() {
         body: fd,
       });
       if (!res.ok) { const d = await res.json(); throw new Error(d.message); }
-      setShowModal(false); fetchSlides();
+      const saved = await res.json();
+      if (editSlide) {
+        setSlides(prev => prev.map(s => s._id === saved._id ? saved : s));
+      } else {
+        setSlides(prev => [...prev, saved]);
+      }
+      setShowModal(false);
     } catch (err: unknown) { setError(err instanceof Error ? err.message : "Failed"); }
     setSaving(false);
   };
@@ -69,7 +75,8 @@ export default function AdminCarousel() {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       if (!res.ok) throw new Error("Toggle failed");
-      fetchSlides();
+      const saved = await res.json();
+      setSlides(prev => prev.map(s => s._id === saved._id ? saved : s));
     } catch (err) {
       alert("Failed to toggle slide. Make sure the backend is running.");
     }
@@ -77,8 +84,8 @@ export default function AdminCarousel() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this slide?")) return;
-    await fetch(`${API}/carousel/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${getToken()}` } });
-    fetchSlides();
+    const res = await fetch(`${API}/carousel/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${getToken()}` } });
+    if (res.ok) setSlides(prev => prev.filter(s => s._id !== id));
   };
 
   return (

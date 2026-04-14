@@ -145,8 +145,13 @@ export default function AdminDashboard() {
         { method: editProject ? "PUT" : "POST", body: fd }
       );
       if (!res.ok) { const d = await res.json(); throw new Error(d.message); }
+      const saved = await res.json();
+      if (editProject) {
+        setProjects(prev => prev.map(p => p._id === saved._id ? saved : p));
+      } else {
+        setProjects(prev => [...prev, saved]);
+      }
       setShowModal(false);
-      fetchProjects();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to save");
     }
@@ -157,7 +162,7 @@ export default function AdminDashboard() {
     if (!confirm("Delete this project?")) return;
     try {
       await apiFetch(`/projects/${id}`, { method: "DELETE" });
-      fetchProjects();
+      setProjects(prev => prev.filter(p => p._id !== id));
     } catch {}
   };
 
@@ -197,8 +202,13 @@ export default function AdminDashboard() {
         { method: editService ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }
       );
       if (!res.ok) { const d = await res.json(); throw new Error(d.message); }
+      const saved = await res.json();
+      if (editService) {
+        setServices(prev => prev.map(s => s._id === saved._id ? saved : s));
+      } else {
+        setServices(prev => [...prev, saved]);
+      }
       setShowServiceModal(false);
-      fetchServices();
     } catch (err: unknown) {
       setServiceError(err instanceof Error ? err.message : "Failed to save");
     }
@@ -209,7 +219,7 @@ export default function AdminDashboard() {
     if (!confirm("Delete this service?")) return;
     try {
       await apiFetch(`/services/${id}`, { method: "DELETE" });
-      fetchServices();
+      setServices(prev => prev.filter(s => s._id !== id));
     } catch {}
   };
 

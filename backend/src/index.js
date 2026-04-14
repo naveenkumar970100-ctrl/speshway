@@ -1,9 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const compression = require("compression");
 require("dotenv").config();
 
-const connectDB = require("./db");
+const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth");
 const dashboardRoutes = require("./routes/dashboard");
 const contactRoutes = require("./routes/contact");
@@ -19,10 +20,13 @@ const testimonialRoutes = require("./routes/testimonials");
 const { verifyToken } = require("./middleware/auth");
 
 const app = express();
-const PORT = 5000; // hardcoded — system env PORT=3015 must not override
+const PORT = process.env.PORT || 5000;
 
 // Connect MongoDB
 connectDB();
+
+// Gzip compression — reduces response size by ~70%
+app.use(compression());
 
 // CORS — allow frontend dev server and production
 const allowedOrigins = [
@@ -47,6 +51,12 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+// Cache middleware for public read-only endpoints (60s browser cache)
+const cache = (seconds) => (req, res, next) => {
+  if (req.method === "GET") res.set("Cache-Control", `public, max-age=${seconds}, stale-while-revalidate=${seconds * 2}`);
+  next();
+};
 
 // Serve admin static files
 app.use("/admin", express.static(path.join(__dirname, "../admin")));

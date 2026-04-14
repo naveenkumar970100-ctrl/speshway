@@ -49,24 +49,35 @@ export default function AdminTestimonials() {
         body: JSON.stringify(body),
       });
       if (!res.ok) { const d = await res.json(); throw new Error(d.message); }
-      setShowModal(false); fetchAll();
+      const saved = await res.json();
+      // Update local state instantly — no re-fetch
+      if (editing) {
+        setItems(prev => prev.map(t => t._id === saved._id ? saved : t));
+      } else {
+        setItems(prev => [...prev, saved]);
+      }
+      setShowModal(false);
     } catch (err: unknown) { setError(err instanceof Error ? err.message : "Failed"); }
     setSaving(false);
   };
 
   const handleToggle = async (t: Testimonial) => {
-    await fetch(`${API}/testimonials/${t._id}`, {
+    const body = { name: t.name, role: t.role, text: t.text, rating: t.rating, order: t.order, isActive: !t.isActive };
+    const res = await fetch(`${API}/testimonials/${t._id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` },
-      body: JSON.stringify({ ...t, isActive: !t.isActive }),
+      body: JSON.stringify(body),
     });
-    fetchAll();
+    if (res.ok) {
+      const saved = await res.json();
+      setItems(prev => prev.map(item => item._id === saved._id ? saved : item));
+    }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this testimonial?")) return;
-    await fetch(`${API}/testimonials/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${getToken()}` } });
-    fetchAll();
+    const res = await fetch(`${API}/testimonials/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${getToken()}` } });
+    if (res.ok) setItems(prev => prev.filter(t => t._id !== id));
   };
 
   const f = (key: keyof typeof empty) => (v: string) => setForm(p => ({ ...p, [key]: v }));
