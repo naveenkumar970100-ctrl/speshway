@@ -29,9 +29,6 @@ const About = () => {
   }, []);
 
   const sc = (key: string, fallback: string) => content[key] || fallback;
-      .catch(() => {});
-  }, []);
-
   const s = (key: string, fallback: string) => settings[key] || fallback;
 
   return (

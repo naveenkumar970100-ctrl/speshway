@@ -21,7 +21,7 @@ exports.getAll = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
-    const { badge, title, highlight, desc, ctaText, ctaLink, cta2Text, cta2Link, order } = req.body;
+    const { badge, title, highlight, desc, ctaText, ctaLink, cta2Text, cta2Link, order, image, imagePublicId } = req.body;
     const slide = await CarouselSlide.create({
       badge, title, highlight, desc,
       ctaText: ctaText || "Learn More",
@@ -29,8 +29,9 @@ exports.create = async (req, res) => {
       cta2Text: cta2Text || "Contact Us",
       cta2Link: cta2Link || "/contact",
       order: order || 0,
-      image: req.file ? req.file.path : "",
-      imagePublicId: req.file ? req.file.filename : "",
+      // Use pre-uploaded URL if provided, otherwise use multer file
+      image: image || (req.file ? req.file.path : ""),
+      imagePublicId: imagePublicId || (req.file ? req.file.filename : ""),
     });
     res.status(201).json(slide);
   } catch (err) {

@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { apiUrl } from "@/lib/api";
 
-// All images are stored in Cloudinary + MongoDB
-// These are the permanent Cloudinary URLs (no local fallbacks needed)
+// Cloudinary base URLs — permanent fallbacks
 const CLOUDINARY: Record<string, string> = {
   aboutTeam:      "https://res.cloudinary.com/djjimbk12/image/upload/speshway/assets/about-team.jpg",
   webShowcase:    "https://res.cloudinary.com/djjimbk12/image/upload/speshway/assets/web-showcase.png",
@@ -28,26 +27,16 @@ export interface Assets {
   phoneFood: string; phoneHealth: string; phoneSocial: string;
 }
 
-let cached: Assets | null = null;
-
-// Allow cache to be cleared from outside (e.g. after admin uploads new logo)
-if (typeof window !== "undefined") {
-  Object.defineProperty(window, "__assetsCache", {
-    get: () => cached,
-    set: (v) => { cached = v; },
-    configurable: true,
-  });
-}
+const defaults = CLOUDINARY as unknown as Assets;
 
 export const useAssets = (): Assets => {
-  const [assets, setAssets] = useState<Assets>(cached || (CLOUDINARY as unknown as Assets));
+  const [assets, setAssets] = useState<Assets>(defaults);
 
   useEffect(() => {
-    // Always re-fetch — don't use cache so logo updates reflect immediately
     fetch(apiUrl("/api/assets"))
       .then(r => r.json())
       .then((data: Record<string, string>) => {
-        const resolved: Assets = {
+        setAssets({
           aboutTeam:      data.asset_about_team      || CLOUDINARY.aboutTeam,
           webShowcase:    data.asset_web_showcase    || CLOUDINARY.webShowcase,
           logo:           data.asset_logo            || CLOUDINARY.logo,
@@ -62,9 +51,7 @@ export const useAssets = (): Assets => {
           phoneFood:      data.asset_phone_food      || CLOUDINARY.phoneFood,
           phoneHealth:    data.asset_phone_health    || CLOUDINARY.phoneHealth,
           phoneSocial:    data.asset_phone_social    || CLOUDINARY.phoneSocial,
-        };
-        cached = resolved;
-        setAssets(resolved);
+        });
       })
       .catch(() => {});
   }, []);
