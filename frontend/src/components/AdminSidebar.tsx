@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import logo from "@/assets/logo-speshway.png";
+import { useAssets } from "@/hooks/useAssets";
+
 
 const navItems = [
   { path: "/admin/dashboard", icon: "🚀", label: "Projects" },
@@ -15,6 +16,7 @@ const navItems = [
 
 export default function AdminSidebar({ active }: { active: string }) {
   const navigate = useNavigate();
+  const { logo } = useAssets();
 
   return (
     <aside className="w-56 bg-[#1e1b2e] text-white flex flex-col fixed top-0 left-0 h-full z-50 py-6 px-4">

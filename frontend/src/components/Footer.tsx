@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
-import logo from "@/assets/logo-speshway.png";
 import { toSlug } from "@/pages/ServiceDetail";
+import { useAssets } from "@/hooks/useAssets";
+
 
 const quickLinks = [
   { name: "Home", path: "/" },
@@ -13,15 +14,17 @@ const quickLinks = [
   { name: "Contact", path: "/contact" },
 ];
 
-const socials = [
-  { Icon: Facebook, href: "https://www.facebook.com/profile.php?id=61584485021568" },
-  { Icon: Twitter, href: "https://x.com/SpeshwayM56509" },
-  { Icon: Linkedin, href: "https://www.linkedin.com/company/speshway-solutions-pvt-ltd/" },
-  { Icon: Instagram, href: "https://www.instagram.com/speshwaysolutionsofficial/" },
+const socialIcons = [
+  { Icon: Facebook, key: "social_facebook" },
+  { Icon: Twitter, key: "social_twitter" },
+  { Icon: Linkedin, key: "social_linkedin" },
+  { Icon: Instagram, key: "social_instagram" },
 ];
 
 const Footer = () => {
+  const { logo } = useAssets();
   const [services, setServices] = useState<{ name: string; path: string }[]>([]);
+  const [settings, setSettings] = useState<Record<string, string>>({});
 
   useEffect(() => {
     fetch("/api/services")
@@ -34,6 +37,10 @@ const Footer = () => {
           })));
         }
       })
+      .catch(() => {});
+    fetch("/api/settings")
+      .then(r => r.json())
+      .then(data => setSettings(data))
       .catch(() => {});
   }, []);
 
@@ -56,12 +63,16 @@ const Footer = () => {
           Delivering innovative IT solutions and driving digital transformation for businesses worldwide.
         </p>
         <div className="flex gap-3">
-          {socials.map(({ Icon, href }, i) => (
-            <a key={i} href={href} target="_blank" rel="noopener noreferrer"
-              className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all cursor-pointer">
-              <Icon size={16} />
-            </a>
-          ))}
+          {socialIcons.map(({ Icon, key }, i) => {
+            const href = settings[key];
+            if (!href) return null;
+            return (
+              <a key={i} href={href} target="_blank" rel="noopener noreferrer"
+                className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all cursor-pointer">
+                <Icon size={16} />
+              </a>
+            );
+          })}
         </div>
       </div>
 

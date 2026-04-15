@@ -11,7 +11,7 @@ import TextReveal from "@/components/TextReveal";
 import MagneticButton from "@/components/MagneticButton";
 import { Code, Cloud, Shield, Cpu, Smartphone, Database, Globe, Settings, BarChart, ArrowRight, CheckCircle, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
-import webShowcase from "@/assets/web-showcase.png";
+import { useAssets } from "@/hooks/useAssets";
 import { cn } from "@/lib/utils";
 import { toSlug } from "./ServiceDetail";
 
@@ -36,15 +36,24 @@ const defaultServices = [
   { icon: BarChart, title: "IT Consulting", desc: "Strategic technology roadmaps and digital transformation advisory.", color: "accent" },
 ];
 
-const process = [
-  { step: "01", title: "Discovery", desc: "We understand your goals, challenges, and requirements." },
-  { step: "02", title: "Planning", desc: "Detailed roadmap, architecture design, and sprint planning." },
-  { step: "03", title: "Development", desc: "Agile development with regular demos and feedback loops." },
-  { step: "04", title: "Delivery", desc: "Testing, deployment, and post-launch support." },
-];
-
 const Services = () => {
+  const { webShowcase } = useAssets();
   const [apiServices, setApiServices] = useState<ApiService[]>([]);
+  const [content, setContent] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    fetch("/api/services").then(r => r.json()).then(data => setApiServices(Array.isArray(data) ? data : [])).catch(() => {});
+    fetch("/api/site-content").then(r => r.json()).then(data => setContent(data)).catch(() => {});
+  }, []);
+
+  const sc = (key: string, fallback: string) => content[key] || fallback;
+
+  const process = [
+    { step: "01", title: sc("process_step1_title", "Discovery"), desc: sc("process_step1_desc", "We understand your goals, challenges, and requirements.") },
+    { step: "02", title: sc("process_step2_title", "Planning"), desc: sc("process_step2_desc", "Detailed roadmap, architecture design, and sprint planning.") },
+    { step: "03", title: sc("process_step3_title", "Development"), desc: sc("process_step3_desc", "Agile development with regular demos and feedback loops.") },
+    { step: "04", title: sc("process_step4_title", "Delivery"), desc: sc("process_step4_desc", "Testing, deployment, and post-launch support.") },
+  ];
 
   useEffect(() => {
     fetch("/api/services")

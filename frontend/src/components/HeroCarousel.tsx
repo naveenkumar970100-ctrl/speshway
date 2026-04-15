@@ -1,10 +1,14 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import heroSlide1 from "@/assets/hero-slide-1.jpg";
-import heroSlide2 from "@/assets/hero-slide-2.jpg";
-import heroSlide3 from "@/assets/hero-slide-3.jpg";
 import { useTheme } from "@/context/ThemeContext";
+
+// Cloudinary URLs — no local imports needed
+const CLOUDINARY_SLIDES = [
+  "https://res.cloudinary.com/djjimbk12/image/upload/speshway/carousel/hero-slide-1.jpg",
+  "https://res.cloudinary.com/djjimbk12/image/upload/speshway/carousel/hero-slide-2.jpg",
+  "https://res.cloudinary.com/djjimbk12/image/upload/speshway/carousel/hero-slide-3.jpg",
+];
 
 interface ApiSlide {
   _id: string; badge: string; title: string; highlight: string; desc: string;
@@ -13,12 +17,10 @@ interface ApiSlide {
 }
 
 const defaultSlides = [
-  { image: heroSlide1, badge: "Welcome to the Future of IT", title: "Build Your Digital Future", highlight: "Speshway Solutions", desc: "Full-stack software, automation, and IT solutions that drive real business growth.", cta: { text: "Our Services", to: "/services" }, cta2: { text: "Get in Touch", to: "/contact" } },
-  { image: heroSlide2, badge: "Mobile App Development", title: "Stunning Mobile Apps", highlight: "For Every Platform", desc: "We build beautiful, high-performance mobile applications for iOS and Android.", cta: { text: "View Projects", to: "/projects" }, cta2: { text: "Get a Quote", to: "/contact" } },
-  { image: heroSlide3, badge: "Cloud & Security Solutions", title: "Secure & Scalable", highlight: "Cloud Infrastructure", desc: "Enterprise-grade cybersecurity and cloud solutions to protect and grow your business.", cta: { text: "Learn More", to: "/services" }, cta2: { text: "Contact Us", to: "/contact" } },
+  { image: CLOUDINARY_SLIDES[0], badge: "Welcome to the Future of IT", title: "Build Your Digital Future", highlight: "Speshway Solutions", desc: "Full-stack software, automation, and IT solutions that drive real business growth.", cta: { text: "Our Services", to: "/services" }, cta2: { text: "Get in Touch", to: "/contact" } },
+  { image: CLOUDINARY_SLIDES[1], badge: "Mobile App Development", title: "Stunning Mobile Apps", highlight: "For Every Platform", desc: "We build beautiful, high-performance mobile applications for iOS and Android.", cta: { text: "View Projects", to: "/projects" }, cta2: { text: "Get a Quote", to: "/contact" } },
+  { image: CLOUDINARY_SLIDES[2], badge: "Cloud & Security Solutions", title: "Secure & Scalable", highlight: "Cloud Infrastructure", desc: "Enterprise-grade cybersecurity and cloud solutions to protect and grow your business.", cta: { text: "Learn More", to: "/services" }, cta2: { text: "Contact Us", to: "/contact" } },
 ];
-
-const defaultImages = [heroSlide1, heroSlide2, heroSlide3];
 
 const HeroCarousel = () => {
   const [current, setCurrent] = useState(0);
@@ -36,7 +38,7 @@ const HeroCarousel = () => {
       .then((data: ApiSlide[]) => {
         if (Array.isArray(data) && data.length > 0) {
           setSlides(data.map((s, i) => ({
-            image: s.image || defaultImages[i % 3],
+            image: s.image || CLOUDINARY_SLIDES[i % 3],
             badge: s.badge,
             title: s.title,
             highlight: s.highlight,

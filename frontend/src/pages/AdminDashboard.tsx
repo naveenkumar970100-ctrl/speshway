@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import logo from "@/assets/logo-speshway.png";
 import SiteSettingsPanel from "@/components/SiteSettingsPanel";
+import { useAssets } from "@/hooks/useAssets";
+
 
 interface Admin { name: string; email: string; role: string; }
 interface Project {
@@ -27,6 +28,7 @@ const emptyProjectForm = { title: "", category: "", description: "", tech: "", l
 const emptyServiceForm = { title: "", description: "", icon: "Code", color: "primary", features: "", order: "0" };
 
 export default function AdminDashboard() {
+  const { logo } = useAssets();
   const navigate = useNavigate();
   const location = useLocation();
   const [admin, setAdmin] = useState<Admin | null>(null);

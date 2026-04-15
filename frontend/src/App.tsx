@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import PageReveal from "@/components/PageReveal";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { apiUrl } from "@/lib/api";
 
 // Eagerly load only the home page
 import Index from "./pages/Index";
@@ -77,7 +78,7 @@ const PageLoader = () => (
 
 const App = () => {
   useEffect(() => {
-    fetch("/api/settings")
+    fetch(apiUrl("/api/settings"))
       .then(r => r.json())
       .then((s: Record<string, string>) => {
         const root = document.documentElement;

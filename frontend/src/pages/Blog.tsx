@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import PageHeader from "@/components/PageHeader";
 import AnimatedSection from "@/components/AnimatedSection";
-import PhoneMockup from "@/components/PhoneMockup";
-import SocialScreen from "@/components/phone-screens/SocialScreen";
 import { Calendar, ArrowRight, Clock, User } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -126,31 +124,6 @@ const Blog = () => {
         </div>
       </section>
 
-      {/* Newsletter + phone */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-card to-secondary/10" />
-        <div className="relative container grid md:grid-cols-2 gap-12 items-center">
-          <AnimatedSection animation="slide-in-left" className="text-center md:text-left">
-            <span className="text-accent text-sm font-semibold uppercase tracking-widest">Stay Updated</span>
-            <h2 className="text-3xl font-heading font-bold mt-2 mb-4 text-foreground">Subscribe to Our Newsletter</h2>
-            <p className="text-muted-foreground mb-6">Get the latest insights, tutorials, and industry news delivered to your inbox.</p>
-            <div className="flex gap-3 max-w-md">
-              <input type="email" placeholder="your@email.com"
-                className="flex-1 px-4 py-3 rounded-xl glass focus:glow-border focus:outline-none transition-all text-sm" />
-              <button className="px-5 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:shadow-[0_0_20px_hsl(var(--primary)/0.4)] transition-all duration-300 hover:scale-105 whitespace-nowrap">
-                Subscribe
-              </button>
-            </div>
-          </AnimatedSection>
-          <AnimatedSection animation="slide-in-right" className="flex justify-center">
-            <div className="animate-slide-in-bottom">
-              <PhoneMockup color="accent" animationClass="animate-float" animationDelay="0.3s">
-                <SocialScreen />
-              </PhoneMockup>
-            </div>
-          </AnimatedSection>
-        </div>
-      </section>
     </Layout>
   );
 };

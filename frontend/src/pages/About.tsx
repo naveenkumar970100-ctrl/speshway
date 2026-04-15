@@ -10,37 +10,25 @@ import FitnessScreen from "@/components/phone-screens/FitnessScreen";
 import TextReveal from "@/components/TextReveal";
 import { Target, Eye, Award, Rocket, Heart, Globe, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import aboutTeam from "@/assets/about-team.jpg";
+import { useAssets } from "@/hooks/useAssets";
 import { cn } from "@/lib/utils";
 
-const values = [
-  { icon: Target, title: "Our Mission", desc: "To empower businesses through innovative technology solutions that drive growth, efficiency, and digital transformation.", color: "primary" },
-  { icon: Eye, title: "Our Vision", desc: "To be the global leader in IT solutions, recognized for excellence, innovation, and lasting client partnerships.", color: "secondary" },
-  { icon: Award, title: "Our Values", desc: "Integrity, innovation, excellence, and customer success guide everything we do at Speshway Solutions.", color: "accent" },
-];
-
-const principles = [
-  { icon: Rocket, title: "Innovation First", desc: "We stay ahead of the curve with cutting-edge technologies.", color: "primary" },
-  { icon: Heart, title: "Client Focused", desc: "Your success is our success. We build lasting partnerships.", color: "secondary" },
-  { icon: Globe, title: "Global Reach", desc: "Serving clients across India, USA, UK, and Middle East.", color: "accent" },
-];
-
-const milestones = [
-  { year: "2017", event: "Speshway Solutions founded with a vision to bridge businesses and technology" },
-  { year: "2018", event: "First enterprise clients onboarded, team of passionate developers formed" },
-  { year: "2019", event: "Expanded service offerings to cloud and mobile app development" },
-  { year: "2020", event: "Crossed 50+ successful project deliveries across multiple industries" },
-  { year: "2022", event: "Launched AI & ML powered solutions for enterprise clients" },
-  { year: "2024", event: "Grew to 200+ team members, serving clients globally" },
-];
-
 const About = () => {
+  const { aboutTeam } = useAssets();
   const [settings, setSettings] = useState<Record<string, string>>({});
+  const [content, setContent] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    fetch("/api/settings")
-      .then(r => r.json())
-      .then(data => setSettings(data))
+    Promise.allSettled([
+      fetch("/api/settings").then(r => r.json()),
+      fetch("/api/site-content").then(r => r.json()),
+    ]).then(([s, c]) => {
+      if (s.status === "fulfilled") setSettings(s.value);
+      if (c.status === "fulfilled") setContent(c.value);
+    });
+  }, []);
+
+  const sc = (key: string, fallback: string) => content[key] || fallback;
       .catch(() => {});
   }, []);
 
@@ -110,14 +98,18 @@ const About = () => {
             </MotionSection>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            {values.map((item, i) => (
-              <MotionSection key={item.title} delay={i * 0.1} animation="skew-up">
+            {[
+              { icon: Target, color: "primary", titleKey: "about_mission_title", descKey: "about_mission_desc", defaultTitle: "Our Mission", defaultDesc: "To empower businesses through innovative technology solutions that drive growth, efficiency, and digital transformation." },
+              { icon: Eye, color: "secondary", titleKey: "about_vision_title", descKey: "about_vision_desc", defaultTitle: "Our Vision", defaultDesc: "To be the global leader in IT solutions, recognized for excellence, innovation, and lasting client partnerships." },
+              { icon: Award, color: "accent", titleKey: "about_values_title", descKey: "about_values_desc", defaultTitle: "Our Values", defaultDesc: "Integrity, innovation, excellence, and customer success guide everything we do at Speshway Solutions." },
+            ].map((item, i) => (
+              <MotionSection key={i} delay={i * 0.1} animation="skew-up">
                 <div className="group h-full p-10 rounded-3xl glass hover:glow-border-strong hover:shadow-2xl transition-all duration-700 card-3d border-white/5 relative overflow-hidden">
                   <div className={`w-16 h-16 rounded-2xl bg-${item.color}/10 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 border border-${item.color}/10`}>
                     <item.icon className={`text-${item.color}`} size={32} />
                   </div>
-                  <h3 className="font-heading font-bold text-2xl mb-4 text-foreground group-hover:text-primary transition-colors duration-500">{item.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed font-light">{item.desc}</p>
+                  <h3 className="font-heading font-bold text-2xl mb-4 text-foreground group-hover:text-primary transition-colors duration-500">{sc(item.titleKey, item.defaultTitle)}</h3>
+                  <p className="text-muted-foreground leading-relaxed font-light">{sc(item.descKey, item.defaultDesc)}</p>
                 </div>
               </MotionSection>
             ))}
@@ -140,7 +132,13 @@ const About = () => {
               <div className="absolute inset-0 bg-gradient-to-b from-primary via-secondary to-accent animate-line-grow origin-top h-full" />
             </div>
             <div className="flex flex-col gap-12">
-              {milestones.map((m, i) => (
+              {[
+                { year: "2017", key: "milestone_2017", default: "Speshway Solutions founded with a vision to bridge businesses and technology" },
+                { year: "2018", key: "milestone_2018", default: "First enterprise clients onboarded, team of passionate developers formed" },
+                { year: "2020", key: "milestone_2020", default: "Expanded to mobile development, launched 10+ successful apps" },
+                { year: "2022", key: "milestone_2022", default: "Crossed 30+ clients, opened cloud & AI practice" },
+                { year: "2024", key: "milestone_2024", default: "50+ projects delivered, recognized as top IT solutions provider" },
+              ].map((m, i) => (
                 <MotionSection key={m.year} delay={i * 0.1} animation={i % 2 === 0 ? "slide-horizontal" : "skew-up"}
                   className={cn("relative flex flex-col md:flex-row items-center gap-8 w-full", i % 2 === 0 ? "md:flex-row-reverse" : "")}>
                   <div className="absolute left-[-32px] md:left-1/2 md:-translate-x-1/2 w-16 h-16 z-10 flex items-center justify-center">
@@ -149,7 +147,7 @@ const About = () => {
                   </div>
                   <div className={cn("w-full md:w-[45%] glass rounded-3xl p-8 hover:glow-border-strong transition-all duration-500 hover:-translate-y-2 card-3d border-white/5", i % 2 === 0 ? "md:text-right" : "md:text-left")}>
                     <span className="text-primary font-black text-xl mb-2 block">{m.year}</span>
-                    <p className="text-foreground text-lg font-light leading-relaxed">{m.event}</p>
+                    <p className="text-foreground text-lg font-light leading-relaxed">{sc(m.key, m.default)}</p>
                   </div>
                   <div className="hidden md:block w-[45%]" />
                 </MotionSection>
@@ -172,15 +170,19 @@ const About = () => {
             <span className="text-accent text-sm font-bold uppercase tracking-[0.3em]">Our Approach</span>
             <h2 className="text-4xl md:text-5xl font-heading font-bold mt-4 mb-10 text-foreground leading-tight">Why Businesses <br /><span className="text-accent">Trust Us</span></h2>
             <div className="grid gap-6">
-              {principles.map((p, i) => (
+              {[
+                { icon: Rocket, color: "primary", titleKey: "about_principle1_title", descKey: "about_principle1_desc", defaultTitle: "Innovation First", defaultDesc: "We stay ahead of the curve with cutting-edge technologies." },
+                { icon: Heart, color: "secondary", titleKey: "about_principle2_title", descKey: "about_principle2_desc", defaultTitle: "Client Focused", defaultDesc: "Your success is our success. We build lasting partnerships." },
+                { icon: Globe, color: "accent", titleKey: "about_principle3_title", descKey: "about_principle3_desc", defaultTitle: "Global Reach", defaultDesc: "Serving clients across India, USA, UK, and Middle East." },
+              ].map((p, i) => (
                 <AnimatedSection key={i} delay={i * 150} animation="fade-in-up">
                   <div className="flex gap-6 p-6 rounded-3xl glass hover:glow-border-strong transition-all duration-500 group hover:-translate-y-2 border-white/5">
                     <div className={`w-14 h-14 rounded-2xl bg-${p.color}/10 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 border border-${p.color}/10`}>
                       <p.icon className={`text-${p.color}`} size={28} />
                     </div>
                     <div>
-                      <h3 className="font-bold text-xl mb-2 text-foreground group-hover:text-primary transition-colors">{p.title}</h3>
-                      <p className="text-muted-foreground font-light leading-relaxed">{p.desc}</p>
+                      <h3 className="font-bold text-xl mb-2 text-foreground group-hover:text-primary transition-colors">{sc(p.titleKey, p.defaultTitle)}</h3>
+                      <p className="text-muted-foreground font-light leading-relaxed">{sc(p.descKey, p.defaultDesc)}</p>
                     </div>
                   </div>
                 </AnimatedSection>

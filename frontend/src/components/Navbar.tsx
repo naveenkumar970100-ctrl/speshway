@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Sun, Moon, ChevronDown } from "lucide-react";
-import logo from "@/assets/logo-speshway.png";
 import MagneticButton from "./MagneticButton";
 import { toSlug } from "@/pages/ServiceDetail";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/context/ThemeContext";
+import { useAssets } from "@/hooks/useAssets";
+
 
 const mainLinks = [
   { name: "Home", path: "/" },
@@ -22,6 +23,7 @@ const dropdownLinks = [
 const allLinks = [...mainLinks, { name: "Services", path: "/services" }, { name: "Projects", path: "/projects" }, ...dropdownLinks];
 
 const Navbar = () => {
+  const { logo } = useAssets();
   const [open, setOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [projectsOpen, setProjectsOpen] = useState(false);

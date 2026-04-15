@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "@/assets/logo-speshway.png";
+import { useAssets } from "@/hooks/useAssets";
+
 
 const AdminLogin = () => {
+  const { logo } = useAssets();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

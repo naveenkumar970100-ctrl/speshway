@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface SettingItem {
   _id: string; key: string; label: string; value: string; group: string; type: string;
@@ -15,7 +15,14 @@ const groupLabels: Record<string, { icon: string; title: string }> = {
   seo: { icon: "🔍", title: "SEO Settings" },
   home: { icon: "🏠", title: "Home Page Text" },
   appearance: { icon: "🎨", title: "Appearance & Misc" },
+  assets: { icon: "🖼️", title: "Site Images" },
 };
+
+const assetFields = [
+  { key: "asset_about_team", label: "About / Team Photo", hint: "Used on About, Team & Career pages" },
+  { key: "asset_web_showcase", label: "Web Showcase Image", hint: "Used on Services page" },
+  { key: "asset_logo", label: "Site Logo", hint: "Used in Navbar, Footer & Admin sidebar" },
+];
 
 export default function SiteSettingsPanel({ admin }: { admin?: { email?: string; role?: string } | null }) {
   const [items, setItems] = useState<SettingItem[]>([]);
@@ -23,16 +30,48 @@ export default function SiteSettingsPanel({ admin }: { admin?: { email?: string;
   const [saving, setSaving] = useState<Record<string, boolean>>({});
   const [saved, setSaved] = useState<Record<string, boolean>>({});
   const [activeGroup, setActiveGroup] = useState("site");
+  const [assets, setAssets] = useState<Record<string, string>>({});
+  const [assetSaving, setAssetSaving] = useState<Record<string, boolean>>({});
+  const fileRefs = useRef<Record<string, HTMLInputElement | null>>({});
+
+  const fetchAssets = () => {
+    fetch(`${API}/assets`, { headers: { Authorization: `Bearer ${getToken()}` } })
+      .then(r => r.json())
+      .then(data => setAssets(data))
+      .catch(() => {});
+  };
+
+  const handleAssetUpload = async (key: string, file: File) => {
+    setAssetSaving(p => ({ ...p, [key]: true }));
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("key", key);
+    try {
+      const res = await fetch(`${API}/assets/upload`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${getToken()}` },
+        body: fd,
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setAssets(p => ({ ...p, [key]: data.url }));
+        // Clear useAssets cache so all components pick up the new image on next render
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (window as any).__assetsCache = null;
+      }
+    } catch {}
+    setAssetSaving(p => ({ ...p, [key]: false }));
+  };
 
   useEffect(() => {
     fetch(`${API}/settings/all`, { headers: { Authorization: `Bearer ${getToken()}` }, cache: "no-store" })
       .then(r => r.json())
-      .then((data: SettingItem[]) => {
-        setItems(Array.isArray(data) ? data : []);
+      .then((data: SettingItem[]) => {        setItems(Array.isArray(data) ? data : []);
         const map: Record<string, string> = {};
         data.forEach(i => { map[i.key] = i.value; });
         setValues(map);
       });
+    fetchAssets();
   }, []);
 
   const handleSave = async (key: string) => {
@@ -70,8 +109,8 @@ export default function SiteSettingsPanel({ admin }: { admin?: { email?: string;
     const order = ["stats", "site", "contact", "social", "seo", "home", "appearance"];
     return order.indexOf(a) - order.indexOf(b);
   });
-  // stats group is handled by the custom Quick Edit above — exclude from generic tabs
-  const genericGroups = groups.filter(g => g !== "stats");
+  // stats and assets groups are handled separately — exclude from generic tabs
+  const genericGroups = groups.filter(g => g !== "stats" && g !== "assets");
   const groupItems = items.filter(i => i.group === activeGroup);
 
   return (
@@ -239,10 +278,17 @@ export default function SiteSettingsPanel({ admin }: { admin?: { email?: string;
                 </button>
               );
             })}
+            {/* Assets tab */}
+            <button onClick={() => setActiveGroup("assets")}
+              className={`w-full flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-left border-b border-gray-50 last:border-0 transition-colors ${activeGroup === "assets" ? "bg-purple-50 text-purple-700 font-bold" : "text-gray-600 hover:bg-gray-50"}`}>
+              <span>🖼️</span>
+              <span>Site Images</span>
+            </button>
           </div>
         </div>
 
-        {/* Settings form */}
+        {/* Settings form — hidden when assets tab active */}
+        {activeGroup !== "assets" && (
         <div className="flex-1">
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
@@ -332,6 +378,60 @@ export default function SiteSettingsPanel({ admin }: { admin?: { email?: string;
             </div>
           </div>
         </div>
+        )}
+
+        {/* Assets panel — shown when activeGroup === "assets" */}
+        {activeGroup === "assets" && (
+          <div className="flex-1">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
+              <div className="px-6 py-4 border-b border-gray-100">
+                <h2 className="font-bold text-gray-800">🖼️ Site Images</h2>
+                <p className="text-xs text-gray-400 mt-1">Upload images to Cloudinary — changes reflect on the website immediately</p>
+              </div>
+              <div className="p-6 space-y-6">
+                {assetFields.map(field => (
+                  <div key={field.key}>
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">{field.label}</label>
+                    <p className="text-xs text-gray-400 mb-3">{field.hint}</p>
+                    <div className="flex gap-4 items-start">
+                      {/* Preview */}
+                      <div className="w-32 h-20 rounded-xl border-2 border-gray-200 overflow-hidden bg-gray-50 shrink-0 flex items-center justify-center">
+                        {assets[field.key] ? (
+                          <img src={assets[field.key]} alt={field.label} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-gray-300 text-2xl">🖼️</span>
+                        )}
+                      </div>
+                      {/* Upload */}
+                      <div className="flex-1">
+                        <input
+                          ref={el => { fileRefs.current[field.key] = el; }}
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={e => {
+                            const file = e.target.files?.[0];
+                            if (file) handleAssetUpload(field.key, file);
+                          }}
+                        />
+                        <button
+                          onClick={() => fileRefs.current[field.key]?.click()}
+                          disabled={assetSaving[field.key]}
+                          className="px-5 py-2.5 rounded-xl bg-purple-600 text-white text-sm font-bold hover:bg-purple-700 disabled:opacity-60 transition-colors"
+                        >
+                          {assetSaving[field.key] ? "Uploading…" : assets[field.key] ? "Replace Image" : "Upload Image"}
+                        </button>
+                        {assets[field.key] && (
+                          <p className="text-xs text-green-600 mt-2 font-medium">✓ Stored in Cloudinary</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

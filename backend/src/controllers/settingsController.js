@@ -27,9 +27,8 @@ exports.updateOne = async (req, res) => {
     const item = await Settings.findOneAndUpdate(
       { key: req.params.key },
       { value: req.body.value },
-      { new: true }
+      { new: true, upsert: true }  // upsert — create if not exists
     );
-    if (!item) return res.status(404).json({ message: "Not found" });
     res.json(item);
   } catch {
     res.status(500).json({ message: "Server error" });

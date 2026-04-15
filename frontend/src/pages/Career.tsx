@@ -11,7 +11,7 @@ import TextReveal from "@/components/TextReveal";
 import MagneticButton from "@/components/MagneticButton";
 import { MapPin, Clock, ArrowRight, DollarSign, Zap, Heart, Coffee, BookOpen, Briefcase } from "lucide-react";
 import { Link } from "react-router-dom";
-import aboutTeam from "@/assets/about-team.jpg";
+import { useAssets } from "@/hooks/useAssets";
 import { cn } from "@/lib/utils";
 
 interface ApiJob {
@@ -21,22 +21,24 @@ interface ApiJob {
 
 const defaultJobs: ApiJob[] = []; // No dummy data — show only real jobs from DB
 
-const perks = [
-  { icon: Zap, label: "Flexible work hours", color: "primary" },
-  { icon: Heart, label: "Health insurance", color: "accent" },
-  { icon: Coffee, label: "Remote-friendly", color: "secondary" },
-  { icon: BookOpen, label: "Learning budget", color: "primary" },
-];
-
 const Career = () => {
+  const { aboutTeam } = useAssets();
   const [apiJobs, setApiJobs] = useState<ApiJob[]>([]);
+  const [content, setContent] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    fetch("/api/jobs")
-      .then(r => r.json())
-      .then(data => setApiJobs(Array.isArray(data) ? data : []))
-      .catch(() => {});
+    fetch("/api/jobs").then(r => r.json()).then(data => setApiJobs(Array.isArray(data) ? data : [])).catch(() => {});
+    fetch("/api/site-content").then(r => r.json()).then(data => setContent(data)).catch(() => {});
   }, []);
+
+  const sc = (key: string, fallback: string) => content[key] || fallback;
+
+  const perks = [
+    { icon: Zap, label: sc("perk1_label", "Flexible work hours"), color: "primary" },
+    { icon: Heart, label: sc("perk2_label", "Health insurance"), color: "accent" },
+    { icon: Coffee, label: sc("perk3_label", "Remote-friendly"), color: "secondary" },
+    { icon: BookOpen, label: sc("perk4_label", "Learning budget"), color: "primary" },
+  ];
 
   const jobs = apiJobs;
 

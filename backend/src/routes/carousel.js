@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { upload } = require("../config/cloudinary");
+const { uploadCarousel } = require("../config/cloudinary");
 const { verifyToken } = require("../middleware/auth");
 const ctrl = require("../controllers/carouselController");
 const CarouselSlide = require("../models/CarouselSlide");
@@ -21,8 +21,8 @@ seedSlides();
 
 router.get("/", ctrl.getPublic);
 router.get("/all", verifyToken, ctrl.getAll);
-router.post("/", verifyToken, upload.single("image"), ctrl.create);
-router.put("/:id", verifyToken, upload.single("image"), ctrl.update);
+router.post("/", verifyToken, uploadCarousel.single("image"), ctrl.create);
+router.put("/:id", verifyToken, uploadCarousel.single("image"), ctrl.update);
 router.patch("/:id/toggle", verifyToken, ctrl.toggle);
 router.delete("/:id", verifyToken, ctrl.remove);
 

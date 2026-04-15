@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import logo from "@/assets/logo-speshway.png";
+import { useAssets } from "@/hooks/useAssets";
+
 
 const PageReveal = () => {
+  const { logo } = useAssets();
   const [phase, setPhase] = useState<"in" | "out" | "done">("in");
 
   useEffect(() => {

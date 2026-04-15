@@ -17,6 +17,7 @@ const teamRoutes = require("./routes/team");
 const blogRoutes = require("./routes/blog");
 const settingsRoutes = require("./routes/settings");
 const testimonialRoutes = require("./routes/testimonials");
+const assetRoutes = require("./routes/assets");
 const { verifyToken } = require("./middleware/auth");
 
 const app = express();
@@ -28,7 +29,7 @@ connectDB();
 // Gzip compression — reduces response size by ~70%
 app.use(compression());
 
-// CORS — allow frontend dev server and production
+// CORS — allow frontend dev server and production domains
 const allowedOrigins = [
   "http://localhost:8080",
   "http://localhost:3000",
@@ -38,12 +39,13 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    // allow requests with no origin (mobile apps, curl, etc.)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error(`CORS blocked: ${origin}`));
-    }
+    // Allow requests with no origin (mobile apps, curl, Postman, same-origin)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    // Allow any subdomain of the production domain
+    const prodDomain = process.env.FRONTEND_URL;
+    if (prodDomain && origin.endsWith(new URL(prodDomain).hostname)) return callback(null, true);
+    callback(new Error(`CORS blocked: ${origin}`));
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
@@ -51,12 +53,6 @@ app.use(cors({
 }));
 
 app.use(express.json());
-
-// Cache middleware for public read-only endpoints (60s browser cache)
-const cache = (seconds) => (req, res, next) => {
-  if (req.method === "GET") res.set("Cache-Control", `public, max-age=${seconds}, stale-while-revalidate=${seconds * 2}`);
-  next();
-};
 
 // Serve admin static files
 app.use("/admin", express.static(path.join(__dirname, "../admin")));
@@ -73,6 +69,7 @@ app.use("/api/team", teamRoutes);
 app.use("/api/blog", blogRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/testimonials", testimonialRoutes);
+app.use("/api/assets", assetRoutes);
 app.use("/api/dashboard", verifyToken, dashboardRoutes);
 
 // Catch-all: serve admin index for /admin/* (Express 5 requires named wildcard)

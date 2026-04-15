@@ -10,7 +10,7 @@ import TextReveal from "@/components/TextReveal";
 import MagneticButton from "@/components/MagneticButton";
 import { Linkedin, Github, Twitter, Users, Award, Globe, Code, Cloud, Palette, BarChart2, Settings, Briefcase, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import aboutTeam from "@/assets/about-team.jpg";
+import { useAssets } from "@/hooks/useAssets";
 import { cn } from "@/lib/utils";
 
 interface ApiMember {
@@ -18,25 +18,18 @@ interface ApiMember {
   gradient: string; linkedin: string; github: string; twitter: string; image: string;
 }
 
-const culture = [
-  { icon: Users, title: "Collaborative", desc: "We work as one team, sharing knowledge and lifting each other up.", color: "primary" },
-  { icon: Award, title: "Excellence", desc: "We hold ourselves to the highest standards in everything we do.", color: "secondary" },
-  { icon: Globe, title: "Inclusive", desc: "Diverse perspectives make us stronger and more innovative.", color: "accent" },
-];
-
 const Team = () => {
+  const { aboutTeam } = useAssets();
   const [apiMembers, setApiMembers] = useState<ApiMember[]>([]);
   const [loadingMembers, setLoadingMembers] = useState(true);
+  const [content, setContent] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    fetch("/api/team")
-      .then(r => r.json())
-      .then(data => {
-        setApiMembers(Array.isArray(data) ? data : []);
-        setLoadingMembers(false);
-      })
-      .catch(() => setLoadingMembers(false));
+    fetch("/api/team").then(r => r.json()).then(data => { setApiMembers(Array.isArray(data) ? data : []); setLoadingMembers(false); }).catch(() => setLoadingMembers(false));
+    fetch("/api/site-content").then(r => r.json()).then(data => setContent(data)).catch(() => {});
   }, []);
+
+  const sc = (key: string, fallback: string) => content[key] || fallback;
 
   const members = apiMembers.map(m => ({ ...m, icon: Briefcase }));
 
@@ -60,16 +53,19 @@ const Team = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {culture.map((c, i) => (
-            <MotionSection key={c.title} delay={i * 0.1} animation="skew-up">
+          {[
+            { icon: Users, color: "primary", titleKey: "culture1_title", descKey: "culture1_desc", defaultTitle: "Collaborative", defaultDesc: "We work as one team, sharing knowledge and lifting each other up." },
+            { icon: Award, color: "secondary", titleKey: "culture2_title", descKey: "culture2_desc", defaultTitle: "Excellence", defaultDesc: "We hold ourselves to the highest standards in everything we do." },
+            { icon: Globe, color: "accent", titleKey: "culture3_title", descKey: "culture3_desc", defaultTitle: "Inclusive", defaultDesc: "Diverse perspectives make us stronger and more innovative." },
+          ].map((c, i) => (
+            <MotionSection key={i} delay={i * 0.1} animation="skew-up">
               <div className="glass rounded-[2.5rem] p-10 text-center hover:glow-border-strong transition-all duration-700 hover:-translate-y-2 group card-3d border-white/5 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                
                 <div className={`w-16 h-16 rounded-2xl bg-${c.color}/10 flex items-center justify-center mx-auto mb-8 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-[0_0_40px_hsl(var(--${c.color})/0.4)] transition-all duration-500 border border-${c.color}/10 relative z-10`}>
                   <c.icon className={`text-${c.color}`} size={28} />
                 </div>
-                <h3 className="font-heading font-bold text-2xl text-foreground mb-4 relative z-10">{c.title}</h3>
-                <p className="text-muted-foreground leading-relaxed font-light relative z-10">{c.desc}</p>
+                <h3 className="font-heading font-bold text-2xl text-foreground mb-4 relative z-10">{sc(c.titleKey, c.defaultTitle)}</h3>
+                <p className="text-muted-foreground leading-relaxed font-light relative z-10">{sc(c.descKey, c.defaultDesc)}</p>
               </div>
             </MotionSection>
           ))}
