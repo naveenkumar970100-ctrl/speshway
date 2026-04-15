@@ -5,19 +5,21 @@ const CounterAnimation = ({ target, suffix = "" }: { target: number; suffix?: st
   const { ref, visible } = useScrollAnimation();
   const [count, setCount] = useState(0);
   const rafRef = useRef<number>(0);
+  const started = useRef(false);
 
   useEffect(() => {
-    if (!visible) return;
-    const duration = 1800;
+    if (!visible || started.current) return;
+    started.current = true;
+
+    const duration = 1600;
     const start = performance.now();
 
     const tick = (now: number) => {
-      const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      // ease-out-expo
-      const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(2, -10 * progress);
       setCount(Math.floor(eased * target));
       if (progress < 1) rafRef.current = requestAnimationFrame(tick);
+      else setCount(target);
     };
 
     rafRef.current = requestAnimationFrame(tick);
