@@ -23,9 +23,9 @@ const tagColors = ["primary", "secondary", "accent"] as const;
 
 const defaultStats = [
   { val: "50+", label: "Projects Delivered", color: "primary" },
-  { val: "30+", label: "Happy Clients", color: "secondary" },
-  { val: "98%", label: "On-Time Delivery", color: "accent" },
-  { val: "4.9★", label: "Average Rating", color: "primary" },
+  { val: "30+", label: "Happy Clients", color: "accent" },
+  { val: "98%", label: "On-Time Delivery", color: "primary" },
+  { val: "4.9★", label: "Average Rating", color: "accent" },
 ];
 
 const Projects = () => {
@@ -48,9 +48,9 @@ const Projects = () => {
 
   const stats = [
     { val: settings.proj_stat1_val || defaultStats[0].val, label: settings.proj_stat1_label || defaultStats[0].label, color: "primary" },
-    { val: settings.proj_stat2_val || defaultStats[1].val, label: settings.proj_stat2_label || defaultStats[1].label, color: "secondary" },
-    { val: settings.proj_stat3_val || defaultStats[2].val, label: settings.proj_stat3_label || defaultStats[2].label, color: "accent" },
-    { val: settings.proj_stat4_val || defaultStats[3].val, label: settings.proj_stat4_label || defaultStats[3].label, color: "primary" },
+    { val: settings.proj_stat2_val || defaultStats[1].val, label: settings.proj_stat2_label || defaultStats[1].label, color: "accent" },
+    { val: settings.proj_stat3_val || defaultStats[2].val, label: settings.proj_stat3_label || defaultStats[2].label, color: "primary" },
+    { val: settings.proj_stat4_val || defaultStats[3].val, label: settings.proj_stat4_label || defaultStats[3].label, color: "accent" },
   ];
 
   return (

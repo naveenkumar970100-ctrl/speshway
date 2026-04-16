@@ -191,7 +191,7 @@ const Services = () => {
             ))}
           </div>
           <div className="flex gap-6">
-            {[{ val: "200+", label: "Apps Built", color: "primary" }, { val: "4.8★", label: "Rating", color: "secondary" }, { val: "1M+", label: "Downloads", color: "accent" }].map((s, i) => (
+            {[{ val: "200+", label: "Apps Built", color: "primary" }, { val: "4.8★", label: "Rating", color: "accent" }, { val: "1M+", label: "Downloads", color: "primary" }].map((s, i) => (
               <AnimatedSection key={s.label} delay={i * 150} animation="scale-up">
                 <div className="glass rounded-2xl p-6 text-center hover:glow-border transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl border-white/5">
                   <div className={`text-3xl font-bold text-${s.color} mb-1`}>{s.val}</div>

@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const compression = require("compression");
-require("dotenv").config();
+require("dotenv").config({ path: path.join(__dirname, "../.env") });
 
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth");
@@ -21,7 +21,7 @@ const assetRoutes = require("./routes/assets");
 const { verifyToken } = require("./middleware/auth");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = 5000; // hardcoded — system env PORT=3015 must not override
 
 // Connect MongoDB
 connectDB();

@@ -199,9 +199,9 @@ const Index = () => {
               <div className="relative grid grid-cols-2 gap-8">
                 {[
                   { valKey: "whyus_stat1_val", labelKey: "whyus_stat1_label", defaultVal: "99%", defaultLabel: "Satisfaction", color: "primary", delay: 0 },
-                  { valKey: "whyus_stat2_val", labelKey: "whyus_stat2_label", defaultVal: "24/7", defaultLabel: "Support", color: "secondary", delay: 100 },
+                  { valKey: "whyus_stat2_val", labelKey: "whyus_stat2_label", defaultVal: "24/7", defaultLabel: "Support", color: "primary", delay: 100 },
                   { valKey: "whyus_stat3_val", labelKey: "whyus_stat3_label", defaultVal: "100+", defaultLabel: "Tech Stack", color: "accent", delay: 200 },
-                  { valKey: "whyus_stat4_val", labelKey: "whyus_stat4_label", defaultVal: "50+", defaultLabel: "Partners", color: "primary", delay: 300 },
+                  { valKey: "whyus_stat4_val", labelKey: "whyus_stat4_label", defaultVal: "50+", defaultLabel: "Partners", color: "accent", delay: 300 },
                 ].map((item, i) => (
                   <div 
                     key={i} 

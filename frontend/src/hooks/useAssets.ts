@@ -3,20 +3,20 @@ import { apiUrl } from "@/lib/api";
 
 // Cloudinary base URLs — permanent fallbacks
 const CLOUDINARY: Record<string, string> = {
-  aboutTeam:      "https://res.cloudinary.com/djjimbk12/image/upload/speshway/assets/about-team.jpg",
-  webShowcase:    "https://res.cloudinary.com/djjimbk12/image/upload/speshway/assets/web-showcase.png",
-  logo:           "https://res.cloudinary.com/djjimbk12/image/upload/speshway/assets/logo-speshway.png",
-  heroSlide1:     "https://res.cloudinary.com/djjimbk12/image/upload/speshway/carousel/hero-slide-1.jpg",
-  heroSlide2:     "https://res.cloudinary.com/djjimbk12/image/upload/speshway/carousel/hero-slide-2.jpg",
-  heroSlide3:     "https://res.cloudinary.com/djjimbk12/image/upload/speshway/carousel/hero-slide-3.jpg",
-  heroBg:         "https://res.cloudinary.com/djjimbk12/image/upload/speshway/assets/hero-bg.jpg",
-  mobileShowcase: "https://res.cloudinary.com/djjimbk12/image/upload/speshway/assets/mobile-showcase.png",
-  phoneEcommerce: "https://res.cloudinary.com/djjimbk12/image/upload/speshway/phones/phone-ecommerce.png",
-  phoneFintech:   "https://res.cloudinary.com/djjimbk12/image/upload/speshway/phones/phone-fintech.png",
-  phoneFitness:   "https://res.cloudinary.com/djjimbk12/image/upload/speshway/phones/phone-fitness.png",
-  phoneFood:      "https://res.cloudinary.com/djjimbk12/image/upload/speshway/phones/phone-food.png",
-  phoneHealth:    "https://res.cloudinary.com/djjimbk12/image/upload/speshway/phones/phone-health.png",
-  phoneSocial:    "https://res.cloudinary.com/djjimbk12/image/upload/speshway/phones/phone-social.png",
+  aboutTeam:      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80",
+  webShowcase:    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+  logo:           "https://www.speshway.com/logo.png",
+  heroSlide1:     "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1600&q=80",
+  heroSlide2:     "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1600&q=80",
+  heroSlide3:     "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1600&q=80",
+  heroBg:         "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1600&q=80",
+  mobileShowcase: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80",
+  phoneEcommerce: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=400&q=80",
+  phoneFintech:   "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&q=80",
+  phoneFitness:   "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&q=80",
+  phoneFood:      "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=80",
+  phoneHealth:    "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&q=80",
+  phoneSocial:    "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=400&q=80",
 };
 
 export interface Assets {

@@ -25,13 +25,16 @@ const Career = () => {
   const { aboutTeam } = useAssets();
   const [apiJobs, setApiJobs] = useState<ApiJob[]>([]);
   const [content, setContent] = useState<Record<string, string>>({});
+  const [settings, setSettings] = useState<Record<string, string>>({});
 
   useEffect(() => {
     fetch("/api/jobs").then(r => r.json()).then(data => setApiJobs(Array.isArray(data) ? data : [])).catch(() => {});
     fetch("/api/site-content").then(r => r.json()).then(data => setContent(data)).catch(() => {});
+    fetch("/api/settings", { cache: "no-store" }).then(r => r.json()).then(data => setSettings(data)).catch(() => {});
   }, []);
 
   const sc = (key: string, fallback: string) => content[key] || fallback;
+  const st = (key: string, fallback: string) => settings[key] || fallback;
 
   const perks = [
     { icon: Zap, label: sc("perk1_label", "Flexible work hours"), color: "primary" },
@@ -124,13 +127,13 @@ const Career = () => {
           <div className="grid grid-cols-2 gap-6">
             {[
               { val: `${apiJobs.length || "0"}+`, label: "Open Positions", color: "primary" },
-              { val: "200+", label: "Team Members", color: "secondary" },
-              { val: "100%", label: "Remote OK", color: "accent" },
-              { val: "2017", label: "Founded", color: "primary" },
+              { val: `${st("stat_team","200")}${st("stat_team_suffix","+")}`, label: "Team Members", color: "accent" },
+              { val: "100%", label: "Remote OK", color: "primary" },
+              { val: "2017", label: "Founded", color: "accent" },
             ].map((s, i) => (
               <AnimatedSection key={s.label} delay={i * 120} animation="scale-up">
                 <div className="glass rounded-2xl p-8 text-center hover:glow-border-strong transition-all duration-700 hover:-translate-y-2 border-white/5 group">
-                  <div className={`text-4xl font-heading font-black text-${s.color} mb-2 group-hover:animate-glitch`}>{s.val}</div>
+                  <div className={`text-4xl font-heading font-black text-${s.color} mb-2`}>{s.val}</div>
                   <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{s.label}</div>
                 </div>
               </AnimatedSection>
