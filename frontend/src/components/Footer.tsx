@@ -15,10 +15,10 @@ const quickLinks = [
 ];
 
 const socialIcons = [
-  { Icon: Facebook, key: "social_facebook" },
-  { Icon: Twitter, key: "social_twitter" },
-  { Icon: Linkedin, key: "social_linkedin" },
-  { Icon: Instagram, key: "social_instagram" },
+  { Icon: Facebook, key: "social_facebook", fallback: "https://www.facebook.com/profile.php?id=61584485021568" },
+  { Icon: Twitter, key: "social_twitter", fallback: "https://x.com/SpeshwayM56509" },
+  { Icon: Linkedin, key: "social_linkedin", fallback: "https://www.linkedin.com/company/speshway-solutions-pvt-ltd/" },
+  { Icon: Instagram, key: "social_instagram", fallback: "https://www.instagram.com/speshwaysolutionsofficial/" },
 ];
 
 const Footer = () => {
@@ -63,9 +63,8 @@ const Footer = () => {
           Delivering innovative IT solutions and driving digital transformation for businesses worldwide.
         </p>
         <div className="flex gap-3">
-          {socialIcons.map(({ Icon, key }, i) => {
-            const href = settings[key];
-            if (!href) return null;
+          {socialIcons.map(({ Icon, key, fallback }, i) => {
+            const href = settings[key] || fallback;
             return (
               <a key={i} href={href} target="_blank" rel="noopener noreferrer"
                 className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all cursor-pointer">
