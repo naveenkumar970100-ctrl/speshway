@@ -132,7 +132,7 @@ export default function AdminTeam() {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {members.map(m => (
-              <div key={m._id} className={`bg-white rounded-2xl border border-gray-100 shadow-sm p-5 ${!m.isActive ? "opacity-60" : ""}`}>
+              <div key={m._id} className={`bg-white rounded-2xl border shadow-sm p-5 ${!m.isActive ? "border-gray-300 bg-gray-50" : "border-gray-100"}`}>
                 <div className="flex items-center gap-4 mb-4">
                   {m.image ? (
                     <img src={m.image} alt={m.name} className="w-14 h-14 rounded-full object-cover" />
@@ -142,7 +142,10 @@ export default function AdminTeam() {
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-gray-800 truncate">{m.name}</h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-gray-800 truncate">{m.name}</h3>
+                      {!m.isActive && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-200 text-gray-500 shrink-0">Hidden</span>}
+                    </div>
                     <p className="text-purple-600 text-xs font-bold uppercase tracking-wider">{m.role}</p>
                   </div>
                 </div>
