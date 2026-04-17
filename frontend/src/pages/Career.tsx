@@ -184,12 +184,15 @@ const Career = () => {
                 </div>
                 <div className="relative z-10 shrink-0 flex flex-col gap-3">
                   <Link to={`/career/${(j as ApiJob)._id || ""}`}>
-                    <GooeyButton color="secondary">
+                    <button
+                      className="w-full px-8 py-4 rounded-full font-bold uppercase tracking-widest transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg text-white text-sm"
+                      style={{ background: "linear-gradient(135deg, #7c3aed, #a855f7)", boxShadow: "0 4px 20px rgba(124,58,237,0.4)" }}
+                    >
                       View Details <ArrowRight size={16} className="inline ml-1" />
-                    </GooeyButton>
+                    </button>
                   </Link>
                   <Link to={`/career/${(j as ApiJob)._id || ""}/apply`}>
-                    <GooeyButton color="primary" className="!px-10 !py-4 text-[13px]">
+                    <GooeyButton color="primary" className="w-full !px-10 !py-4 text-[13px]">
                       Apply Now <ArrowRight size={18} className="inline ml-2" />
                     </GooeyButton>
                   </Link>
