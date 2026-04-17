@@ -98,6 +98,16 @@ export default function ServiceDetail() {
         <div className="absolute top-20 right-0 w-[500px] h-[500px] rounded-full bg-primary/10 blur-[120px]" />
 
         <div className="container relative">
+          {/* Back button */}
+          <AnimatedSection animation="fade-in-up" className="mb-4">
+            <Link
+              to="/services"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-border text-muted-foreground font-bold text-sm hover:text-primary hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 w-fit"
+            >
+              <ArrowLeft size={16} /> Back to Services
+            </Link>
+          </AnimatedSection>
+
           {/* Breadcrumb */}
           <AnimatedSection animation="fade-in-up" className="mb-8">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">

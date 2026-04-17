@@ -5,6 +5,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { HelpCircle, MessageCircle, Search, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useTheme } from "@/context/ThemeContext";
 
 const faqs = [
   { q: "What services does Speshway Solutions offer?", a: "We offer web and mobile development, cloud solutions, cybersecurity, AI/ML, data engineering, DevOps, IT consulting, and digital marketing services.", category: "Services" },
@@ -16,16 +17,37 @@ const faqs = [
   { q: "How do I get started?", a: "Simply reach out through our contact page or email us. We'll schedule a discovery call to understand your requirements.", category: "Process" },
 ];
 
-const categoryColors: Record<string, string> = {
-  Services: "bg-primary/10 text-primary",
-  Process: "bg-secondary/10 text-secondary",
-  Tech: "bg-accent/10 text-accent",
-  Support: "bg-primary/10 text-primary",
-  Pricing: "bg-secondary/10 text-secondary",
+const getCategoryStyle = (category: string, isLight: boolean): React.CSSProperties => {
+  const styles: Record<string, { light: React.CSSProperties; dark: React.CSSProperties }> = {
+    Services: {
+      light: { background: "#ede9fe", color: "#6d28d9", border: "1px solid #c4b5fd" },
+      dark:  { background: "rgba(109,40,217,0.2)", color: "#a78bfa", border: "1px solid rgba(167,139,250,0.4)" },
+    },
+    Process: {
+      light: { background: "#fef3c7", color: "#b45309", border: "1px solid #fcd34d" },
+      dark:  { background: "rgba(180,83,9,0.2)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.4)" },
+    },
+    Tech: {
+      light: { background: "#fce7f3", color: "#be185d", border: "1px solid #f9a8d4" },
+      dark:  { background: "rgba(190,24,93,0.2)", color: "#f472b6", border: "1px solid rgba(244,114,182,0.4)" },
+    },
+    Support: {
+      light: { background: "#dbeafe", color: "#1d4ed8", border: "1px solid #93c5fd" },
+      dark:  { background: "rgba(29,78,216,0.2)", color: "#60a5fa", border: "1px solid rgba(96,165,250,0.4)" },
+    },
+    Pricing: {
+      light: { background: "#dcfce7", color: "#15803d", border: "1px solid #86efac" },
+      dark:  { background: "rgba(21,128,61,0.2)", color: "#4ade80", border: "1px solid rgba(74,222,128,0.4)" },
+    },
+  };
+  const s = styles[category] ?? styles.Services;
+  return isLight ? s.light : s.dark;
 };
 
 const FAQ = () => {
   const [search, setSearch] = useState("");
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const filtered = faqs.filter(f =>
     f.q.toLowerCase().includes(search.toLowerCase()) ||
     f.a.toLowerCase().includes(search.toLowerCase())
@@ -94,7 +116,10 @@ const FAQ = () => {
                   >
                     <AccordionTrigger className="text-left font-medium text-foreground hover:text-primary transition-colors py-5 hover:no-underline">
                       <span className="flex items-start gap-3">
-                        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full shrink-0 mt-0.5 ${categoryColors[f.category] ?? "bg-primary/10 text-primary"}`}>
+                        <span
+                          className="text-xs font-bold px-2.5 py-1 rounded-full shrink-0 mt-0.5"
+                          style={getCategoryStyle(f.category, isLight)}
+                        >
                           {f.category}
                         </span>
                         {f.q}

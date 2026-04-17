@@ -160,7 +160,6 @@ const Career = () => {
               <div className="text-5xl mb-4">💼</div>
               <h3 className="text-2xl font-bold text-foreground mb-3">No Open Positions Right Now</h3>
               <p className="text-muted-foreground font-light mb-8">We don't have any open roles at the moment, but we're always looking for great talent.</p>
-              <Link to="/contact"><GooeyButton color="primary">Send Your Resume <ArrowRight size={16} className="inline ml-1" /></GooeyButton></Link>
             </div>
           ) : (
           jobs.map((j, i) => (
