@@ -139,7 +139,7 @@ const Index = () => {
             <AnimatedSection animation="fade-in-up">
               <span className="text-primary text-sm font-black uppercase tracking-[0.3em]">{t("services_label", "What We Do")}</span>
             </AnimatedSection>
-            <TextReveal text={t("services_title", "Innovation & Excellence")} className="text-4xl md:text-6xl font-heading font-black mt-4 mb-6 justify-center leading-tight" />
+            <TextReveal text={t("services_title", "Innovation & Excellence")} className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-heading font-black mt-4 mb-6 justify-center leading-tight" />
             <AnimatedSection delay={200}>
               <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-light leading-relaxed">
                 End-to-end IT solutions tailored to your business needs, powered by innovation and expertise.
@@ -175,7 +175,7 @@ const Index = () => {
             <span className="text-secondary font-black text-sm uppercase tracking-[0.3em] mb-6 block">{s("home_whyus_label", "Why Choose Us")}</span>
             <TextReveal 
               text={s("home_whyus_title", "Delivering Excellence In Every Project")} 
-              className="text-4xl md:text-6xl font-heading font-black mb-12 leading-tight"
+              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-heading font-black mb-12 leading-tight"
             />
             <div className="grid sm:grid-cols-2 gap-8">
               {[1,2,3,4,5,6].map(n => {
@@ -232,7 +232,7 @@ const Index = () => {
             </AnimatedSection>
             <TextReveal 
               text={t("testimonials_title", "What Our Clients Say")} 
-              className="text-4xl md:text-5xl font-heading font-black mt-6 justify-center"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-black mt-6 justify-center"
             />
           </div>
           
@@ -276,7 +276,7 @@ const Index = () => {
         <MotionSection animation="parallax-reveal" className="container text-center relative z-10">
           <TextReveal
             text={t("cta_title", "Ready to Transform Your Business?")}
-            className="text-4xl md:text-7xl font-heading font-black mb-8 justify-center leading-tight tracking-tighter"
+            className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-heading font-black mb-8 justify-center leading-tight tracking-tighter"
           />
           <p className="text-muted-foreground mb-12 max-w-3xl mx-auto text-xl font-light leading-relaxed">
             {t("cta_subtitle", "Let's discuss how Speshway Solutions can accelerate your digital journey and bring your vision to life.")}

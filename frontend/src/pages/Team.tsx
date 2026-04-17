@@ -1,17 +1,12 @@
 import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import PageHeader from "@/components/PageHeader";
-import AnimatedSection from "@/components/AnimatedSection";
 import MotionSection from "@/components/MotionSection";
 import GooeyButton from "@/components/GooeyButton";
-import PhoneMockup from "@/components/PhoneMockup";
-import SocialScreen from "@/components/phone-screens/SocialScreen";
 import TextReveal from "@/components/TextReveal";
 import MagneticButton from "@/components/MagneticButton";
-import { Linkedin, Github, Twitter, Users, Award, Globe, Code, Cloud, Palette, BarChart2, Settings, Briefcase, ArrowRight } from "lucide-react";
+import { Linkedin, Github, Twitter, Users, Award, Globe, Briefcase, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAssets } from "@/hooks/useAssets";
-import { cn } from "@/lib/utils";
 
 interface ApiMember {
   _id: string; name: string; role: string; bio: string; initials: string;
@@ -19,7 +14,6 @@ interface ApiMember {
 }
 
 const Team = () => {
-  const { aboutTeam } = useAssets();
   const [apiMembers, setApiMembers] = useState<ApiMember[]>([]);
   const [loadingMembers, setLoadingMembers] = useState(true);
   const [content, setContent] = useState<Record<string, string>>({});
@@ -47,7 +41,7 @@ const Team = () => {
             <span className="text-primary text-sm font-bold uppercase tracking-[0.3em]">Our Culture</span>
             <TextReveal 
               text="What Makes Us Different" 
-              className="text-4xl md:text-5xl font-heading font-bold mt-4 justify-center"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-bold mt-4 justify-center"
             />
           </MotionSection>
         </div>
@@ -84,7 +78,7 @@ const Team = () => {
             <span className="text-secondary text-sm font-bold uppercase tracking-[0.3em]">The People</span>
             <TextReveal 
               text="Meet the Team" 
-              className="text-4xl md:text-6xl font-heading font-bold mt-4 justify-center"
+              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-heading font-bold mt-4 justify-center"
             />
           </MotionSection>
         </div>
@@ -158,7 +152,7 @@ const Team = () => {
       <MotionSection animation="zoom-out" className="container text-center relative z-10">
         <TextReveal 
           text="Want to Join Our Team?" 
-          className="text-4xl md:text-7xl font-heading font-black mb-8 justify-center"
+          className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-heading font-black mb-8 justify-center"
         />
         <p className="text-muted-foreground mb-12 max-w-2xl mx-auto text-xl font-light leading-relaxed">
           We're always looking for talented people who are passionate about technology and innovation.
