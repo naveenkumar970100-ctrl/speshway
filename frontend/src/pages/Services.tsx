@@ -114,7 +114,8 @@ const Services = () => {
                 <p className="text-muted-foreground leading-relaxed mb-8 relative z-10">{s.desc}</p>
                 
                 <MagneticButton distance={30} strength={0.2} className="relative z-10">
-                  <span className={`inline-flex items-center gap-2 text-${s.color} text-[13px] font-bold uppercase tracking-[0.15em] opacity-70 group-hover:opacity-100 group-hover:gap-3 transition-all duration-500`}>
+                  <span className={`inline-flex items-center gap-2 text-primary text-[13px] font-bold uppercase tracking-[0.15em] group-hover:gap-3 transition-all duration-500`}
+                    style={{ color: "hsl(var(--primary))" }}>
                     Learn More <ArrowRight size={16} />
                   </span>
                 </MagneticButton>

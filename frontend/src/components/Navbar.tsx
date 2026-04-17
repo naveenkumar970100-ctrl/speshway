@@ -36,6 +36,9 @@ const Navbar = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const projectsRef = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
+  const dropdownTimer = useRef<NodeJS.Timeout | null>(null);
+  const projectsTimer = useRef<NodeJS.Timeout | null>(null);
+  const servicesTimer = useRef<NodeJS.Timeout | null>(null);
 
   // Fetch real projects for dropdown
   useEffect(() => {
@@ -148,9 +151,18 @@ const Navbar = () => {
           ))}
 
           {/* Services dropdown */}
-          <div className="relative" ref={servicesRef}>
+          <div
+            className="relative"
+            ref={servicesRef}
+            onMouseEnter={() => {
+              if (servicesTimer.current) clearTimeout(servicesTimer.current);
+              setServicesOpen(true);
+            }}
+            onMouseLeave={() => {
+              servicesTimer.current = setTimeout(() => setServicesOpen(false), 150);
+            }}
+          >
             <button
-              onClick={() => setServicesOpen((v) => !v)}
               className={cn(
                 "relative text-[13px] font-bold uppercase tracking-wider px-4 py-2 transition-all duration-500 group overflow-hidden flex items-center gap-1",
                 pathname === "/services" ? "text-primary" : "text-muted-foreground hover:text-foreground"
@@ -192,9 +204,18 @@ const Navbar = () => {
           </div>
 
           {/* Projects dropdown */}
-          <div className="relative" ref={projectsRef}>
+          <div
+            className="relative"
+            ref={projectsRef}
+            onMouseEnter={() => {
+              if (projectsTimer.current) clearTimeout(projectsTimer.current);
+              setProjectsOpen(true);
+            }}
+            onMouseLeave={() => {
+              projectsTimer.current = setTimeout(() => setProjectsOpen(false), 150);
+            }}
+          >
             <button
-              onClick={() => setProjectsOpen((v) => !v)}
               className={cn(
                 "relative text-[13px] font-bold uppercase tracking-wider px-4 py-2 transition-all duration-500 group overflow-hidden flex items-center gap-1",
                 pathname === "/projects" ? "text-primary" : "text-muted-foreground hover:text-foreground"
@@ -236,9 +257,18 @@ const Navbar = () => {
           </div>
 
           {/* Company dropdown */}
-          <div className="relative" ref={dropdownRef}>
+          <div
+            className="relative"
+            ref={dropdownRef}
+            onMouseEnter={() => {
+              if (dropdownTimer.current) clearTimeout(dropdownTimer.current);
+              setDropdownOpen(true);
+            }}
+            onMouseLeave={() => {
+              dropdownTimer.current = setTimeout(() => setDropdownOpen(false), 150);
+            }}
+          >
             <button
-              onClick={() => setDropdownOpen((v) => !v)}
               className={cn(
                 "relative text-[13px] font-bold uppercase tracking-wider px-4 py-2 transition-all duration-500 group overflow-hidden flex items-center gap-1",
                 isDropdownActive ? "text-primary" : "text-muted-foreground hover:text-foreground"

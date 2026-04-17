@@ -10,6 +10,7 @@ import { ArrowRight, Code, Cloud, Shield, Cpu, Users, Zap, CheckCircle, Star } f
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { toSlug } from "@/pages/ServiceDetail";
 
 const defaultStats = [
   { num: 100, suffix: "+", label: "Projects Delivered" },
@@ -65,7 +66,7 @@ const Index = () => {
       }
 
       if (servicesRes.status === "fulfilled" && Array.isArray(servicesRes.value) && servicesRes.value.length > 0) {
-        setApiServices(servicesRes.value.slice(0, 6).map((s: { title: string; description: string; icon: string; color: string }) => ({
+        setApiServices(servicesRes.value.slice(0, 6).map((s: { _id: string; title: string; description: string; icon: string; color: string }) => ({
           icon: iconMap[s.icon] || Code,
           title: s.title,
           desc: s.description,
@@ -149,16 +150,16 @@ const Index = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {apiServices.map((s, i) => (
               <AnimatedSection key={s.title} delay={i * 80} animation="card-rise">
-                <div className="group h-full p-8 rounded-3xl glass hover:glow-border hover:shadow-xl transition-all duration-400 border-border relative overflow-hidden">
+                <Link to={`/services/${toSlug(s.title)}`} className="group h-full block p-8 rounded-3xl glass hover:glow-border hover:shadow-xl transition-all duration-400 border-border relative overflow-hidden">
                   <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300 border border-primary/20">
                     <s.icon className="text-primary" size={28} />
                   </div>
                   <h3 className="font-heading font-bold text-xl mb-3 text-foreground group-hover:text-primary transition-colors duration-300">{s.title}</h3>
                   <p className="text-muted-foreground font-light leading-relaxed mb-6">{s.desc}</p>
-                  <Link to="/services" className="inline-flex items-center gap-2 text-primary text-sm font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300">
+                  <span className="inline-flex items-center gap-2 text-primary text-sm font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300">
                     Explore <ArrowRight size={16} />
-                  </Link>
-                </div>
+                  </span>
+                </Link>
               </AnimatedSection>
             ))}
           </div>
