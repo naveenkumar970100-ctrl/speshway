@@ -84,13 +84,13 @@ const HeroCarousel = () => {
         />
       ))}
 
-      {/* Overlay — darker in light mode so text stays readable */}
+      {/* Overlay */}
       <div className={isLight ? "absolute inset-0 bg-black/45" : "absolute inset-0 bg-background/40"} />
       <div className={`absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t ${isLight ? "from-black/60" : "from-background"} to-transparent`} />
       <div className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b ${isLight ? "from-black/40" : "from-background/50"} to-transparent`} />
 
-      {/* Content */}
-      <div className="relative z-10 container px-4">
+      {/* Content — pt-20 clears the fixed navbar height */}
+      <div className="relative z-10 container px-4 pt-24 pb-16">
         <div key={`badge-${current}`} className="animate-fade-in-up mb-8">
           <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/15 border border-white/30 text-white text-sm backdrop-blur-sm">
             <span className="w-2 h-2 rounded-full bg-primary" />
