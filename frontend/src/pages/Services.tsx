@@ -87,7 +87,7 @@ const Services = () => {
             <span className="text-primary text-sm font-bold uppercase tracking-[0.3em]">What We Offer</span>
             <TextReveal 
               text="End-to-End IT Solutions" 
-              className="text-4xl md:text-6xl font-heading font-bold mt-4 mb-6 justify-center"
+              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-heading font-bold mt-4 mb-6 justify-center"
             />
             <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-light leading-relaxed">
               From strategy to execution, we cover every aspect of your digital journey with cutting-edge technology.
@@ -135,7 +135,7 @@ const Services = () => {
             <span className="text-secondary text-sm font-bold uppercase tracking-[0.3em]">How We Work</span>
             <TextReveal 
               text="Our Seamless Process" 
-              className="text-4xl md:text-5xl font-heading font-bold mt-4 justify-center"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-bold mt-4 justify-center"
             />
           </MotionSection>
         </div>
@@ -175,7 +175,7 @@ const Services = () => {
       <div className="relative container grid md:grid-cols-2 gap-20 items-center">
         <MotionSection animation="slide-horizontal">
           <span className="text-secondary text-sm font-bold uppercase tracking-[0.3em]">Mobile Excellence</span>
-          <h2 className="text-4xl md:text-5xl font-heading font-bold mt-4 mb-8 text-foreground leading-tight">We Build Apps <br />People <span className="text-secondary">Love</span></h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-bold mt-4 mb-8 text-foreground leading-tight">We Build Apps <br />People <span className="text-secondary">Love</span></h2>
           <p className="text-muted-foreground text-lg leading-relaxed mb-10 font-light">
             From concept to launch, we create mobile experiences that engage users and drive business results. Our apps are built for performance, security, and scalability.
           </p>
@@ -246,7 +246,7 @@ const Services = () => {
 
         <MotionSection animation="skew-up" className="order-1 md:order-2">
           <span className="text-primary text-sm font-bold uppercase tracking-[0.3em]">Web Development</span>
-          <h2 className="text-4xl md:text-5xl font-heading font-bold mt-4 mb-8 text-foreground leading-tight">Future-Proof <br /><span className="text-primary">Web Applications</span></h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-bold mt-4 mb-8 text-foreground leading-tight">Future-Proof <br /><span className="text-primary">Web Applications</span></h2>
           <p className="text-muted-foreground text-lg leading-relaxed mb-10 font-light">
             We build high-performance web applications that provide seamless user experiences across all devices. Our tech stack includes React, Next.js, Node.js, and other modern technologies.
           </p>

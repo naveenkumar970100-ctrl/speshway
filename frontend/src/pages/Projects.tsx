@@ -78,7 +78,7 @@ const Projects = () => {
           <div className="text-center mb-20">
             <MotionSection animation="parallax-reveal">
               <span className="text-primary text-sm font-bold uppercase tracking-[0.3em]">Portfolio</span>
-              <TextReveal text="Our Work" className="text-4xl md:text-6xl font-heading font-bold mt-4 justify-center" />
+              <TextReveal text="Our Work" className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-heading font-bold mt-4 justify-center" />
               <p className="text-muted-foreground mt-6 text-lg font-light max-w-2xl mx-auto">
                 Click any project to see full details, tech stack, and features.
               </p>

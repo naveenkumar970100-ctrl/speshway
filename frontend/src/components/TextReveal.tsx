@@ -1,28 +1,24 @@
 import { cn } from "@/lib/utils";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
-// Uses shared IntersectionObserver for performance
+// Simple, reliable heading reveal — no word-level clipping
 const TextReveal = ({ text, className, delay = 0 }: { text: string; className?: string; delay?: number; stagger?: number }) => {
-  const { ref, visible } = useScrollAnimation();
-  const words = text.split(" ");
+  const { ref, visible } = useScrollAnimation(0.05);
 
   return (
-    <div ref={ref} className={cn("flex flex-wrap gap-x-[0.3em]", className)}>
-      {words.map((word, i) => (
-        <span key={i} className="inline-block overflow-hidden">
-          <span
-            className="inline-block transition-[transform,opacity] duration-500 ease-out"
-            style={{
-              transform: visible ? "translateY(0)" : "translateY(110%)",
-              opacity: visible ? 1 : 0,
-              transitionDelay: `${delay + i * 0.06}s`,
-            }}
-          >
-            {word}
-          </span>
-        </span>
-      ))}
-    </div>
+    <h2
+      ref={ref}
+      className={cn(className)}
+      style={{
+        transform: visible ? "translateY(0)" : "translateY(24px)",
+        opacity: visible ? 1 : 0,
+        transition: `transform 0.6s ease, opacity 0.6s ease`,
+        transitionDelay: `${delay}s`,
+        willChange: "transform, opacity",
+      }}
+    >
+      {text}
+    </h2>
   );
 };
 

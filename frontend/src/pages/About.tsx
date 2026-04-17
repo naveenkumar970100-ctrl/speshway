@@ -41,7 +41,7 @@ const About = () => {
         <div className="container grid md:grid-cols-2 gap-20 items-center relative">
           <MotionSection animation="skew-up">
             <span className="text-primary text-sm font-bold uppercase tracking-[0.3em] mb-4 block">Who We Are</span>
-            <TextReveal text="Pioneering Digital Transformation Since 2017" className="text-4xl md:text-6xl font-heading font-bold mb-8 leading-tight" />
+            <TextReveal text="Pioneering Digital Transformation Since 2017" className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-heading font-bold mb-8 leading-tight" />
             <p className="text-muted-foreground text-lg leading-relaxed mb-6 font-light">
               Founded in 2017, Speshway Solutions Private Limited began with a simple yet powerful vision: to bridge the gap between businesses and cutting-edge technology. What started as a small team of passionate developers has grown into a full-service IT solutions provider serving clients across the globe.
             </p>
@@ -91,7 +91,7 @@ const About = () => {
           <div className="text-center mb-20">
             <MotionSection animation="parallax-reveal">
               <span className="text-secondary text-sm font-bold uppercase tracking-[0.3em]">What Drives Us</span>
-              <TextReveal text="Mission, Vision & Values" className="text-4xl md:text-5xl font-heading font-bold mt-4 justify-center" />
+              <TextReveal text="Mission, Vision & Values" className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-bold mt-4 justify-center" />
             </MotionSection>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -121,7 +121,7 @@ const About = () => {
           <div className="text-center mb-20">
             <MotionSection animation="parallax-reveal">
               <span className="text-accent text-sm font-bold uppercase tracking-[0.3em]">Our Journey</span>
-              <TextReveal text="Milestones That Define Us" className="text-4xl md:text-5xl font-heading font-bold mt-4 justify-center" />
+              <TextReveal text="Milestones That Define Us" className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-bold mt-4 justify-center" />
             </MotionSection>
           </div>
           <div className="relative pl-8 md:pl-0">
@@ -165,7 +165,7 @@ const About = () => {
           </MotionSection>
           <MotionSection animation="skew-up">
             <span className="text-accent text-sm font-bold uppercase tracking-[0.3em]">Our Approach</span>
-            <h2 className="text-4xl md:text-5xl font-heading font-bold mt-4 mb-10 text-foreground leading-tight">Why Businesses <br /><span className="text-accent">Trust Us</span></h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-bold mt-4 mb-10 text-foreground leading-tight">Why Businesses <br /><span className="text-accent">Trust Us</span></h2>
             <div className="grid gap-6">
               {[
                 { icon: Rocket, color: "primary", titleKey: "about_principle1_title", descKey: "about_principle1_desc", defaultTitle: "Innovation First", defaultDesc: "We stay ahead of the curve with cutting-edge technologies." },

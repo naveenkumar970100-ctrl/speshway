@@ -3,11 +3,11 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTheme } from "@/context/ThemeContext";
 
-// Cloudinary URLs — no local imports needed
-const CLOUDINARY_SLIDES = [
-  "https://res.cloudinary.com/djjimbk12/image/upload/speshway/carousel/hero-slide-1.jpg",
-  "https://res.cloudinary.com/djjimbk12/image/upload/speshway/carousel/hero-slide-2.jpg",
-  "https://res.cloudinary.com/djjimbk12/image/upload/speshway/carousel/hero-slide-3.jpg",
+// CSS gradient backgrounds — used when no Cloudinary image is uploaded yet
+const GRADIENT_SLIDES = [
+  "linear-gradient(135deg, #1a0533 0%, #2d1b69 40%, #0f3460 100%)",
+  "linear-gradient(135deg, #0f2027 0%, #203a43 40%, #2c5364 100%)",
+  "linear-gradient(135deg, #0d0d0d 0%, #1a1a2e 40%, #16213e 100%)",
 ];
 
 interface ApiSlide {
@@ -17,9 +17,9 @@ interface ApiSlide {
 }
 
 const defaultSlides = [
-  { image: CLOUDINARY_SLIDES[0], badge: "Welcome to the Future of IT", title: "Build Your Digital Future", highlight: "Speshway Solutions", desc: "Full-stack software, automation, and IT solutions that drive real business growth.", cta: { text: "Our Services", to: "/services" }, cta2: { text: "Get in Touch", to: "/contact" } },
-  { image: CLOUDINARY_SLIDES[1], badge: "Mobile App Development", title: "Stunning Mobile Apps", highlight: "For Every Platform", desc: "We build beautiful, high-performance mobile applications for iOS and Android.", cta: { text: "View Projects", to: "/projects" }, cta2: { text: "Get a Quote", to: "/contact" } },
-  { image: CLOUDINARY_SLIDES[2], badge: "Cloud & Security Solutions", title: "Secure & Scalable", highlight: "Cloud Infrastructure", desc: "Enterprise-grade cybersecurity and cloud solutions to protect and grow your business.", cta: { text: "Learn More", to: "/services" }, cta2: { text: "Contact Us", to: "/contact" } },
+  { image: "", gradient: GRADIENT_SLIDES[0], badge: "Welcome to the Future of IT", title: "Build Your Digital Future", highlight: "Speshway Solutions", desc: "Full-stack software, automation, and IT solutions that drive real business growth.", cta: { text: "Our Services", to: "/services" }, cta2: { text: "Get in Touch", to: "/contact" } },
+  { image: "", gradient: GRADIENT_SLIDES[1], badge: "Mobile App Development", title: "Stunning Mobile Apps", highlight: "For Every Platform", desc: "We build beautiful, high-performance mobile applications for iOS and Android.", cta: { text: "View Projects", to: "/projects" }, cta2: { text: "Get a Quote", to: "/contact" } },
+  { image: "", gradient: GRADIENT_SLIDES[2], badge: "Cloud & Security Solutions", title: "Secure & Scalable", highlight: "Cloud Infrastructure", desc: "Enterprise-grade cybersecurity and cloud solutions to protect and grow your business.", cta: { text: "Learn More", to: "/services" }, cta2: { text: "Contact Us", to: "/contact" } },
 ];
 
 const HeroCarousel = () => {
@@ -38,7 +38,8 @@ const HeroCarousel = () => {
       .then((data: ApiSlide[]) => {
         if (Array.isArray(data) && data.length > 0) {
           setSlides(data.map((s, i) => ({
-            image: s.image || CLOUDINARY_SLIDES[i % 3],
+            image: s.image || "",
+            gradient: GRADIENT_SLIDES[i % 3],
             badge: s.badge,
             title: s.title,
             highlight: s.highlight,
@@ -63,7 +64,7 @@ const HeroCarousel = () => {
   const prev = useCallback(() => goTo((current - 1 + slides.length) % slides.length), [current, goTo]);
 
   useEffect(() => {
-    timerRef.current = setInterval(next, 2000);
+    timerRef.current = setInterval(next, 5000);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [next]);
 
@@ -74,18 +75,21 @@ const HeroCarousel = () => {
       {slides.map((s, i) => (
         <div
           key={i}
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0"
           style={{
-            backgroundImage: `url(${s.image})`,
+            background: s.image ? undefined : s.gradient,
+            backgroundImage: s.image ? `url(${s.image})` : undefined,
+            backgroundSize: s.image ? "cover" : undefined,
+            backgroundPosition: s.image ? "center" : undefined,
             opacity: i === current ? 1 : 0,
-            filter: isLight ? "brightness(0.75) saturate(0.9)" : "brightness(0.55)",
+            filter: s.image ? (isLight ? "brightness(0.75) saturate(0.9)" : "brightness(0.55)") : undefined,
             transition: (i === current || i === prevIdx) ? "opacity 0.6s ease" : "none",
           }}
         />
       ))}
 
-      {/* Overlay */}
-      <div className={isLight ? "absolute inset-0 bg-black/45" : "absolute inset-0 bg-background/40"} />
+      {/* Overlay — lighter when using gradient (no image) */}
+      <div className={`absolute inset-0 ${slide.image ? (isLight ? "bg-black/45" : "bg-background/40") : "bg-black/20"}`} />
       <div className={`absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t ${isLight ? "from-black/60" : "from-background"} to-transparent`} />
       <div className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b ${isLight ? "from-black/40" : "from-background/50"} to-transparent`} />
 

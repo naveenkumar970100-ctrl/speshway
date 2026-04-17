@@ -8,22 +8,17 @@ import PhoneMockup from "@/components/PhoneMockup";
 import FitnessScreen from "@/components/phone-screens/FitnessScreen";
 import DashboardScreen from "@/components/phone-screens/DashboardScreen";
 import TextReveal from "@/components/TextReveal";
-import MagneticButton from "@/components/MagneticButton";
 import { MapPin, Clock, ArrowRight, DollarSign, Zap, Heart, Coffee, BookOpen, Briefcase } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAssets } from "@/hooks/useAssets";
-import { cn } from "@/lib/utils";
 
 interface ApiJob {
   _id: string; title: string; location: string; type: string; salary: string;
   department: string; experience: string; desc: string; requirements: string[]; status: string;
 }
 
-const defaultJobs: ApiJob[] = []; // No dummy data — show only real jobs from DB
-
 const Career = () => {
-  const { aboutTeam } = useAssets();
-  const [apiJobs, setApiJobs] = useState<ApiJob[]>([]);
+  const { aboutTeam } = useAssets();  const [apiJobs, setApiJobs] = useState<ApiJob[]>([]);
   const [content, setContent] = useState<Record<string, string>>({});
   const [settings, setSettings] = useState<Record<string, string>>({});
 
@@ -58,7 +53,7 @@ const Career = () => {
           <span className="text-accent text-sm font-bold uppercase tracking-[0.3em] mb-4 block">Life at Speshway</span>
           <TextReveal 
             text="Build Your Career With Us" 
-            className="text-4xl md:text-6xl font-heading font-bold mb-8 leading-tight"
+            className="text-2xl sm:text-3xl md:text-5xl font-heading font-bold mb-8 leading-tight"
           />
           <p className="text-muted-foreground text-lg leading-relaxed mb-10 font-light max-w-lg">
             We believe in creating an environment where talent thrives. Join a team that values innovation, collaboration, and continuous growth.
@@ -119,7 +114,7 @@ const Career = () => {
           <span className="text-primary text-sm font-bold uppercase tracking-[0.3em] mb-4 block">Our Workspace</span>
           <TextReveal 
             text="Where Great Work Happens" 
-            className="text-4xl md:text-5xl font-heading font-bold mb-8"
+            className="text-2xl sm:text-3xl md:text-4xl font-heading font-bold mb-8"
           />
           <p className="text-muted-foreground text-lg leading-relaxed mb-10 font-light">
             Whether you're in our Hyderabad office or working remotely, you'll have everything you need to do your best work — fast machines, great tools, and an amazing team.
@@ -213,7 +208,7 @@ const Career = () => {
         <MotionSection animation="skew-up" className="text-center md:text-left">
           <TextReveal 
             text="Don't See a Fit?" 
-            className="text-4xl md:text-7xl font-heading font-black mb-8 leading-tight"
+            className="text-3xl sm:text-4xl md:text-6xl font-heading font-black mb-8 leading-tight"
           />
           <p className="text-muted-foreground text-xl font-light leading-relaxed mb-12 max-w-lg">
             Send us your resume anyway. We're always open to meeting great talent and finding a place for exceptional people.

@@ -123,7 +123,7 @@ export default function ServiceDetail() {
                 </span>
                 <TextReveal
                   text={service.title}
-                  className="text-4xl md:text-6xl font-heading font-black mb-6 leading-tight"
+                  className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-heading font-black mb-6 leading-tight"
                 />
                 <p className="text-muted-foreground text-xl leading-relaxed mb-10 font-light">
                   {service.description}
@@ -252,7 +252,7 @@ export default function ServiceDetail() {
         <MotionSection animation="zoom-out" className="container text-center relative z-10">
           <TextReveal
             text="Ready to Get Started?"
-            className="text-4xl md:text-6xl font-heading font-black mb-6 justify-center"
+            className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-heading font-black mb-6 justify-center"
           />
           <p className="text-muted-foreground mb-10 max-w-2xl mx-auto text-xl font-light leading-relaxed">
             Let's discuss how our {service.title} service can help transform your business.
