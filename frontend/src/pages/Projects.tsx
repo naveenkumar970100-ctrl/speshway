@@ -72,7 +72,6 @@ const Projects = () => {
       </section>
 
       {/* Projects Grid */}
-<<<<<<< HEAD
       <section className="py-10 md:py-24 bg-background relative overflow-hidden">
         <div className="container relative">
           <div className="text-center mb-8 md:mb-20">
@@ -80,15 +79,6 @@ const Projects = () => {
               <span className="text-primary text-xs md:text-sm font-bold uppercase tracking-[0.3em]">Portfolio</span>
               <TextReveal text="Our Work" className="text-2xl md:text-5xl lg:text-6xl font-heading font-bold mt-3 md:mt-4 justify-center" />
               <p className="text-muted-foreground mt-3 md:mt-6 text-xs md:text-lg font-light max-w-2xl mx-auto px-2">
-=======
-      <section className="py-12 md:py-24 bg-background relative overflow-hidden">
-        <div className="container relative">
-          <div className="text-center mb-10 md:mb-20">
-            <MotionSection animation="parallax-reveal">
-              <span className="text-primary text-sm font-bold uppercase tracking-[0.3em]">Portfolio</span>
-              <TextReveal text="Our Work" className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-heading font-bold mt-4 justify-center" />
-              <p className="text-muted-foreground mt-4 md:mt-6 text-sm md:text-lg font-light max-w-2xl mx-auto px-2">
->>>>>>> d490115cbc132716e44405339c3955a4b5ef5bc3
                 Click any project to see full details, tech stack, and features.
               </p>
             </MotionSection>
@@ -105,32 +95,20 @@ const Projects = () => {
               <p className="text-sm mt-2">Add projects from the admin dashboard.</p>
             </div>
           ) : (
-<<<<<<< HEAD
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
-=======
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8">
->>>>>>> d490115cbc132716e44405339c3955a4b5ef5bc3
               {projects.map((p, i) => (
                 <AnimatedSection key={p._id} delay={i * 80} animation="card-rise">
                   <div
                     onClick={() => navigate(`/projects/${p._id}`)}
-<<<<<<< HEAD
                     className="group cursor-pointer h-full bg-card rounded-xl md:rounded-3xl border border-border overflow-hidden hover:border-primary/30 hover:shadow-[0_20px_60px_hsl(var(--primary)/0.15)] transition-all duration-500 flex flex-col"
                   >
                     {/* Image */}
                     <div className="relative h-24 md:h-52 overflow-hidden bg-gradient-to-br from-primary/10 to-secondary/10">
-=======
-                    className="group cursor-pointer h-full bg-card rounded-2xl md:rounded-3xl border border-border overflow-hidden hover:border-primary/30 hover:shadow-[0_20px_60px_hsl(var(--primary)/0.15)] transition-all duration-500 hover:-translate-y-1 flex flex-col"
-                  >
-                    {/* Image */}
-                    <div className="relative h-44 md:h-52 overflow-hidden bg-gradient-to-br from-primary/10 to-secondary/10">
->>>>>>> d490115cbc132716e44405339c3955a4b5ef5bc3
                       {p.image ? (
                         <img src={p.image} alt={p.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-2xl md:text-5xl">🚀</div>
                       )}
-<<<<<<< HEAD
                       {/* Overlay on hover */}
                       <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 hidden md:flex items-center justify-center">
                         <span className="bg-white text-primary font-bold text-sm px-4 py-2 rounded-full flex items-center gap-2 shadow-lg">
@@ -170,50 +148,13 @@ const Projects = () => {
                         )}
                         {p.tech.slice(2, 4).map(t => (
                           <span key={t} className="hidden md:inline px-3 py-1 rounded-lg glass text-[10px] font-bold text-muted-foreground uppercase tracking-wider border border-border">
-=======
-                      <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
-                        <span className="bg-white text-primary font-bold text-sm px-4 py-2 rounded-full flex items-center gap-2 shadow-lg translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                          <ExternalLink size={14} /> View Details
-                        </span>
-                      </div>
-                      <div className="absolute top-3 left-3">
-                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${statusColors[p.status] || "bg-muted text-muted-foreground border-border"}`}>
-                          {p.status}
-                        </span>
-                      </div>
-                      <div className="absolute top-3 right-3">
-                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold bg-${tagColors[i % 3]}/20 text-${tagColors[i % 3]} border border-${tagColors[i % 3]}/20`}>
-                          {p.category}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-4 md:p-6 flex-1 flex flex-col">
-                      <h3 className="font-heading font-bold text-base md:text-xl text-foreground mb-1.5 md:mb-2 group-hover:text-primary transition-colors leading-tight">
-                        {p.title}
-                      </h3>
-                      {p.client && (
-                        <p className="text-xs text-muted-foreground mb-2 md:mb-3 font-medium">Client: {p.client}</p>
-                      )}
-                      <p className="text-muted-foreground text-xs md:text-sm leading-relaxed mb-4 flex-1 line-clamp-3">
-                        {p.description}
-                      </p>
-                      <div className="flex flex-wrap gap-1.5 md:gap-2 mt-auto">
-                        {p.tech.slice(0, 4).map(t => (
-                          <span key={t} className="px-2 md:px-3 py-1 rounded-lg glass text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-wider border border-border">
->>>>>>> d490115cbc132716e44405339c3955a4b5ef5bc3
                             {t}
                           </span>
                         ))}
                         {p.tech.length > 4 && (
-<<<<<<< HEAD
                           <span className="hidden md:inline px-3 py-1 rounded-lg text-[10px] font-bold text-muted-foreground">
                             +{p.tech.length - 4}
                           </span>
-=======
-                          <span className="px-2 py-1 rounded-lg text-[10px] font-bold text-muted-foreground">+{p.tech.length - 4}</span>
->>>>>>> d490115cbc132716e44405339c3955a4b5ef5bc3
                         )}
                       </div>
                     </div>
@@ -229,22 +170,13 @@ const Projects = () => {
       <section className="py-16 md:py-32 relative overflow-hidden bg-background">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-card/50 to-secondary/20" />
         <MotionSection animation="zoom-out" className="container text-center relative z-10 px-4">
-<<<<<<< HEAD
           <TextReveal text="Have a Project in Mind?" className="text-2xl md:text-7xl font-heading font-black mb-5 md:mb-8 justify-center leading-tight" />
-=======
-          <TextReveal text="Have a Project in Mind?" className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-heading font-black mb-6 md:mb-8 justify-center leading-tight" />
->>>>>>> d490115cbc132716e44405339c3955a4b5ef5bc3
           <p className="text-muted-foreground mb-8 md:mb-12 max-w-2xl mx-auto text-sm md:text-xl font-light leading-relaxed">
             Let's build something amazing together. Our team is ready to bring your vision to life.
           </p>
           <Link to="/contact">
-<<<<<<< HEAD
             <GooeyButton color="primary" className="!px-8 md:!px-12 !py-3 md:!py-5 text-sm md:text-lg">
               Start a Project <ArrowRight size={18} className="inline ml-2" />
-=======
-            <GooeyButton color="primary">
-              Start a Project <ArrowRight size={20} className="inline ml-2" />
->>>>>>> d490115cbc132716e44405339c3955a4b5ef5bc3
             </GooeyButton>
           </Link>
         </MotionSection>
