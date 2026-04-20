@@ -41,6 +41,10 @@ app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no origin (mobile apps, curl, Postman, same-origin)
     if (!origin) return callback(null, true);
+    // Allow localhost on any port
+    if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return callback(null, true);
+    // Allow any local network IP (192.168.x.x, 10.x.x.x, 172.16-31.x.x)
+    if (/^https?:\/\/(192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(origin)) return callback(null, true);
     if (allowedOrigins.includes(origin)) return callback(null, true);
     // Allow any subdomain of the production domain
     const prodDomain = process.env.FRONTEND_URL;

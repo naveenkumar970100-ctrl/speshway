@@ -51,81 +51,79 @@ export default function JobDetail() {
 
   return (
     <Layout>
-      <div className="container py-10 max-w-5xl">
+      <div className="container py-5 md:py-10 max-w-5xl px-3 md:px-4">
         {/* Back */}
         <button onClick={() => navigate("/career")}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full glass border border-border text-muted-foreground font-bold text-sm hover:text-foreground hover:border-primary/30 transition-all duration-300 mb-8 w-fit">
-          <ArrowLeft size={16} /> Back to Careers
+          className="flex items-center gap-1.5 px-3 md:px-5 py-2 md:py-2.5 rounded-full glass border border-border text-muted-foreground font-bold text-xs md:text-sm hover:text-foreground hover:border-primary/30 transition-all duration-300 mb-4 md:mb-8 w-fit">
+          <ArrowLeft size={14} /> Back to Careers
         </button>
 
         {/* Header */}
-        <div className="glass rounded-3xl p-8 border border-border mb-6">
-          <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
+        <div className="glass rounded-2xl md:rounded-3xl p-4 md:p-8 border border-border mb-4 md:mb-6">
+          <div className="flex flex-wrap items-start justify-between gap-3 md:gap-4 mb-3 md:mb-4">
             <div className="flex-1">
-              <div className="flex flex-wrap items-center gap-3 mb-3">
-                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold border ${statusColors[job.status] || ""}`}>
-                  <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />{job.status}
+              <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-2 md:mb-3">
+                <span className={`inline-flex items-center gap-1 px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[10px] md:text-[11px] font-bold border ${statusColors[job.status] || ""}`}>
+                  <span className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-current animate-pulse" />{job.status}
                 </span>
-                {job.location && <span className="px-3 py-1 rounded-full bg-muted text-muted-foreground text-[11px] font-bold">{job.location}</span>}
-                {job.type && <span className="px-3 py-1 rounded-full bg-muted text-muted-foreground text-[11px] font-bold">{job.type}</span>}
+                {job.location && <span className="px-2 md:px-3 py-0.5 md:py-1 rounded-full bg-muted text-muted-foreground text-[10px] md:text-[11px] font-bold">{job.location}</span>}
+                {job.type && <span className="px-2 md:px-3 py-0.5 md:py-1 rounded-full bg-muted text-muted-foreground text-[10px] md:text-[11px] font-bold">{job.type}</span>}
               </div>
-              <h1 className="text-3xl md:text-4xl font-heading font-black text-foreground leading-tight">{job.title}</h1>
+              <h1 className="text-xl md:text-4xl font-heading font-black text-foreground leading-tight">{job.title}</h1>
             </div>
             <Link to={`/career/${id}/apply`}>
-              <GooeyButton color="primary">
-                Apply Now <ArrowLeft size={16} className="inline ml-2 rotate-180" />
-              </GooeyButton>
+              <button className="px-4 md:px-6 py-2 md:py-3 rounded-full bg-primary text-white font-bold text-xs md:text-sm uppercase tracking-wider">
+                Apply Now →
+              </button>
             </Link>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
           {/* Main content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4 md:space-y-6">
             {/* Job details table */}
-            <div className="glass rounded-3xl p-8 border border-border">
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="text-muted-foreground font-medium">Job Title:</span>
-                    <p className="text-foreground font-semibold mt-0.5">{job.title}</p>
-                  </div>
-                  {job.location && (
-                    <div>
-                      <span className="text-muted-foreground font-medium">Location:</span>
-                      <p className="text-foreground font-semibold mt-0.5">{job.location}</p>
-                    </div>
-                  )}
-                  {job.experience && (
-                    <div>
-                      <span className="text-muted-foreground font-medium">Experience:</span>
-                      <p className="text-foreground font-semibold mt-0.5">{job.experience} years</p>
-                    </div>
-                  )}
-                  {job.salary && (
-                    <div>
-                      <span className="text-muted-foreground font-medium">Salary:</span>
-                      <p className="text-foreground font-semibold mt-0.5">{job.salary}</p>
-                    </div>
-                  )}
+            <div className="glass rounded-2xl md:rounded-3xl p-4 md:p-8 border border-border">
+              <div className="grid grid-cols-2 gap-3 md:gap-4 text-xs md:text-sm">
+                <div>
+                  <span className="text-muted-foreground font-medium">Job Title:</span>
+                  <p className="text-foreground font-semibold mt-0.5 text-xs md:text-sm">{job.title}</p>
                 </div>
+                {job.location && (
+                  <div>
+                    <span className="text-muted-foreground font-medium">Location:</span>
+                    <p className="text-foreground font-semibold mt-0.5 text-xs md:text-sm">{job.location}</p>
+                  </div>
+                )}
+                {job.experience && (
+                  <div>
+                    <span className="text-muted-foreground font-medium">Experience:</span>
+                    <p className="text-foreground font-semibold mt-0.5 text-xs md:text-sm">{job.experience} years</p>
+                  </div>
+                )}
+                {job.salary && (
+                  <div>
+                    <span className="text-muted-foreground font-medium">Salary:</span>
+                    <p className="text-foreground font-semibold mt-0.5 text-xs md:text-sm">{job.salary}</p>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Description */}
-            <div className="glass rounded-3xl p-8 border border-border">
-              <h2 className="text-lg font-heading font-black text-foreground mb-4">Summary</h2>
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{job.desc}</p>
+            <div className="glass rounded-2xl md:rounded-3xl p-4 md:p-8 border border-border">
+              <h2 className="text-sm md:text-lg font-heading font-black text-foreground mb-2 md:mb-4">Summary</h2>
+              <p className="text-muted-foreground text-xs md:text-base leading-relaxed whitespace-pre-line">{job.desc}</p>
             </div>
 
             {/* Requirements */}
             {job.requirements?.length > 0 && (
-              <div className="glass rounded-3xl p-8 border border-border">
-                <h2 className="text-lg font-heading font-black text-foreground mb-4">Requirements</h2>
-                <ul className="space-y-3">
+              <div className="glass rounded-2xl md:rounded-3xl p-4 md:p-8 border border-border">
+                <h2 className="text-sm md:text-lg font-heading font-black text-foreground mb-2 md:mb-4">Requirements</h2>
+                <ul className="space-y-2 md:space-y-3">
                   {job.requirements.map((r, i) => (
-                    <li key={i} className="flex items-start gap-3 text-muted-foreground">
-                      <CheckCircle size={16} className="text-primary shrink-0 mt-0.5" />
+                    <li key={i} className="flex items-start gap-2 md:gap-3 text-muted-foreground text-xs md:text-base">
+                      <CheckCircle size={13} className="text-primary shrink-0 mt-0.5" />
                       <span>{r}</span>
                     </li>
                   ))}
@@ -134,12 +132,12 @@ export default function JobDetail() {
             )}
 
             {/* Apply CTA */}
-            <div className="glass rounded-3xl p-8 border border-border text-center">
-              <h3 className="text-xl font-heading font-black text-foreground mb-3">Interested in this role?</h3>
-              <p className="text-muted-foreground mb-6">Send us your resume and we'll get back to you soon.</p>
+            <div className="glass rounded-2xl md:rounded-3xl p-4 md:p-8 border border-border text-center">
+              <h3 className="text-base md:text-xl font-heading font-black text-foreground mb-2 md:mb-3">Interested in this role?</h3>
+              <p className="text-muted-foreground text-xs md:text-base mb-4 md:mb-6">Send us your resume and we'll get back to you soon.</p>
               <Link to={`/career/${id}/apply`}>
                 <GooeyButton color="primary">
-                  Apply Now <ArrowLeft size={16} className="inline ml-2 rotate-180" />
+                  Apply Now <ArrowLeft size={14} className="inline ml-2 rotate-180" />
                 </GooeyButton>
               </Link>
             </div>
@@ -147,9 +145,9 @@ export default function JobDetail() {
 
           {/* Sidebar — Key job details */}
           <div>
-            <div className="glass rounded-3xl p-6 border border-border sticky top-28">
-              <h3 className="text-sm font-black text-foreground uppercase tracking-widest mb-5">Key Job Details</h3>
-              <div className="space-y-4 text-sm">
+            <div className="glass rounded-2xl md:rounded-3xl p-4 md:p-6 border border-border lg:sticky lg:top-28">
+              <h3 className="text-xs md:text-sm font-black text-foreground uppercase tracking-widest mb-3 md:mb-5">Key Job Details</h3>
+              <div className="space-y-2 md:space-y-4 text-xs md:text-sm">
                 {[
                   { icon: Briefcase, label: "Job category", value: job.department },
                   { icon: MapPin, label: "Location", value: job.location },
@@ -158,11 +156,11 @@ export default function JobDetail() {
                   { icon: DollarSign, label: "Salary", value: job.salary },
                   { icon: CheckCircle, label: "Experience", value: job.experience ? `${job.experience} years` : null },
                 ].filter(i => i.value).map(item => (
-                  <div key={item.label} className="flex items-center justify-between py-2 border-b border-border last:border-0">
-                    <span className="text-muted-foreground flex items-center gap-2">
-                      <item.icon size={14} className="text-primary" />{item.label}:
+                  <div key={item.label} className="flex items-center justify-between py-1.5 md:py-2 border-b border-border last:border-0">
+                    <span className="text-muted-foreground flex items-center gap-1.5">
+                      <item.icon size={12} className="text-primary" />{item.label}:
                     </span>
-                    <span className="font-semibold text-foreground text-right">{item.value}</span>
+                    <span className="font-semibold text-foreground text-right text-xs">{item.value}</span>
                   </div>
                 ))}
               </div>

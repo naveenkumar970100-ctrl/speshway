@@ -26,27 +26,27 @@ const phones: { color: "primary" | "secondary" | "accent"; Screen: React.LazyExo
 ];
 
 const MobileShowcase = () => (
-  <section className="py-32 overflow-hidden relative bg-background">
+  <section className="py-16 md:py-32 overflow-hidden relative bg-background">
     <div className="absolute inset-0 bg-gradient-to-b from-background via-card/20 to-background" />
 
     <div className="relative container">
-      <MotionSection className="text-center mb-20" animation="parallax-reveal">
-        <span className="text-primary text-sm font-black uppercase tracking-[0.3em] mb-4 block">Portfolio</span>
+      <MotionSection className="text-center mb-10 md:mb-20" animation="parallax-reveal">
+        <span className="text-primary text-sm font-black uppercase tracking-[0.3em] mb-3 md:mb-4 block">Portfolio</span>
         <TextReveal
           text="Our Latest Masterpieces"
-          className="text-4xl md:text-6xl font-heading font-black justify-center mb-6"
+          className="text-2xl md:text-6xl font-heading font-black justify-center mb-3 md:mb-6"
         />
-        <p className="text-muted-foreground max-w-2xl mx-auto text-xl font-light leading-relaxed">
+        <p className="text-muted-foreground max-w-2xl mx-auto text-sm md:text-xl font-light leading-relaxed px-4 md:px-0">
           We build stunning mobile apps and web solutions that redefine user experience.
         </p>
       </MotionSection>
 
       <MotionSection animation="zoom-out" className="relative">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 blur-[80px] rounded-full -z-10" />
-        <div className="flex items-end justify-center gap-4 md:gap-6 overflow-x-auto pb-4 px-4 scrollbar-hide">
+        <div className="flex items-end justify-center gap-2 md:gap-6 overflow-x-auto pb-4 px-2 md:px-4 scrollbar-hide">
           {phones.map(({ color, Screen, delay }, i) => (
             <AnimatedSection key={i} delay={i * 100} animation="fade-in-up">
-              <div className={i % 2 === 1 ? "mb-10" : ""}>
+              <div className={i % 2 === 1 ? "mb-6 md:mb-10" : ""}>
                 <PhoneMockup color={color} animationClass="animate-float" animationDelay={delay}>
                   <Suspense fallback={<PhoneFallback />}>
                     <Screen />
@@ -58,30 +58,30 @@ const MobileShowcase = () => (
         </div>
       </MotionSection>
 
-      <div className="grid md:grid-cols-3 gap-8 mt-20">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 mt-10 md:mt-20 items-stretch">
         {[
           { title: "Mobile App Development", desc: "iOS & Android apps with stunning UI, seamless UX, and world-class performance.", color: "primary" },
           { title: "Web Development", desc: "Responsive websites and web applications built for extreme performance and scale.", color: "secondary" },
           { title: "Full-Stack Solutions", desc: "End-to-end digital products from concept to deployment with modern tech stacks.", color: "accent" },
         ].map((item, i) => (
-          <AnimatedSection key={i} delay={i * 150} animation="fade-in-up">
-            <div className="text-center group p-8 rounded-3xl glass border-border hover:glow-border transition-all duration-500 hover:-translate-y-2">
-              <div className={`w-12 h-12 rounded-2xl bg-${item.color}/10 border border-${item.color}/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:bg-${item.color}/20 transition-all duration-300`}>
-                <div className={`w-3 h-3 rounded-full bg-${item.color} animate-pulse`} />
+          <AnimatedSection key={i} delay={i * 150} animation="fade-in-up" className="h-full">
+            <div className="h-full text-center group p-5 md:p-8 rounded-2xl md:rounded-3xl glass border-border hover:glow-border transition-all duration-500 flex flex-col items-center">
+              <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-${item.color}/10 border border-${item.color}/20 flex items-center justify-center mx-auto mb-3 md:mb-4 group-hover:scale-110 group-hover:bg-${item.color}/20 transition-all duration-300 shrink-0`}>
+                <div className={`w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-${item.color} animate-pulse`} />
               </div>
-              <h3 className={`text-xl font-heading font-bold mb-3 group-hover:text-${item.color} transition-colors duration-300`}>{item.title}</h3>
-              <p className="text-muted-foreground font-light leading-relaxed text-sm">{item.desc}</p>
+              <h3 className={`text-sm md:text-xl font-heading font-bold mb-2 md:mb-3 group-hover:text-${item.color} transition-colors duration-300 leading-tight`}>{item.title}</h3>
+              <p className="text-muted-foreground font-light leading-relaxed text-xs md:text-sm flex-1">{item.desc}</p>
             </div>
           </AnimatedSection>
         ))}
       </div>
 
-      <div className="text-center mt-16">
+      <div className="text-center mt-8 md:mt-16">
         <Link
           to="/projects"
-          className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-primary text-primary-foreground font-bold uppercase tracking-widest hover:shadow-[0_0_30px_hsl(var(--primary)/0.5)] hover:scale-105 transition-all duration-300"
+          className="inline-flex items-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-full bg-primary text-primary-foreground font-bold uppercase tracking-widest text-sm hover:shadow-[0_0_30px_hsl(var(--primary)/0.5)] hover:scale-105 transition-all duration-300"
         >
-          View All Projects <ArrowRight size={18} />
+          View All Projects <ArrowRight size={16} />
         </Link>
       </div>
     </div>

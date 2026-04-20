@@ -236,25 +236,25 @@ const Index = () => {
             />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-10">
             {testimonials.map((testimonial, i) => (
               <AnimatedSection key={i} delay={i * 200} animation="card-rise">
-                <div className="glass rounded-2xl md:rounded-[2.5rem] p-6 md:p-10 hover:glow-border-strong transition-all duration-700 h-full flex flex-col border-border group relative overflow-hidden">
-                  <div className="flex gap-1 md:gap-2 mb-5 md:mb-8 relative z-10">
+                <div className="glass rounded-xl md:rounded-[2.5rem] p-4 md:p-10 hover:glow-border-strong transition-all duration-700 h-full flex flex-col border-border group relative overflow-hidden">
+                  <div className="flex gap-1 md:gap-2 mb-3 md:mb-8 relative z-10">
                     {[...Array(testimonial.rating)].map((_, j) => (
-                      <Star key={j} size={18} className="text-primary fill-primary" />
+                      <Star key={j} size={14} className="text-primary fill-primary" />
                     ))}
                   </div>
-                  <p className="text-muted-foreground text-sm md:text-xl flex-1 italic leading-relaxed relative z-10 font-light">
+                  <p className="text-muted-foreground text-xs md:text-xl flex-1 italic leading-relaxed relative z-10 font-light">
                     "{testimonial.text}"
                   </p>
-                  <div className="mt-6 md:mt-10 pt-5 md:pt-8 border-t border-border flex items-center gap-4 md:gap-6 relative z-10">
-                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-primary/10 flex items-center justify-center font-heading font-black text-xl md:text-2xl text-primary shrink-0">
+                  <div className="mt-4 md:mt-10 pt-3 md:pt-8 border-t border-border flex items-center gap-2 md:gap-6 relative z-10">
+                    <div className="w-8 h-8 md:w-16 md:h-16 rounded-lg md:rounded-2xl bg-primary/10 flex items-center justify-center font-heading font-black text-sm md:text-2xl text-primary shrink-0">
                       {testimonial.name.charAt(0)}
                     </div>
-                    <div>
-                      <div className="font-black text-base md:text-lg text-foreground">{testimonial.name}</div>
-                      <div className="text-[10px] md:text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">{testimonial.role}</div>
+                    <div className="min-w-0">
+                      <div className="font-black text-xs md:text-lg text-foreground truncate">{testimonial.name}</div>
+                      <div className="text-[9px] md:text-xs font-black text-muted-foreground uppercase tracking-[0.1em] md:tracking-[0.2em] truncate">{testimonial.role}</div>
                     </div>
                   </div>
                 </div>

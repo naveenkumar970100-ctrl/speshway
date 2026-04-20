@@ -53,36 +53,34 @@ const Blog = () => {
 
       {/* Featured post */}
       {featured && (
-        <section className="py-12 relative overflow-hidden">
+        <section className="py-6 md:py-12 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-background via-card to-background" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full bg-primary/5 blur-3xl" />
-          <div className="relative container grid md:grid-cols-2 gap-12 items-center">
+          <div className="relative container grid md:grid-cols-2 gap-6 md:gap-12 items-center">
             <AnimatedSection animation="slide-in-left">
-              <div className="flex flex-wrap items-center gap-3 mb-4">
-                <span className="text-xs font-semibold px-3 py-1 rounded-full bg-primary/10 text-primary">Featured</span>
-                <span className={`text-xs font-semibold px-3 py-1 rounded-full ${tagColorMap[featured.tag] || "bg-muted text-muted-foreground"}`}>{featured.tag}</span>
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary">Featured</span>
+                <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${tagColorMap[featured.tag] || "bg-muted text-muted-foreground"}`}>{featured.tag}</span>
               </div>
-              <h2 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-3 hover:text-primary transition-colors cursor-pointer">{featured.title}</h2>
-              <p className="text-muted-foreground mb-5 leading-relaxed">{featured.excerpt}</p>
-              <div className="flex items-center gap-4 text-xs text-muted-foreground mb-5">
-                <span className="flex items-center gap-1"><User size={12} /> {featured.author}</span>
-                <span className="flex items-center gap-1"><Calendar size={12} /> {formatDate(featured.createdAt)}</span>
-                <span className="flex items-center gap-1"><Clock size={12} /> {featured.readTime}</span>
+              <h2 className="text-lg md:text-3xl font-heading font-bold text-foreground mb-2 md:mb-3 hover:text-primary transition-colors cursor-pointer leading-tight">{featured.title}</h2>
+              <p className="text-muted-foreground text-xs md:text-base mb-3 md:mb-5 leading-relaxed line-clamp-2 md:line-clamp-none">{featured.excerpt}</p>
+              <div className="flex items-center gap-3 text-[10px] md:text-xs text-muted-foreground mb-3 md:mb-5">
+                <span className="flex items-center gap-1"><User size={10} /> {featured.author}</span>
+                <span className="flex items-center gap-1"><Calendar size={10} /> {formatDate(featured.createdAt)}</span>
+                <span className="flex items-center gap-1"><Clock size={10} /> {featured.readTime}</span>
               </div>
               <Link to={`/blog/${featured._id}`}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:shadow-[0_0_20px_hsl(var(--primary)/0.4)] transition-all duration-300 hover:scale-105">
-                Read Article <ArrowRight size={14} />
+                className="inline-flex items-center gap-2 px-4 md:px-6 py-2 md:py-2.5 rounded-full bg-primary text-primary-foreground text-xs md:text-sm font-semibold hover:shadow-[0_0_20px_hsl(var(--primary)/0.4)] transition-all duration-300 hover:scale-105">
+                Read Article <ArrowRight size={12} />
               </Link>
             </AnimatedSection>
 
             <AnimatedSection animation="slide-in-right">
               <div className="relative group">
-                <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 {featured.image ? (
                   <img src={featured.image} alt={featured.title}
-                    className="relative rounded-2xl w-full object-cover shadow-2xl animate-blur-in group-hover:scale-[1.02] transition-all duration-500 max-h-64" />
+                    className="relative rounded-xl md:rounded-2xl w-full object-cover shadow-2xl group-hover:scale-[1.02] transition-all duration-500 max-h-40 md:max-h-64" />
                 ) : (
-                  <div className="relative rounded-2xl w-full h-48 glass border border-border flex items-center justify-center text-6xl">📝</div>
+                  <div className="relative rounded-xl md:rounded-2xl w-full h-32 md:h-48 glass border border-border flex items-center justify-center text-4xl md:text-6xl">📝</div>
                 )}
               </div>
             </AnimatedSection>
@@ -91,30 +89,27 @@ const Blog = () => {
       )}
 
       {/* All Posts */}
-      <section className="py-12 pb-20 bg-background relative overflow-hidden">
-        <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-secondary/5 blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-accent/5 blur-3xl" />
+      <section className="py-8 md:py-12 pb-12 md:pb-20 bg-background relative overflow-hidden">
         <div className="container relative">
-          <AnimatedSection className="mb-10">
-            <span className="text-secondary text-sm font-semibold uppercase tracking-widest">All Articles</span>
-            <h2 className="text-2xl font-heading font-bold mt-1 text-foreground">Latest Posts</h2>
+          <AnimatedSection className="mb-6 md:mb-10">
+            <span className="text-secondary text-xs md:text-sm font-semibold uppercase tracking-widest">All Articles</span>
+            <h2 className="text-lg md:text-2xl font-heading font-bold mt-1 text-foreground">Latest Posts</h2>
           </AnimatedSection>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
             {rest.map((p, i) => (
               <AnimatedSection key={p._id} delay={i * 100} animation={i % 3 === 0 ? "slide-in-left" : i % 3 === 1 ? "fade-in-up" : "slide-in-right"}>
-                <Link to={`/blog/${p._id}`} className="group h-full flex flex-col rounded-xl glass hover:glow-border-strong transition-all duration-500 hover:-translate-y-3 cursor-pointer card-3d overflow-hidden">
-                  {p.image && <img src={p.image} alt={p.title} className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500" />}
-                  <div className="p-6 flex flex-col flex-1">
-                    <span className={`text-xs font-semibold px-3 py-1 rounded-full w-fit ${tagColorMap[p.tag] || "bg-muted text-muted-foreground"}`}>{p.tag}</span>
-                    <h3 className="font-heading font-semibold text-lg mt-3 mb-2 text-foreground group-hover:text-primary transition-colors">{p.title}</h3>
-                    <p className="text-sm text-muted-foreground flex-1 leading-relaxed line-clamp-3">{p.excerpt}</p>
-                    <div className="flex items-center gap-3 mt-4 pt-4 border-t border-border/50 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1"><User size={12} /> {p.author}</span>
-                      <span className="flex items-center gap-1"><Calendar size={12} /> {formatDate(p.createdAt)}</span>
-                      <span className="flex items-center gap-1"><Clock size={12} /> {p.readTime}</span>
+                <Link to={`/blog/${p._id}`} className="group h-full flex flex-col rounded-xl glass hover:glow-border-strong transition-all duration-500 hover:-translate-y-3 cursor-pointer overflow-hidden">
+                  {p.image && <img src={p.image} alt={p.title} className="w-full h-24 md:h-40 object-cover group-hover:scale-105 transition-transform duration-500" />}
+                  <div className="p-3 md:p-6 flex flex-col flex-1">
+                    <span className={`text-[9px] md:text-xs font-semibold px-2 md:px-3 py-0.5 md:py-1 rounded-full w-fit ${tagColorMap[p.tag] || "bg-muted text-muted-foreground"}`}>{p.tag}</span>
+                    <h3 className="font-heading font-semibold text-xs md:text-lg mt-2 mb-1 md:mb-2 text-foreground group-hover:text-primary transition-colors leading-tight">{p.title}</h3>
+                    <p className="text-[10px] md:text-sm text-muted-foreground flex-1 leading-relaxed line-clamp-2 md:line-clamp-3">{p.excerpt}</p>
+                    <div className="flex items-center gap-2 mt-3 pt-2 md:pt-4 border-t border-border/50 text-[9px] md:text-xs text-muted-foreground flex-wrap">
+                      <span className="flex items-center gap-0.5"><Calendar size={9} /> {formatDate(p.createdAt)}</span>
+                      <span className="flex items-center gap-0.5"><Clock size={9} /> {p.readTime}</span>
                     </div>
-                    <span className={`inline-flex items-center gap-1 text-sm text-${tagTextMap[p.tag] || "primary"} font-medium mt-3 group-hover:gap-2 transition-all`}>
-                      Read More <ArrowRight size={14} />
+                    <span className={`inline-flex items-center gap-1 text-[10px] md:text-sm text-${tagTextMap[p.tag] || "primary"} font-medium mt-2 md:mt-3`}>
+                      Read More <ArrowRight size={10} />
                     </span>
                   </div>
                 </Link>
