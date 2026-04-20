@@ -81,6 +81,7 @@ const App = () => {
   const [maintenance, setMaintenance] = useState<boolean | null>(null);
 
   useEffect(() => {
+    // Fetch settings (colors + maintenance mode)
     fetch(apiUrl("/api/settings"))
       .then(r => r.json())
       .then((s: Record<string, string>) => {
@@ -91,6 +92,27 @@ const App = () => {
         setMaintenance(s.maintenance_mode === "true");
       })
       .catch(() => setMaintenance(false));
+
+    // Fetch logo from assets API and update favicon + tab icon dynamically
+    fetch(apiUrl("/api/assets"))
+      .then(r => r.json())
+      .then((data: Record<string, string>) => {
+        const logoUrl = data.asset_logo;
+        if (logoUrl) {
+          // Update favicon
+          const favicon = document.querySelector("link[rel='icon']") as HTMLLinkElement;
+          if (favicon) {
+            favicon.href = logoUrl;
+          } else {
+            const link = document.createElement("link");
+            link.rel = "icon";
+            link.type = "image/png";
+            link.href = logoUrl;
+            document.head.appendChild(link);
+          }
+        }
+      })
+      .catch(() => {});
   }, []);
 
   // Block public pages while checking — allow admin paths immediately

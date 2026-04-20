@@ -181,12 +181,6 @@ const ProjectDetail = () => {
                   <ExternalLink size={16} /> Visit Live Project
                 </a>
               )}
-              <button
-                onClick={() => navigate("/projects")}
-                className="flex items-center gap-2 px-7 py-3.5 rounded-2xl glass border border-border text-muted-foreground font-bold text-sm uppercase tracking-widest hover:text-foreground hover:border-primary/30 transition-all duration-300"
-              >
-                <ArrowLeft size={16} /> Back
-              </button>
             </div>
           </div>
         </div>
