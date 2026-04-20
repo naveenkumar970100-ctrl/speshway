@@ -33,6 +33,7 @@ export default function AdminDashboard() {
   const location = useLocation();
   const [admin, setAdmin] = useState<Admin | null>(null);
   const [section, setSection] = useState((location.state as { section?: string })?.section || "projects");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Projects state
   const [projects, setProjects] = useState<Project[]>([]);
@@ -245,25 +246,27 @@ export default function AdminDashboard() {
   return (
     <div className="flex min-h-screen bg-gray-50 font-sans">
       {/* Sidebar */}
-      <aside className="w-56 bg-[#1e1b2e] text-white flex flex-col fixed top-0 left-0 h-full z-50 py-6 px-4">
+      <aside className={`w-56 bg-[#1e1b2e] text-white flex flex-col fixed top-0 left-0 h-full z-[160] py-6 px-4 transition-transform duration-300 md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
+        {/* Close button mobile */}
+        <button onClick={() => setSidebarOpen(false)} className="absolute top-4 right-4 md:hidden text-purple-300 hover:text-white">✕</button>
         <div className="flex items-center gap-2 mb-8">
           <img src={logo} alt="" className="w-8 h-8 object-contain" />
           <span className="font-bold text-sm">Speshway Admin</span>
         </div>
         <nav className="flex flex-col gap-1 flex-1">
           {navItems.map(n => (
-            <button key={n.key} onClick={() => setSection(n.key)}
+            <button key={n.key} onClick={() => { setSection(n.key); setSidebarOpen(false); }}
               className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-left transition-all ${section === n.key ? "bg-purple-600/40 text-white" : "text-purple-300 hover:bg-purple-600/20 hover:text-white"}`}>
               {n.icon} {n.label}
             </button>
           ))}
           {extraNav.map(n => (
-            <button key={n.path} onClick={() => navigate(n.path)}
+            <button key={n.path} onClick={() => { navigate(n.path); setSidebarOpen(false); }}
               className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-purple-300 hover:bg-purple-600/20 hover:text-white text-sm font-medium text-left transition-all">
               {n.icon} {n.label}
             </button>
           ))}
-          <button onClick={() => setSection("settings")}
+          <button onClick={() => { setSection("settings"); setSidebarOpen(false); }}
             className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-left transition-all ${section === "settings" ? "bg-purple-600/40 text-white" : "text-purple-300 hover:bg-purple-600/20 hover:text-white"}`}>
             🔧 Settings
           </button>
@@ -273,8 +276,22 @@ export default function AdminDashboard() {
         </button>
       </aside>
 
+      {/* Mobile overlay */}
+      {sidebarOpen && <div className="fixed inset-0 bg-black/50 z-[150] md:hidden" onClick={() => setSidebarOpen(false)} />}
+
+      {/* Hamburger button — mobile only */}
+      <button
+        onClick={() => setSidebarOpen(true)}
+        className="fixed top-4 left-4 z-[200] flex md:hidden flex-col justify-center items-center gap-[5px] w-10 h-10 bg-purple-700 rounded-xl shadow-lg"
+        aria-label="Open menu"
+      >
+        <span className="block w-5 h-0.5 bg-white rounded" />
+        <span className="block w-5 h-0.5 bg-white rounded" />
+        <span className="block w-5 h-0.5 bg-white rounded" />
+      </button>
+
       {/* Main */}
-      <main className="ml-56 flex-1 p-8">
+      <main className="md:ml-56 flex-1 p-4 md:p-8 pt-16 md:pt-8">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-black text-gray-900 capitalize">{section}</h1>

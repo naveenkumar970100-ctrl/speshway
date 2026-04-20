@@ -85,7 +85,7 @@ export default function AdminBlog() {
     <div className="flex min-h-screen bg-gray-50 font-sans">
       <AdminSidebar active="Blog" />
 
-      <main className="ml-56 flex-1 p-8">
+      <main className="md:ml-56 flex-1 p-4 md:p-8 pt-16 md:pt-8">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-black text-gray-900">Blog Posts ({posts.length})</h1>
