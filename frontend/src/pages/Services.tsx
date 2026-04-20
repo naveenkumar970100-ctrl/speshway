@@ -131,20 +131,21 @@ const Services = () => {
             <div className="absolute top-6 md:top-10 left-[10%] right-[10%] h-[2px] bg-white/5 overflow-hidden z-0">
               <div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-accent origin-left scale-x-0 transition-transform duration-[1500ms] ease-out delay-300 [.opacity-100_&]:scale-x-100" />
             </div>
-          {process.map((p, i) => (
-            <MotionSection key={p.step} delay={i * 0.1} animation="zoom-out">
-              <div className="text-center group relative z-10">
-                <div className="relative w-10 h-10 md:w-20 md:h-20 mx-auto mb-3 md:mb-8">
-                  <div className="relative w-10 h-10 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-primary-foreground font-bold text-xs md:text-2xl group-hover:scale-110 transition-all duration-1000">
-                    {p.step}
+            {process.map((p, i) => (
+              <MotionSection key={p.step} delay={i * 0.1} animation="zoom-out">
+                <div className="text-center group relative z-10">
+                  <div className="relative w-10 h-10 md:w-20 md:h-20 mx-auto mb-3 md:mb-8">
+                    <div className="relative w-10 h-10 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-primary-foreground font-bold text-xs md:text-2xl group-hover:scale-110 transition-all duration-1000">
+                      {p.step}
+                    </div>
                   </div>
+                  <h3 className="font-heading font-bold text-[10px] md:text-xl text-foreground mb-1 md:mb-4 group-hover:text-primary transition-colors duration-500 tracking-tight leading-tight">{p.title}</h3>
+                  <p className="text-muted-foreground font-light leading-relaxed text-[9px] md:text-base hidden md:block">{p.desc}</p>
                 </div>
-                <h3 className="font-heading font-bold text-[10px] md:text-xl text-foreground mb-1 md:mb-4 group-hover:text-primary transition-colors duration-500 tracking-tight leading-tight">{p.title}</h3>
-                <p className="text-muted-foreground font-light leading-relaxed text-[9px] md:text-base hidden md:block">{p.desc}</p>
-              </div>
-            </MotionSection>
-          ))}
-        </div>
+              </MotionSection>
+            ))}
+          </div>
+        </MotionSection>
       </div>
     </section>
 
