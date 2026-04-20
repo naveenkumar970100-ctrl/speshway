@@ -93,7 +93,7 @@ export default function ServiceDetail() {
   return (
     <Layout>
       {/* Hero */}
-      <section className="relative pt-32 pb-20 overflow-hidden bg-background">
+      <section className="relative pt-20 md:pt-32 pb-12 md:pb-20 overflow-hidden bg-background">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-secondary/5" />
         <div className="absolute top-20 right-0 w-[500px] h-[500px] rounded-full bg-primary/10 blur-[120px]" />
 
@@ -119,7 +119,7 @@ export default function ServiceDetail() {
             </div>
           </AnimatedSection>
 
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-10 md:gap-16 items-center">
             <div>
               <AnimatedSection animation="fade-in-up">
                 <div className={`w-20 h-20 rounded-3xl bg-${service.color}/15 flex items-center justify-center mb-8 border border-${service.color}/20`}>

@@ -49,36 +49,36 @@ const ProjectDetail = () => {
 
   return (
     <Layout>
-      <div className="container py-10">
+      <div className="container py-6 md:py-10">
 
         {/* Back button */}
         <button
           onClick={() => navigate("/projects")}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full glass border border-border text-muted-foreground font-bold text-sm hover:text-foreground hover:border-primary/30 transition-all duration-300 mb-8 w-fit"
+          className="flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-full glass border border-border text-muted-foreground font-bold text-sm hover:text-foreground hover:border-primary/30 transition-all duration-300 mb-6 md:mb-8 w-fit"
         >
           <ArrowLeft size={16} /> Back to Projects
         </button>
 
-        {/* Project Title — full width at top */}
-        <div className="mb-10">
-          <div className="flex flex-wrap items-center gap-3 mb-3">
-            <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest border ${statusColors[project.status] || "bg-muted text-muted-foreground border-border"}`}>
+        {/* Project Title */}
+        <div className="mb-6 md:mb-10">
+          <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-3">
+            <span className={`inline-flex items-center gap-2 px-3 md:px-4 py-1.5 rounded-full text-[10px] md:text-[11px] font-bold uppercase tracking-widest border ${statusColors[project.status] || "bg-muted text-muted-foreground border-border"}`}>
               <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
               {project.status}
             </span>
-            <span className="text-muted-foreground text-sm font-medium">{project.category}</span>
-            {project.client && <span className="text-muted-foreground text-sm">· Client: <span className="text-foreground font-semibold">{project.client}</span></span>}
+            <span className="text-muted-foreground text-xs md:text-sm font-medium">{project.category}</span>
+            {project.client && <span className="text-muted-foreground text-xs md:text-sm">· Client: <span className="text-foreground font-semibold">{project.client}</span></span>}
           </div>
-          <h1 className="text-4xl md:text-6xl font-heading font-black text-foreground leading-tight">
+          <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-heading font-black text-foreground leading-tight">
             {project.title}
           </h1>
         </div>
 
-        {/* Main layout — image left, details right */}
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
+        {/* Main layout */}
+        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-start">
 
           {/* LEFT — Project Image */}
-          <div className="rounded-3xl overflow-hidden border border-border shadow-2xl group hover:shadow-[0_0_60px_hsl(var(--primary)/0.2)] transition-all duration-700 sticky top-28">
+          <div className="rounded-2xl md:rounded-3xl overflow-hidden border border-border shadow-2xl group hover:shadow-[0_0_60px_hsl(var(--primary)/0.2)] transition-all duration-700 lg:sticky lg:top-28">
             {project.image ? (
               <img
                 src={project.image}
