@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { apiUrl } from "@/lib/api";
-import { optimizeImage } from "@/lib/cloudinary";
 
 // Cloudinary base URLs — permanent fallbacks
 const CLOUDINARY: Record<string, string> = {
@@ -38,20 +37,20 @@ export const useAssets = (): Assets => {
       .then(r => r.json())
       .then((data: Record<string, string>) => {
         setAssets({
-          aboutTeam:      optimizeImage(data.asset_about_team      || CLOUDINARY.aboutTeam, 800),
-          webShowcase:    optimizeImage(data.asset_web_showcase    || CLOUDINARY.webShowcase, 1200),
+          aboutTeam:      data.asset_about_team      || CLOUDINARY.aboutTeam,
+          webShowcase:    data.asset_web_showcase    || CLOUDINARY.webShowcase,
           logo:           data.asset_logo            || CLOUDINARY.logo,
-          heroSlide1:     optimizeImage(data.asset_hero_slide_1    || CLOUDINARY.heroSlide1, 1920),
-          heroSlide2:     optimizeImage(data.asset_hero_slide_2    || CLOUDINARY.heroSlide2, 1920),
-          heroSlide3:     optimizeImage(data.asset_hero_slide_3    || CLOUDINARY.heroSlide3, 1920),
-          heroBg:         optimizeImage(data.asset_hero_bg         || CLOUDINARY.heroBg, 1920),
-          mobileShowcase: optimizeImage(data.asset_mobile_showcase || CLOUDINARY.mobileShowcase, 800),
-          phoneEcommerce: optimizeImage(data.asset_phone_ecommerce || CLOUDINARY.phoneEcommerce, 400),
-          phoneFintech:   optimizeImage(data.asset_phone_fintech   || CLOUDINARY.phoneFintech, 400),
-          phoneFitness:   optimizeImage(data.asset_phone_fitness   || CLOUDINARY.phoneFitness, 400),
-          phoneFood:      optimizeImage(data.asset_phone_food      || CLOUDINARY.phoneFood, 400),
-          phoneHealth:    optimizeImage(data.asset_phone_health    || CLOUDINARY.phoneHealth, 400),
-          phoneSocial:    optimizeImage(data.asset_phone_social    || CLOUDINARY.phoneSocial, 400),
+          heroSlide1:     data.asset_hero_slide_1    || CLOUDINARY.heroSlide1,
+          heroSlide2:     data.asset_hero_slide_2    || CLOUDINARY.heroSlide2,
+          heroSlide3:     data.asset_hero_slide_3    || CLOUDINARY.heroSlide3,
+          heroBg:         data.asset_hero_bg         || CLOUDINARY.heroBg,
+          mobileShowcase: data.asset_mobile_showcase || CLOUDINARY.mobileShowcase,
+          phoneEcommerce: data.asset_phone_ecommerce || CLOUDINARY.phoneEcommerce,
+          phoneFintech:   data.asset_phone_fintech   || CLOUDINARY.phoneFintech,
+          phoneFitness:   data.asset_phone_fitness   || CLOUDINARY.phoneFitness,
+          phoneFood:      data.asset_phone_food      || CLOUDINARY.phoneFood,
+          phoneHealth:    data.asset_phone_health    || CLOUDINARY.phoneHealth,
+          phoneSocial:    data.asset_phone_social    || CLOUDINARY.phoneSocial,
         });
       })
       .catch(() => {});
