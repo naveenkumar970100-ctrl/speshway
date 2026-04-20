@@ -65,10 +65,12 @@ export default function AdminSubmissions() {
     <div className="flex min-h-screen bg-gray-50 font-sans">
       <AdminSidebar active="Submissions" />
 
-      <main className="md:ml-56 flex-1 p-4 md:p-8 pt-16 md:pt-8">
-        <div className="mb-6">
-          <h1 className="text-2xl font-black text-gray-900">Job Submissions</h1>
-          <p className="text-gray-400 text-sm mt-1">All job applications with resume and details</p>
+      <main className="lg:ml-56 flex-1 p-4 md:p-6 pt-16 lg:pt-6 min-w-0">
+        <div className="flex items-center justify-between mb-6 gap-3">
+          <div>
+            <h1 className="text-xl md:text-2xl font-black text-gray-900">Job Submissions</h1>
+            <p className="text-gray-400 text-sm mt-1">All job applications with resume and details</p>
+          </div>
         </div>
 
         {/* Filters */}
@@ -150,8 +152,8 @@ export default function AdminSubmissions() {
 
       {/* Detail Modal */}
       {selected && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-[400] flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-0 sm:p-4">
+          <div className="bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:max-w-lg max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between p-6 border-b border-gray-100">
               <h2 className="text-lg font-black text-gray-900">Application Details</h2>
               <button onClick={() => setSelected(null)} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">x</button>

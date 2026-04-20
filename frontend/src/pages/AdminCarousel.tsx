@@ -93,57 +93,54 @@ export default function AdminCarousel() {
       {/* Sidebar */}
       <AdminSidebar active="Carousel" />
 
-      <main className="md:ml-56 flex-1 p-4 md:p-8 pt-16 md:pt-8">
-        <div className="flex items-center justify-between mb-8">
+      <main className="lg:ml-56 flex-1 p-4 md:p-6 pt-16 lg:pt-6 min-w-0">
+        <div className="flex items-center justify-between mb-6 gap-3">
           <div>
-            <h1 className="text-2xl font-black text-gray-900">Carousel Slides</h1>
-            <p className="text-gray-400 text-sm mt-1">Manage hero carousel — add, edit, toggle active, delete</p>
+            <h1 className="text-xl md:text-2xl font-black text-gray-900">Carousel Slides</h1>
+            <p className="text-gray-400 text-sm mt-1">Manage hero carousel — add, edit, toggle, delete</p>
           </div>
-          <button onClick={openAdd} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-600 text-white text-sm font-bold hover:bg-purple-700 transition-colors">
-            + Add New Slide
+          <button onClick={openAdd} className="flex items-center gap-1.5 px-3 md:px-5 py-2 md:py-2.5 rounded-xl bg-purple-600 text-white text-xs md:text-sm font-bold hover:bg-purple-700 shrink-0">
+            + Add Slide
           </button>
         </div>
 
-        <div className="space-y-4">
-          {slides.map((s, i) => (
-            <div key={s._id} className={`bg-white rounded-2xl border p-5 flex gap-5 items-start transition-all ${s.isActive ? "border-gray-100 shadow-sm" : "border-gray-200 opacity-60"}`}>
-              {/* Image preview */}
-              <div className="w-32 h-20 rounded-xl overflow-hidden bg-gray-100 shrink-0">
-                {s.image ? <img src={s.image} alt="" className="w-full h-full object-cover" /> : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-300 text-2xl">🖼️</div>
-                )}
-              </div>
-
-              {/* Content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-bold text-purple-500 uppercase tracking-widest">{s.badge}</span>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${s.isActive ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-500"}`}>
-                    {s.isActive ? "Active" : "Inactive"}
-                  </span>
-                  <span className="text-[10px] text-gray-400">Order: {s.order}</span>
+        <div className="space-y-3 md:space-y-4">
+          {slides.map((s) => (
+            <div key={s._id} className={`bg-white rounded-2xl border p-4 md:p-5 transition-all ${s.isActive ? "border-gray-100 shadow-sm" : "border-gray-200 opacity-60"}`}>
+              <div className="flex gap-3 md:gap-5 items-start">
+                {/* Image preview */}
+                <div className="w-20 h-14 md:w-32 md:h-20 rounded-xl overflow-hidden bg-gray-100 shrink-0">
+                  {s.image ? <img src={s.image} alt="" className="w-full h-full object-cover" /> : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-300 text-xl">🖼️</div>
+                  )}
                 </div>
-                <h3 className="font-bold text-gray-800 truncate">{s.title} <span className="text-purple-500">{s.highlight}</span></h3>
-                <p className="text-gray-500 text-xs mt-1 line-clamp-2">{s.desc}</p>
-                <div className="flex gap-2 mt-1 text-[10px] text-gray-400">
-                  <span>CTA: {s.ctaText} → {s.ctaLink}</span>
-                  <span>·</span>
-                  <span>{s.cta2Text} → {s.cta2Link}</span>
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
+                    <span className="text-[10px] font-bold text-purple-500 uppercase tracking-widest truncate">{s.badge}</span>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold shrink-0 ${s.isActive ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-500"}`}>
+                      {s.isActive ? "Active" : "Inactive"}
+                    </span>
+                  </div>
+                  <h3 className="font-bold text-gray-800 text-sm truncate">{s.title} <span className="text-purple-500">{s.highlight}</span></h3>
+                  <p className="text-gray-500 text-xs mt-1 line-clamp-2 hidden sm:block">{s.desc}</p>
+                  {/* Actions inline on mobile */}
+                  <div className="flex gap-2 mt-2 md:hidden">
+                    <button onClick={() => handleToggle(s._id)} className={`px-2.5 py-1 rounded-lg text-xs font-bold ${s.isActive ? "bg-yellow-50 text-yellow-600" : "bg-green-50 text-green-600"}`}>
+                      {s.isActive ? "Stop" : "Start"}
+                    </button>
+                    <button onClick={() => openEdit(s)} className="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-600 text-xs font-bold">Edit</button>
+                    <button onClick={() => handleDelete(s._id)} className="px-2.5 py-1 rounded-lg bg-red-50 text-red-600 text-xs font-bold">Del</button>
+                  </div>
                 </div>
-              </div>
-
-              {/* Actions */}
-              <div className="flex flex-col gap-2 shrink-0">
-                <button onClick={() => handleToggle(s._id)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${s.isActive ? "bg-yellow-50 text-yellow-600 hover:bg-yellow-100" : "bg-green-50 text-green-600 hover:bg-green-100"}`}>
-                  {s.isActive ? "⏸ Stop" : "▶ Start"}
-                </button>
-                <button onClick={() => openEdit(s)} className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 text-xs font-bold hover:bg-blue-100 transition-colors">
-                  ✏️ Edit
-                </button>
-                <button onClick={() => handleDelete(s._id)} className="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 text-xs font-bold hover:bg-red-100 transition-colors">
-                  🗑 Delete
-                </button>
+                {/* Actions — desktop only */}
+                <div className="hidden md:flex flex-col gap-2 shrink-0">
+                  <button onClick={() => handleToggle(s._id)} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${s.isActive ? "bg-yellow-50 text-yellow-600 hover:bg-yellow-100" : "bg-green-50 text-green-600 hover:bg-green-100"}`}>
+                    {s.isActive ? "⏸ Stop" : "▶ Start"}
+                  </button>
+                  <button onClick={() => openEdit(s)} className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 text-xs font-bold hover:bg-blue-100">✏️ Edit</button>
+                  <button onClick={() => handleDelete(s._id)} className="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 text-xs font-bold hover:bg-red-100">🗑 Delete</button>
+                </div>
               </div>
             </div>
           ))}
@@ -152,8 +149,8 @@ export default function AdminCarousel() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-[400] flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-0 sm:p-4">
+          <div className="bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:max-w-2xl max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between p-6 border-b border-gray-100">
               <h2 className="text-lg font-black text-gray-900">{editSlide ? "Edit Slide" : "Add New Slide"}</h2>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
@@ -162,7 +159,7 @@ export default function AdminCarousel() {
               {error && <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">{error}</div>}
 
               <CField label="Badge Text *" value={form.badge} onChange={v => setForm(f => ({ ...f, badge: v }))} required placeholder="Welcome to the Future of IT" />
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <CField label="Title *" value={form.title} onChange={v => setForm(f => ({ ...f, title: v }))} required placeholder="Build Your Digital Future" />
                 <CField label="Highlight (colored) *" value={form.highlight} onChange={v => setForm(f => ({ ...f, highlight: v }))} required placeholder="Speshway Solutions" />
               </div>
@@ -171,11 +168,11 @@ export default function AdminCarousel() {
                 <textarea value={form.desc} onChange={e => setForm(f => ({ ...f, desc: e.target.value }))} required rows={2}
                   className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm resize-none" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <CField label="CTA Button Text" value={form.ctaText} onChange={v => setForm(f => ({ ...f, ctaText: v }))} placeholder="Learn More" />
                 <CField label="CTA Link" value={form.ctaLink} onChange={v => setForm(f => ({ ...f, ctaLink: v }))} placeholder="/services" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <CField label="2nd Button Text" value={form.cta2Text} onChange={v => setForm(f => ({ ...f, cta2Text: v }))} placeholder="Contact Us" />
                 <CField label="2nd Button Link" value={form.cta2Link} onChange={v => setForm(f => ({ ...f, cta2Link: v }))} placeholder="/contact" />
               </div>

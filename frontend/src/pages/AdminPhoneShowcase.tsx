@@ -127,14 +127,13 @@ export default function AdminPhoneShowcase() {
     <div className="flex min-h-screen bg-gray-50 font-sans">
       <AdminSidebar active="Phone Showcase" />
 
-      <main className="md:ml-56 flex-1 p-4 md:p-8 pt-16 md:pt-8">
-        <div className="flex items-center justify-between mb-8">
+      <main className="lg:ml-56 flex-1 p-4 md:p-6 pt-16 lg:pt-6 min-w-0">
+        <div className="flex items-center justify-between mb-6 gap-3">
           <div>
-            <h1 className="text-2xl font-black text-gray-900">Phone Showcase</h1>
-            <p className="text-gray-500 text-sm mt-1">Manage images displayed inside phone mockups on the home page</p>
+            <h1 className="text-xl md:text-2xl font-black text-gray-900">Phone Showcase</h1>
+            <p className="text-gray-500 text-sm mt-1">Manage images displayed inside phone mockups</p>
           </div>
-          <button onClick={openAdd}
-            className="px-5 py-2.5 rounded-xl bg-purple-600 text-white font-bold text-sm hover:bg-purple-700 transition-colors">
+          <button onClick={openAdd} className="px-3 md:px-5 py-2 md:py-2.5 rounded-xl bg-purple-600 text-white font-bold text-xs md:text-sm hover:bg-purple-700 shrink-0">
             + Add Image
           </button>
         </div>

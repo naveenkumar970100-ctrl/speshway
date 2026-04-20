@@ -107,14 +107,14 @@ export default function AdminTeam() {
     <div className="flex min-h-screen bg-gray-50 font-sans">
       <AdminSidebar active="Team" />
 
-      <main className="md:ml-56 flex-1 p-4 md:p-8 pt-16 md:pt-8">
-        <div className="flex items-center justify-between mb-8">
+      <main className="lg:ml-56 flex-1 p-4 md:p-6 pt-16 lg:pt-6 min-w-0">
+        <div className="flex items-center justify-between mb-6 gap-3">
           <div>
-            <h1 className="text-2xl font-black text-gray-900">Team Members ({members.length})</h1>
+            <h1 className="text-xl md:text-2xl font-black text-gray-900">Team Members ({members.length})</h1>
             <p className="text-gray-400 text-sm mt-1">Manage your team — changes reflect on the Team page</p>
           </div>
-          <button onClick={openAdd} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-600 text-white text-sm font-bold hover:bg-purple-700 transition-colors">
-            + Add Team Member
+          <button onClick={openAdd} className="flex items-center gap-1.5 px-3 md:px-5 py-2 md:py-2.5 rounded-xl bg-purple-600 text-white text-xs md:text-sm font-bold hover:bg-purple-700 shrink-0">
+            + Add Member
           </button>
         </div>
 
@@ -165,8 +165,8 @@ export default function AdminTeam() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-[400] flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-0 sm:p-4">
+          <div className="bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:max-w-2xl max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between p-6 border-b border-gray-100">
               <h2 className="text-lg font-black text-gray-900">{editMember ? "Edit Member" : "Add Team Member"}</h2>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
@@ -174,7 +174,7 @@ export default function AdminTeam() {
             <form onSubmit={handleSave} className="p-6 flex flex-col gap-4">
               {error && <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">{error}</div>}
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <TField label="Full Name *" value={form.name} onChange={f("name")} required />
                 <TField label="Role / Title *" value={form.role} onChange={f("role")} required placeholder="CEO & Founder" />
               </div>
@@ -183,7 +183,7 @@ export default function AdminTeam() {
                 <textarea value={form.bio} onChange={e => setForm(p => ({ ...p, bio: e.target.value }))} rows={2}
                   className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm resize-none" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <TField label="Initials (e.g. RK)" value={form.initials} onChange={f("initials")} placeholder="Auto-generated" />
                 <div>
                   <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Avatar Gradient</label>
@@ -193,11 +193,11 @@ export default function AdminTeam() {
                   </select>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <TField label="LinkedIn URL" value={form.linkedin} onChange={f("linkedin")} placeholder="https://linkedin.com/in/..." />
                 <TField label="GitHub URL" value={form.github} onChange={f("github")} placeholder="https://github.com/..." />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <TField label="Twitter URL" value={form.twitter} onChange={f("twitter")} placeholder="https://twitter.com/..." />
                 <TField label="Email" value={form.email} onChange={f("email")} placeholder="name@speshway.com" />
               </div>

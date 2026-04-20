@@ -129,15 +129,15 @@ export default function AdminJobs() {
     <div className="flex min-h-screen bg-gray-50 font-sans">
       <AdminSidebar active="Jobs" />
 
-      <main className="md:ml-56 flex-1 p-4 md:p-8 pt-16 md:pt-8">
-        <div className="flex items-center justify-between mb-6">
+      <main className="lg:ml-56 flex-1 p-4 md:p-6 pt-16 lg:pt-6 min-w-0">
+        <div className="flex items-center justify-between mb-6 gap-3">
           <div>
-            <h1 className="text-2xl font-black text-gray-900">Jobs & Applications</h1>
+            <h1 className="text-xl md:text-2xl font-black text-gray-900">Jobs & Applications</h1>
             <p className="text-gray-400 text-sm mt-1">Manage job postings and review applicants</p>
           </div>
           {tab === "jobs" && (
-            <button onClick={openAdd} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-600 text-white text-sm font-bold hover:bg-purple-700 transition-colors">
-              + Add New Job
+            <button onClick={openAdd} className="flex items-center gap-1.5 px-3 md:px-5 py-2 md:py-2.5 rounded-xl bg-purple-600 text-white text-xs md:text-sm font-bold hover:bg-purple-700 shrink-0">
+              + Add Job
             </button>
           )}
         </div>
@@ -159,33 +159,36 @@ export default function AdminJobs() {
           jobs.length === 0 ? (
             <div className="bg-white rounded-2xl p-12 text-center text-gray-400 border border-gray-100">No jobs yet. Add your first posting!</div>
           ) : (
-            <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
               {jobs.map(j => (
-                <div key={j._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:shadow-md transition-shadow">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <h3 className="font-bold text-gray-800 text-lg">{j.title}</h3>
-                      <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-bold ${statusColors[j.status] || "bg-gray-100 text-gray-600"}`}>{j.status}</span>
-                      <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-600 font-bold">
-                        {applications.filter(a => a.jobTitle === j.title).length} applicants
-                      </span>
+                <div key={j._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 md:p-6 hover:shadow-md transition-shadow">
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-wrap items-center gap-2 mb-1">
+                          <h3 className="font-bold text-gray-800 text-base">{j.title}</h3>
+                          <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold shrink-0 ${statusColors[j.status] || "bg-gray-100 text-gray-600"}`}>{j.status}</span>
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-50 text-purple-600 font-bold shrink-0">
+                            {applications.filter(a => a.jobTitle === j.title).length} applicants
+                          </span>
+                        </div>
+                        <div className="flex flex-wrap gap-2 md:gap-4 text-xs text-gray-500">
+                          {j.location && <span>📍 {j.location}</span>}
+                          {j.type && <span>⏱ {j.type}</span>}
+                          {j.salary && <span>💰 {j.salary}</span>}
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex flex-wrap gap-4 text-sm text-gray-500 mb-2">
-                      {j.location && <span>📍 {j.location}</span>}
-                      {j.type && <span>⏱ {j.type}</span>}
-                      {j.salary && <span>💰 {j.salary}</span>}
-                      {j.department && <span>🏢 {j.department}</span>}
+                    <p className="text-gray-500 text-xs line-clamp-2">{j.desc}</p>
+                    <div className="flex gap-2 flex-wrap">
+                      <button onClick={() => setTab("applications")} className="px-3 py-1.5 rounded-xl bg-purple-50 text-purple-600 text-xs font-bold hover:bg-purple-100">Applications</button>
+                      <button onClick={() => openEdit(j)} className="px-3 py-1.5 rounded-xl bg-blue-50 text-blue-600 text-xs font-bold hover:bg-blue-100">Edit</button>
+                      <button onClick={() => handleDelete(j._id)} className="px-3 py-1.5 rounded-xl bg-red-50 text-red-600 text-xs font-bold hover:bg-red-100">Delete</button>
                     </div>
-                    <p className="text-gray-500 text-sm line-clamp-2">{j.desc}</p>
-                  </div>
-                  <div className="flex gap-2 shrink-0">
-                    <button onClick={() => setTab("applications")} className="px-4 py-2 rounded-xl bg-purple-50 text-purple-600 text-sm font-bold hover:bg-purple-100 transition-colors">Applications</button>
-                    <button onClick={() => openEdit(j)} className="px-4 py-2 rounded-xl bg-blue-50 text-blue-600 text-sm font-bold hover:bg-blue-100 transition-colors">Edit</button>
-                    <button onClick={() => handleDelete(j._id)} className="px-4 py-2 rounded-xl bg-red-50 text-red-600 text-sm font-bold hover:bg-red-100 transition-colors">Delete</button>
                   </div>
                 </div>
               ))}
-            </div>
+              </div>
           )
         )}
 
@@ -233,8 +236,8 @@ export default function AdminJobs() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-[400] flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-0 sm:p-4">
+          <div className="bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:max-w-2xl max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between p-6 border-b border-gray-100">
               <h2 className="text-lg font-black text-gray-900">{editJob ? "Edit Job" : "Add New Job"}</h2>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl">x</button>
@@ -247,7 +250,7 @@ export default function AdminJobs() {
                 <textarea value={form.desc} onChange={e => setForm(p => ({ ...p, desc: e.target.value }))} required rows={3}
                   className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none text-sm resize-none" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <JField label="Location" value={form.location} onChange={f("location")} placeholder="Hyderabad / Remote" />
                 <div>
                   <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Type</label>
@@ -257,11 +260,11 @@ export default function AdminJobs() {
                   </select>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <JField label="Salary" value={form.salary} onChange={f("salary")} placeholder="12-18 LPA" />
                 <JField label="Department" value={form.department} onChange={f("department")} placeholder="Engineering" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <JField label="Experience" value={form.experience} onChange={f("experience")} placeholder="2-4 years" />
                 <div>
                   <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Status</label>
