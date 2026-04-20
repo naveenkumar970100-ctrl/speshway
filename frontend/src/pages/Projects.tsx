@@ -39,7 +39,6 @@ const Projects = () => {
       .then(r => r.json())
       .then(data => { setProjects(Array.isArray(data) ? data : []); setLoading(false); })
       .catch(() => setLoading(false));
-
     fetch("/api/settings", { cache: "no-store" })
       .then(r => r.json())
       .then(data => setSettings(data))
@@ -58,14 +57,14 @@ const Projects = () => {
       <PageHeader title="Our Projects" subtitle="Explore our successful deliveries across various industries." />
 
       {/* Stats */}
-      <section className="py-16 relative overflow-hidden">
+      <section className="py-8 md:py-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-card/30 to-secondary/5" />
-        <div className="relative container grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="relative container grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-8">
           {stats.map((s, i) => (
             <MotionSection key={s.label} delay={i * 0.1} animation="skew-up">
-              <div className="text-center glass rounded-2xl p-8 hover:glow-border-strong transition-all duration-500 hover:-translate-y-2 border-border group">
-                <div className={`text-4xl font-heading font-black text-${s.color} mb-2`}>{s.val}</div>
-                <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{s.label}</div>
+              <div className="text-center glass rounded-xl md:rounded-2xl p-4 md:p-8 hover:glow-border-strong transition-all duration-500 border-border group">
+                <div className={`text-2xl md:text-4xl font-heading font-black text-${s.color} mb-1 md:mb-2`}>{s.val}</div>
+                <div className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-tight">{s.label}</div>
               </div>
             </MotionSection>
           ))}
@@ -73,13 +72,13 @@ const Projects = () => {
       </section>
 
       {/* Projects Grid */}
-      <section className="py-24 bg-background relative overflow-hidden">
+      <section className="py-12 md:py-24 bg-background relative overflow-hidden">
         <div className="container relative">
-          <div className="text-center mb-20">
+          <div className="text-center mb-10 md:mb-20">
             <MotionSection animation="parallax-reveal">
               <span className="text-primary text-sm font-bold uppercase tracking-[0.3em]">Portfolio</span>
               <TextReveal text="Our Work" className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-heading font-bold mt-4 justify-center" />
-              <p className="text-muted-foreground mt-6 text-lg font-light max-w-2xl mx-auto">
+              <p className="text-muted-foreground mt-4 md:mt-6 text-sm md:text-lg font-light max-w-2xl mx-auto px-2">
                 Click any project to see full details, tech stack, and features.
               </p>
             </MotionSection>
@@ -96,67 +95,56 @@ const Projects = () => {
               <p className="text-sm mt-2">Add projects from the admin dashboard.</p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8">
               {projects.map((p, i) => (
                 <AnimatedSection key={p._id} delay={i * 80} animation="card-rise">
                   <div
                     onClick={() => navigate(`/projects/${p._id}`)}
-                    className="group cursor-pointer h-full bg-card rounded-3xl border border-border overflow-hidden hover:border-primary/30 hover:shadow-[0_20px_60px_hsl(var(--primary)/0.15)] transition-all duration-500 hover:-translate-y-2 flex flex-col"
+                    className="group cursor-pointer h-full bg-card rounded-2xl md:rounded-3xl border border-border overflow-hidden hover:border-primary/30 hover:shadow-[0_20px_60px_hsl(var(--primary)/0.15)] transition-all duration-500 hover:-translate-y-1 flex flex-col"
                   >
                     {/* Image */}
-                    <div className="relative h-52 overflow-hidden bg-gradient-to-br from-primary/10 to-secondary/10">
+                    <div className="relative h-44 md:h-52 overflow-hidden bg-gradient-to-br from-primary/10 to-secondary/10">
                       {p.image ? (
-                        <img
-                          src={p.image}
-                          alt={p.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                          loading="lazy"
-                        />
+                        <img src={p.image} alt={p.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-5xl">🚀</div>
                       )}
-                      {/* Overlay on hover */}
                       <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
                         <span className="bg-white text-primary font-bold text-sm px-4 py-2 rounded-full flex items-center gap-2 shadow-lg translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                           <ExternalLink size={14} /> View Details
                         </span>
                       </div>
-                      {/* Status badge */}
                       <div className="absolute top-3 left-3">
-                        <span className={`px-3 py-1 rounded-full text-[10px] font-bold border ${statusColors[p.status] || "bg-muted text-muted-foreground border-border"}`}>
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${statusColors[p.status] || "bg-muted text-muted-foreground border-border"}`}>
                           {p.status}
                         </span>
                       </div>
-                      {/* Category badge */}
                       <div className="absolute top-3 right-3">
-                        <span className={`px-3 py-1 rounded-full text-[10px] font-bold bg-${tagColors[i % 3]}/20 text-${tagColors[i % 3]} border border-${tagColors[i % 3]}/20`}>
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold bg-${tagColors[i % 3]}/20 text-${tagColors[i % 3]} border border-${tagColors[i % 3]}/20`}>
                           {p.category}
                         </span>
                       </div>
                     </div>
 
                     {/* Content */}
-                    <div className="p-6 flex-1 flex flex-col">
-                      <h3 className="font-heading font-bold text-xl text-foreground mb-2 group-hover:text-primary transition-colors leading-tight">
+                    <div className="p-4 md:p-6 flex-1 flex flex-col">
+                      <h3 className="font-heading font-bold text-base md:text-xl text-foreground mb-1.5 md:mb-2 group-hover:text-primary transition-colors leading-tight">
                         {p.title}
                       </h3>
                       {p.client && (
-                        <p className="text-xs text-muted-foreground mb-3 font-medium">Client: {p.client}</p>
+                        <p className="text-xs text-muted-foreground mb-2 md:mb-3 font-medium">Client: {p.client}</p>
                       )}
-                      <p className="text-muted-foreground text-sm leading-relaxed mb-5 flex-1 line-clamp-3">
+                      <p className="text-muted-foreground text-xs md:text-sm leading-relaxed mb-4 flex-1 line-clamp-3">
                         {p.description}
                       </p>
-                      {/* Tech stack */}
-                      <div className="flex flex-wrap gap-2 mt-auto">
+                      <div className="flex flex-wrap gap-1.5 md:gap-2 mt-auto">
                         {p.tech.slice(0, 4).map(t => (
-                          <span key={t} className="px-3 py-1 rounded-lg glass text-[10px] font-bold text-muted-foreground uppercase tracking-wider border border-border">
+                          <span key={t} className="px-2 md:px-3 py-1 rounded-lg glass text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-wider border border-border">
                             {t}
                           </span>
                         ))}
                         {p.tech.length > 4 && (
-                          <span className="px-3 py-1 rounded-lg text-[10px] font-bold text-muted-foreground">
-                            +{p.tech.length - 4}
-                          </span>
+                          <span className="px-2 py-1 rounded-lg text-[10px] font-bold text-muted-foreground">+{p.tech.length - 4}</span>
                         )}
                       </div>
                     </div>
@@ -169,16 +157,16 @@ const Projects = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-32 relative overflow-hidden bg-background">
+      <section className="py-16 md:py-32 relative overflow-hidden bg-background">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-card/50 to-secondary/20" />
-        <MotionSection animation="zoom-out" className="container text-center relative z-10">
-          <TextReveal text="Have a Project in Mind?" className="text-4xl md:text-7xl font-heading font-black mb-8 justify-center leading-tight" />
-          <p className="text-muted-foreground mb-12 max-w-2xl mx-auto text-xl font-light leading-relaxed">
+        <MotionSection animation="zoom-out" className="container text-center relative z-10 px-4">
+          <TextReveal text="Have a Project in Mind?" className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-heading font-black mb-6 md:mb-8 justify-center leading-tight" />
+          <p className="text-muted-foreground mb-8 md:mb-12 max-w-2xl mx-auto text-sm md:text-xl font-light leading-relaxed">
             Let's build something amazing together. Our team is ready to bring your vision to life.
           </p>
           <Link to="/contact">
-            <GooeyButton color="primary" className="!px-12 !py-5 text-lg">
-              Start a Project <ArrowRight size={22} className="inline ml-2" />
+            <GooeyButton color="primary">
+              Start a Project <ArrowRight size={20} className="inline ml-2" />
             </GooeyButton>
           </Link>
         </MotionSection>
