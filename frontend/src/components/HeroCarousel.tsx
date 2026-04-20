@@ -71,7 +71,7 @@ const HeroCarousel = () => {
   const slide = slides[current];
 
   return (
-    <section className="relative min-h-[95vh] flex items-center justify-center text-center overflow-hidden bg-background -mt-20">
+    <section className="relative min-h-[65vh] md:min-h-[95vh] flex items-center justify-center text-center overflow-hidden bg-background -mt-20">
       {slides.map((s, i) => (
         <div
           key={i}
@@ -82,6 +82,7 @@ const HeroCarousel = () => {
             backgroundSize: s.image ? "cover" : undefined,
             backgroundPosition: s.image ? "center" : undefined,
             opacity: i === current ? 1 : 0,
+            visibility: i === current || i === prevIdx ? "visible" : "hidden",
             filter: s.image ? (isLight ? "brightness(0.75) saturate(0.9)" : "brightness(0.55)") : undefined,
             transition: (i === current || i === prevIdx) ? "opacity 0.6s ease" : "none",
           }}
@@ -93,19 +94,19 @@ const HeroCarousel = () => {
       <div className={`absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t ${isLight ? "from-black/60" : "from-background"} to-transparent`} />
       <div className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b ${isLight ? "from-black/40" : "from-background/50"} to-transparent`} />
 
-      {/* Content — pt-20 clears the fixed navbar height */}
-      <div className="relative z-10 container px-4 pt-24 pb-16">
-        <div key={`badge-${current}`} className="animate-fade-in-up mb-8">
-          <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/15 border border-white/30 text-white text-sm backdrop-blur-sm">
-            <span className="w-2 h-2 rounded-full bg-primary" />
-            {slide.badge}
-            <ArrowRight size={14} className="text-primary" />
+      {/* Content — pt clears the fixed navbar height (navbar ~80px on mobile) */}
+      <div className="relative z-10 container px-5 pt-24 md:pt-28 pb-14 md:pb-16">
+        <div key={`badge-${current}`} className="animate-fade-in-up mb-4 md:mb-8">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 md:px-5 md:py-2 rounded-full bg-white/15 border border-white/30 text-white text-xs md:text-sm backdrop-blur-sm">
+            <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-primary shrink-0" />
+            <span className="truncate max-w-[200px] md:max-w-none">{slide.badge}</span>
+            <ArrowRight size={12} className="text-primary shrink-0" />
           </span>
         </div>
 
         <h1
           key={`title-${current}`}
-          className="animate-fade-in-up text-5xl md:text-7xl lg:text-8xl font-heading font-bold text-white leading-[1.1] mb-6 tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
+          className="animate-fade-in-up text-[1.75rem] leading-tight sm:text-5xl md:text-7xl lg:text-8xl font-heading font-bold text-white mb-3 md:mb-6 tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
           style={{ animationDelay: "80ms" }}
         >
           {slide.title}
@@ -115,7 +116,7 @@ const HeroCarousel = () => {
 
         <p
           key={`desc-${current}`}
-          className="animate-fade-in-up text-white/85 max-w-2xl mx-auto text-lg md:text-xl mb-10 font-light leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]"
+          className="animate-fade-in-up text-white/85 max-w-2xl mx-auto text-xs md:text-xl mb-5 md:mb-10 font-light leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] px-2 md:px-0"
           style={{ animationDelay: "160ms" }}
         >
           {slide.desc}
@@ -123,18 +124,18 @@ const HeroCarousel = () => {
 
         <div
           key={`cta-${current}`}
-          className="animate-fade-in-up flex flex-col sm:flex-row gap-4 justify-center items-center"
+          className="animate-fade-in-up flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center"
           style={{ animationDelay: "240ms" }}
         >
           <Link
             to={slide.cta.to}
-            className="px-8 py-3.5 rounded-full bg-primary text-primary-foreground font-bold uppercase tracking-widest hover:shadow-[0_0_25px_hsl(var(--primary)/0.5)] hover:scale-105 transition-all duration-300"
+            className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-3.5 rounded-full bg-primary text-primary-foreground font-bold uppercase tracking-widest text-sm hover:shadow-[0_0_25px_hsl(var(--primary)/0.5)] hover:scale-105 transition-all duration-300"
           >
             {slide.cta.text}
           </Link>
           <Link
             to={slide.cta2.to}
-            className="px-8 py-3.5 rounded-full bg-white/15 border border-white/30 text-white font-bold hover:bg-white/25 backdrop-blur-sm transition-all duration-300"
+            className="w-full sm:w-auto px-6 md:px-8 py-3 md:py-3.5 rounded-full bg-white/15 border border-white/30 text-white font-bold text-sm hover:bg-white/25 backdrop-blur-sm transition-all duration-300"
           >
             {slide.cta2.text}
           </Link>

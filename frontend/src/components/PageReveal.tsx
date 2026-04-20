@@ -31,11 +31,11 @@ const PageReveal = () => {
         />
 
         {/* Company name */}
-        <div className="flex flex-col items-center gap-1">
-          <span className="text-primary-foreground font-heading font-black text-3xl md:text-5xl tracking-[0.2em] uppercase">
+        <div className="flex flex-col items-center gap-1 text-center px-4">
+          <span className="text-primary-foreground font-heading font-black text-2xl sm:text-3xl md:text-5xl tracking-[0.15em] sm:tracking-[0.2em] uppercase text-center">
             SPESHWAY SOLUTIONS
           </span>
-          <span className="text-primary-foreground/70 text-xs md:text-sm tracking-[0.35em] uppercase font-medium">
+          <span className="text-primary-foreground/70 text-xs md:text-sm tracking-[0.35em] uppercase font-medium text-center">
             PRIVATE LIMITED
           </span>
         </div>

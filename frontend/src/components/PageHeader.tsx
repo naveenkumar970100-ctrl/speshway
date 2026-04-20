@@ -1,5 +1,5 @@
 const PageHeader = ({ title, subtitle }: { title: string; subtitle?: string }) => (
-  <section className="relative h-72 md:h-96 flex items-center justify-center text-center overflow-hidden">
+  <section className="relative h-44 md:h-96 flex items-center justify-center text-center overflow-hidden">
     {/* Gradient background */}
     <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-accent/10" />
     
@@ -14,10 +14,10 @@ const PageHeader = ({ title, subtitle }: { title: string; subtitle?: string }) =
     }} />
     
     <div className="relative z-10 animate-fade-in-up">
-      <h1 className="text-3xl md:text-5xl font-heading font-bold text-foreground mb-3">
+      <h1 className="text-2xl md:text-5xl font-heading font-bold text-foreground mb-2 md:mb-3">
         {title}
       </h1>
-      {subtitle && <p className="text-muted-foreground max-w-lg mx-auto text-sm md:text-base">{subtitle}</p>}
+      {subtitle && <p className="text-muted-foreground max-w-lg mx-auto text-xs md:text-base px-4">{subtitle}</p>}
     </div>
   </section>
 );

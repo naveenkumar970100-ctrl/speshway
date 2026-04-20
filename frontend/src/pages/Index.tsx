@@ -115,15 +115,15 @@ const Index = () => {
       <HeroCarousel />
 
       {/* Stats */}
-      <section className="relative py-24 overflow-hidden bg-background">
-        <MotionSection animation="zoom-out" className="relative container grid grid-cols-2 md:grid-cols-4 gap-8">
+      <section className="relative py-10 md:py-24 overflow-hidden bg-background">
+        <MotionSection animation="zoom-out" className="relative container grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
           {stats.map((s, i) => (
             <AnimatedSection key={s.label} delay={i * 100} animation="scale-up">
-              <div className="text-center group relative p-8 rounded-3xl hover:bg-primary/5 transition-all duration-500 overflow-hidden border border-border">
-                <div className="text-5xl md:text-6xl font-heading font-black text-gradient mb-3">
+              <div className="text-center group relative p-4 md:p-8 rounded-2xl md:rounded-3xl hover:bg-primary/5 transition-all duration-500 overflow-hidden border border-border">
+                <div className="text-3xl md:text-6xl font-heading font-black text-gradient mb-1 md:mb-3">
                   <CounterAnimation target={s.num} suffix={s.suffix} />
                 </div>
-                <div className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+                <div className="text-[10px] md:text-xs font-black uppercase tracking-[0.15em] md:tracking-[0.2em] text-muted-foreground leading-tight">
                   {s.label}
                 </div>
               </div>
@@ -133,31 +133,31 @@ const Index = () => {
       </section>
 
       {/* Services Grid */}
-      <section className="py-24 bg-background relative overflow-hidden">
+      <section className="py-12 md:py-24 bg-background relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
         <div className="container relative z-10">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 md:mb-16">
             <AnimatedSection animation="fade-in-up">
               <span className="text-primary text-sm font-black uppercase tracking-[0.3em]">{t("services_label", "What We Do")}</span>
             </AnimatedSection>
-            <TextReveal text={t("services_title", "Innovation & Excellence")} className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-heading font-black mt-4 mb-6 justify-center leading-tight" />
+            <TextReveal text={t("services_title", "Innovation & Excellence")} className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-heading font-black mt-4 mb-4 md:mb-6 justify-center leading-tight" />
             <AnimatedSection delay={200}>
-              <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-light leading-relaxed">
+              <p className="text-muted-foreground max-w-2xl mx-auto text-sm md:text-lg font-light leading-relaxed px-2">
                 End-to-end IT solutions tailored to your business needs, powered by innovation and expertise.
               </p>
             </AnimatedSection>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
             {apiServices.map((s, i) => (
               <AnimatedSection key={s.title} delay={i * 80} animation="card-rise">
-                <Link to={`/services/${toSlug(s.title)}`} className="group h-full block p-8 rounded-3xl glass hover:glow-border hover:shadow-xl transition-all duration-400 border-border relative overflow-hidden">
-                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300 border border-primary/20">
-                    <s.icon className="text-primary" size={28} />
+                <Link to={`/services/${toSlug(s.title)}`} className="group h-full block p-4 md:p-8 rounded-2xl md:rounded-3xl glass hover:glow-border hover:shadow-xl transition-all duration-400 border-border relative overflow-hidden">
+                  <div className="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-primary/10 flex items-center justify-center mb-3 md:mb-6 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300 border border-primary/20">
+                    <s.icon className="text-primary" size={20} />
                   </div>
-                  <h3 className="font-heading font-bold text-xl mb-3 text-foreground group-hover:text-primary transition-colors duration-300">{s.title}</h3>
-                  <p className="text-muted-foreground font-light leading-relaxed mb-6">{s.desc}</p>
-                  <span className="inline-flex items-center gap-2 text-primary text-sm font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300">
-                    Explore <ArrowRight size={16} />
+                  <h3 className="font-heading font-bold text-sm md:text-xl mb-1.5 md:mb-3 text-foreground group-hover:text-primary transition-colors duration-300 leading-tight">{s.title}</h3>
+                  <p className="text-muted-foreground text-xs md:text-sm font-light leading-relaxed mb-3 md:mb-6 line-clamp-3">{s.desc}</p>
+                  <span className="inline-flex items-center gap-1 md:gap-2 text-primary text-[10px] md:text-sm font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    Explore <ArrowRight size={12} />
                   </span>
                 </Link>
               </AnimatedSection>
@@ -169,25 +169,25 @@ const Index = () => {
       <MobileShowcase />
 
       {/* Why Choose Us with Rotate-In and Skew */}
-      <section className="py-32 bg-background relative overflow-hidden">
+      <section className="py-16 md:py-32 bg-background relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-        <div className="container grid md:grid-cols-2 gap-24 items-center">
+        <div className="container grid md:grid-cols-2 gap-12 md:gap-24 items-center">
           <MotionSection animation="skew-up">
-            <span className="text-secondary font-black text-sm uppercase tracking-[0.3em] mb-6 block">{s("home_whyus_label", "Why Choose Us")}</span>
+            <span className="text-secondary font-black text-sm uppercase tracking-[0.3em] mb-4 md:mb-6 block">{s("home_whyus_label", "Why Choose Us")}</span>
             <TextReveal 
               text={s("home_whyus_title", "Delivering Excellence In Every Project")} 
-              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-heading font-black mb-12 leading-tight"
+              className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-heading font-black mb-8 md:mb-12 leading-tight"
             />
-            <div className="grid sm:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-8">
               {[1,2,3,4,5,6].map(n => {
                 const point = s(`whyus_point${n}`, whyUs[n-1] || "");
                 if (!point) return null;
                 return (
-                  <div key={n} className="flex items-start gap-5 group">
-                    <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0 group-hover:bg-secondary/20 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 border border-secondary/20">
-                      <CheckCircle className="text-secondary" size={24} />
+                  <div key={n} className="flex items-start gap-3 md:gap-5 group">
+                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0 group-hover:bg-secondary/20 transition-all duration-500 border border-secondary/20">
+                      <CheckCircle className="text-secondary" size={18} />
                     </div>
-                    <span className="text-muted-foreground group-hover:text-foreground transition-colors duration-500 font-medium text-lg leading-tight">{point}</span>
+                    <span className="text-muted-foreground group-hover:text-foreground transition-colors duration-500 font-medium text-sm md:text-lg leading-tight">{point}</span>
                   </div>
                 );
               })}
@@ -197,7 +197,7 @@ const Index = () => {
           <AnimatedSection animation="rotate-in">
             <div className="relative">
               <div className="absolute -inset-20 bg-gradient-to-tr from-primary/15 via-transparent to-secondary/15 rounded-full blur-[120px]" />
-              <div className="relative grid grid-cols-2 gap-8">
+              <div className="relative grid grid-cols-2 gap-4 md:gap-8">
                 {[
                   { valKey: "whyus_stat1_val", labelKey: "whyus_stat1_label", defaultVal: "99%", defaultLabel: "Satisfaction", color: "primary", delay: 0 },
                   { valKey: "whyus_stat2_val", labelKey: "whyus_stat2_label", defaultVal: "24/7", defaultLabel: "Support", color: "primary", delay: 100 },
@@ -207,13 +207,13 @@ const Index = () => {
                   <div 
                     key={i} 
                     className={cn(
-                      "glass rounded-[2.5rem] p-10 hover:glow-border transition-all duration-700 hover:-translate-y-4 hover:shadow-2xl border-border",
-                      i % 2 === 1 ? "mt-12" : ""
+                      "glass rounded-2xl md:rounded-[2.5rem] p-5 md:p-10 hover:glow-border transition-all duration-700 border-border",
+                      i % 2 === 1 ? "mt-6 md:mt-12" : ""
                     )}
                     style={{ transitionDelay: `${item.delay}ms` }}
                   >
-                    <div className={`text-5xl font-heading font-black text-${item.color} mb-4`}>{s(item.valKey, item.defaultVal)}</div>
-                    <div className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">{s(item.labelKey, item.defaultLabel)}</div>
+                    <div className={`text-3xl md:text-5xl font-heading font-black text-${item.color} mb-2 md:mb-4`}>{s(item.valKey, item.defaultVal)}</div>
+                    <div className="text-[10px] md:text-xs font-black text-muted-foreground uppercase tracking-[0.15em] md:tracking-[0.2em]">{s(item.labelKey, item.defaultLabel)}</div>
                   </div>
                 ))}
               </div>
@@ -223,43 +223,38 @@ const Index = () => {
       </section>
 
       {/* Testimonials with Card-Rise */}
-      <section className="py-32 relative overflow-hidden bg-background">
+      <section className="py-16 md:py-32 relative overflow-hidden bg-background">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-card/40 to-background" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[200px]" />
         <div className="relative container">
-          <div className="text-center mb-24">
+          <div className="text-center mb-12 md:mb-24">
             <AnimatedSection animation="reveal-text">
               <span className="text-accent text-sm font-black uppercase tracking-[0.3em]">{t("testimonials_label", "Testimonials")}</span>
             </AnimatedSection>
             <TextReveal 
               text={t("testimonials_title", "What Our Clients Say")} 
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-black mt-6 justify-center"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-black mt-4 md:mt-6 justify-center"
             />
           </div>
           
-          <div className="grid md:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
             {testimonials.map((testimonial, i) => (
               <AnimatedSection key={i} delay={i * 200} animation="card-rise">
-                <div className="glass rounded-[2.5rem] p-10 hover:glow-border-strong transition-all duration-700 hover:-translate-y-6 h-full flex flex-col card-3d border-border group relative overflow-hidden">
-                  <div className="absolute top-0 right-0 p-8 text-primary/10 group-hover:text-primary/20 transition-colors">
-                    <Zap size={60} fill="currentColor" />
-                  </div>
-                  
-                  <div className="flex gap-2 mb-8 relative z-10">
+                <div className="glass rounded-2xl md:rounded-[2.5rem] p-6 md:p-10 hover:glow-border-strong transition-all duration-700 h-full flex flex-col border-border group relative overflow-hidden">
+                  <div className="flex gap-1 md:gap-2 mb-5 md:mb-8 relative z-10">
                     {[...Array(testimonial.rating)].map((_, j) => (
-                      <Star key={j} size={22} className="text-primary fill-primary group-hover:scale-125 transition-transform" style={{ transitionDelay: `${j * 50}ms` }} />
+                      <Star key={j} size={18} className="text-primary fill-primary" />
                     ))}
                   </div>
-                  <p className="text-muted-foreground text-xl flex-1 italic leading-relaxed group-hover:text-foreground transition-colors duration-700 relative z-10 font-light">
+                  <p className="text-muted-foreground text-sm md:text-xl flex-1 italic leading-relaxed relative z-10 font-light">
                     "{testimonial.text}"
                   </p>
-                  <div className="mt-10 pt-8 border-t border-border flex items-center gap-6 relative z-10">
-                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center font-heading font-black text-2xl text-primary group-hover:rotate-12 transition-transform duration-500">
+                  <div className="mt-6 md:mt-10 pt-5 md:pt-8 border-t border-border flex items-center gap-4 md:gap-6 relative z-10">
+                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-primary/10 flex items-center justify-center font-heading font-black text-xl md:text-2xl text-primary shrink-0">
                       {testimonial.name.charAt(0)}
                     </div>
                     <div>
-                      <div className="font-black text-lg text-foreground group-hover:text-primary transition-colors">{testimonial.name}</div>
-                      <div className="text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">{testimonial.role}</div>
+                      <div className="font-black text-base md:text-lg text-foreground">{testimonial.name}</div>
+                      <div className="text-[10px] md:text-xs font-black text-muted-foreground uppercase tracking-[0.2em]">{testimonial.role}</div>
                     </div>
                   </div>
                 </div>
@@ -270,22 +265,20 @@ const Index = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-32 relative overflow-hidden bg-background">
+      <section className="py-16 md:py-32 relative overflow-hidden bg-background">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-accent/10 to-secondary/20" />
-        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-primary/10 blur-[150px]" />
-        <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full bg-secondary/10 blur-[150px]" />
-        <MotionSection animation="parallax-reveal" className="container text-center relative z-10">
+        <MotionSection animation="parallax-reveal" className="container text-center relative z-10 px-4">
           <TextReveal
             text={t("cta_title", "Ready to Transform Your Business?")}
-            className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-heading font-black mb-8 justify-center leading-tight tracking-tighter"
+            className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-heading font-black mb-6 md:mb-8 justify-center leading-tight tracking-tighter"
           />
-          <p className="text-muted-foreground mb-12 max-w-3xl mx-auto text-xl font-light leading-relaxed">
+          <p className="text-muted-foreground mb-8 md:mb-12 max-w-3xl mx-auto text-sm md:text-xl font-light leading-relaxed">
             {t("cta_subtitle", "Let's discuss how Speshway Solutions can accelerate your digital journey and bring your vision to life.")}
           </p>
           <div className="flex justify-center">
             <GooeyButton color="primary">
-              <Link to="/contact" className="inline-flex items-center gap-3 px-10 py-5 font-black text-lg uppercase tracking-widest">
-                Get Started Now <ArrowRight size={22} />
+              <Link to="/contact" className="inline-flex items-center gap-2 md:gap-3 px-6 md:px-10 py-3 md:py-5 font-black text-sm md:text-lg uppercase tracking-widest">
+                Get Started Now <ArrowRight size={18} />
               </Link>
             </GooeyButton>
           </div>
