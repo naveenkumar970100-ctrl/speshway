@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTheme } from "@/context/ThemeContext";
+import { optimizeImage } from "@/lib/cloudinary";
 
 // CSS gradient backgrounds — used when no Cloudinary image is uploaded yet
 const GRADIENT_SLIDES = [
@@ -87,7 +88,7 @@ const HeroCarousel = () => {
           className="absolute inset-0"
           style={{
             background: s.image ? undefined : s.gradient,
-            backgroundImage: s.image ? `url(${s.image})` : undefined,
+            backgroundImage: s.image ? `url(${optimizeImage(s.image, 1920)})` : undefined,
             backgroundSize: s.image ? "cover" : undefined,
             backgroundPosition: s.image ? "center" : undefined,
             opacity: i === current ? 1 : 0,
