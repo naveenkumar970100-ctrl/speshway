@@ -12,8 +12,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        heading: ["Playfair Display", "serif"],
+        sans: ["Noto Sans", "system-ui", "sans-serif"],
+        heading: ["Noto Sans Display", "sans-serif"],
+        condensed: ["Roboto Condensed", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

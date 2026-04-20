@@ -15,7 +15,8 @@
   --danger: #ef4444;
 }
 
-body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); }
+body { font-family: 'Noto Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); }
+h1, h2, h3, h4, h5 { font-family: 'Noto Sans Display', system-ui, sans-serif; }
 
 .hidden { display: none !important; }
 
