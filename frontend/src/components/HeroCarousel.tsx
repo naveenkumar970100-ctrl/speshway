@@ -30,6 +30,7 @@ const HeroCarousel = () => {
   const { theme } = useTheme();
   const isLight = theme === "light";
   const [slides, setSlides] = useState(defaultSlides);
+  const [highlightColor, setHighlightColor] = useState("");
 
   // Fetch slides from API, fall back to defaults
   useEffect(() => {
@@ -48,6 +49,14 @@ const HeroCarousel = () => {
             cta2: { text: s.cta2Text, to: s.cta2Link },
           })));
         }
+      })
+      .catch(() => {});
+
+    // Fetch highlight color from settings
+    fetch("/api/settings")
+      .then(r => r.json())
+      .then((data: Record<string, string>) => {
+        if (data.hero_highlight_color) setHighlightColor(data.hero_highlight_color);
       })
       .catch(() => {});
   }, []);
@@ -111,7 +120,11 @@ const HeroCarousel = () => {
         >
           {slide.title}
           <br />
-          <span className="text-gradient">{slide.highlight}</span>
+          <span
+            style={{ color: highlightColor || "#a855f7" }}
+          >
+            {slide.highlight}
+          </span>
         </h1>
 
         <p

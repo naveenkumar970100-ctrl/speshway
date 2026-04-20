@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -40,6 +40,7 @@ const AdminBlog = lazy(() => import("./pages/AdminBlog"));
 const AdminSettings = lazy(() => import("./pages/AdminSettings"));
 const AdminSubmissions = lazy(() => import("./pages/AdminSubmissions"));
 const AdminTestimonials = lazy(() => import("./pages/AdminTestimonials"));
+const AdminPhoneShowcase = lazy(() => import("./pages/AdminPhoneShowcase"));
 
 const hexToHsl = (hex: string) => {
   const r = parseInt(hex.slice(1, 3), 16) / 255;
@@ -77,6 +78,8 @@ const PageLoader = () => (
 );
 
 const App = () => {
+  const [maintenance, setMaintenance] = useState<boolean | null>(null);
+
   useEffect(() => {
     fetch(apiUrl("/api/settings"))
       .then(r => r.json())
@@ -85,9 +88,50 @@ const App = () => {
         if (s.color_primary) root.style.setProperty("--primary", hexToHsl(s.color_primary));
         if (s.color_secondary) root.style.setProperty("--secondary", hexToHsl(s.color_secondary));
         if (s.color_accent) root.style.setProperty("--accent", hexToHsl(s.color_accent));
+        setMaintenance(s.maintenance_mode === "true");
       })
-      .catch(() => {});
+      .catch(() => setMaintenance(false));
   }, []);
+
+  // Block public pages while checking — allow admin paths immediately
+  const path = window.location.pathname;
+  const isAdmin = path.startsWith("/admin");
+
+  // Still loading settings — show spinner only for public pages
+  if (maintenance === null && !isAdmin) {
+    return (
+      <ThemeProvider>
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+        </div>
+      </ThemeProvider>
+    );
+  }
+
+  // Maintenance mode active — show maintenance page for public visitors
+  if (maintenance === true && !isAdmin) {
+    return (
+      <ThemeProvider>
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#1e1b2e] text-white text-center px-6">
+          <div className="mb-8 text-6xl">🔧</div>
+          <h1 className="text-4xl md:text-6xl font-black mb-4">Under Maintenance</h1>
+          <p className="text-white/60 text-lg md:text-xl max-w-lg leading-relaxed mb-8">
+            We're currently performing scheduled maintenance. We'll be back online shortly. Thank you for your patience!
+          </p>
+          <div className="flex items-center gap-3 px-6 py-3 rounded-full bg-white/10 border border-white/20 text-white/80 text-sm">
+            <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
+            Maintenance in progress — check back soon
+          </div>
+          <p className="mt-8 text-white/30 text-sm">
+            For urgent inquiries:{" "}
+            <a href="mailto:info@speshway.com" className="text-purple-400 hover:underline">
+              info@speshway.com
+            </a>
+          </p>
+        </div>
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider>
@@ -122,6 +166,7 @@ const App = () => {
                   <Route path="/admin/settings" element={<AdminSettings />} />
                   <Route path="/admin/submissions" element={<AdminSubmissions />} />
                   <Route path="/admin/testimonials" element={<AdminTestimonials />} />
+                  <Route path="/admin/phone-showcase" element={<AdminPhoneShowcase />} />
                   <Route path="/blog/:id" element={<BlogDetail />} />
                   <Route path="/career/:id" element={<JobDetail />} />
                   <Route path="/career/:id/apply" element={<JobApply />} />

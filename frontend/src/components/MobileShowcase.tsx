@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import MotionSection from "@/components/MotionSection";
 import TextReveal from "@/components/TextReveal";
 import PhoneMockup from "@/components/PhoneMockup";
@@ -6,7 +6,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
-// Lazy load heavy phone screen components
+// Lazy load fallback phone screen components
 const EcommerceScreen = lazy(() => import("@/components/phone-screens/EcommerceScreen"));
 const FitnessScreen = lazy(() => import("@/components/phone-screens/FitnessScreen"));
 const DashboardScreen = lazy(() => import("@/components/phone-screens/DashboardScreen"));
@@ -16,16 +16,32 @@ const FintechScreen = lazy(() => import("@/components/phone-screens/FintechScree
 
 const PhoneFallback = () => <div className="w-full h-full bg-slate-800 rounded-2xl" />;
 
-const phones: { color: "primary" | "secondary" | "accent"; Screen: React.LazyExoticComponent<() => JSX.Element>; delay: string }[] = [
-  { color: "primary", Screen: EcommerceScreen, delay: "0s" },
-  { color: "secondary", Screen: FitnessScreen, delay: "0.3s" },
-  { color: "accent", Screen: DashboardScreen, delay: "0.6s" },
-  { color: "primary", Screen: FoodScreen, delay: "0.9s" },
-  { color: "secondary", Screen: SocialScreen, delay: "1.2s" },
-  { color: "accent", Screen: FintechScreen, delay: "1.5s" },
-];
+const colors: ("primary" | "secondary" | "accent")[] = ["primary", "secondary", "accent", "primary", "secondary", "accent"];
+const delays = ["0s", "0.3s", "0.6s", "0.9s", "1.2s", "1.5s"];
 
-const MobileShowcase = () => (
+const defaultScreens = [EcommerceScreen, FitnessScreen, DashboardScreen, FoodScreen, SocialScreen, FintechScreen];
+
+interface ApiPhone {
+  _id: string;
+  image: string;
+  label: string;
+  color: "primary" | "secondary" | "accent";
+  order: number;
+}
+
+const MobileShowcase = () => {
+  const [apiPhones, setApiPhones] = useState<ApiPhone[]>([]);
+
+  useEffect(() => {
+    fetch("/api/phone-showcase")
+      .then(r => r.json())
+      .then(data => { if (Array.isArray(data) && data.length > 0) setApiPhones(data); })
+      .catch(() => {});
+  }, []);
+
+  const useApi = apiPhones.length > 0;
+
+  return (
   <section className="py-16 md:py-32 overflow-hidden relative bg-background">
     <div className="absolute inset-0 bg-gradient-to-b from-background via-card/20 to-background" />
 
@@ -44,17 +60,35 @@ const MobileShowcase = () => (
       <MotionSection animation="zoom-out" className="relative">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 blur-[80px] rounded-full -z-10" />
         <div className="flex items-end justify-center gap-2 md:gap-6 overflow-x-auto pb-4 px-2 md:px-4 scrollbar-hide">
-          {phones.map(({ color, Screen, delay }, i) => (
-            <AnimatedSection key={i} delay={i * 100} animation="fade-in-up">
-              <div className={i % 2 === 1 ? "mb-6 md:mb-10" : ""}>
-                <PhoneMockup color={color} animationClass="animate-float" animationDelay={delay}>
-                  <Suspense fallback={<PhoneFallback />}>
-                    <Screen />
-                  </Suspense>
-                </PhoneMockup>
-              </div>
-            </AnimatedSection>
-          ))}
+          {useApi ? (
+            // API images
+            apiPhones.map((phone, i) => (
+              <AnimatedSection key={phone._id} delay={i * 100} animation="fade-in-up">
+                <div className={i % 2 === 1 ? "mb-6 md:mb-10" : ""}>
+                  <PhoneMockup color={phone.color} animationClass="animate-float" animationDelay={delays[i % delays.length]}>
+                    <img
+                      src={phone.image}
+                      alt={phone.label || `App ${i + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </PhoneMockup>
+                </div>
+              </AnimatedSection>
+            ))
+          ) : (
+            // Fallback hardcoded screens
+            defaultScreens.map((Screen, i) => (
+              <AnimatedSection key={i} delay={i * 100} animation="fade-in-up">
+                <div className={i % 2 === 1 ? "mb-6 md:mb-10" : ""}>
+                  <PhoneMockup color={colors[i]} animationClass="animate-float" animationDelay={delays[i]}>
+                    <Suspense fallback={<PhoneFallback />}>
+                      <Screen />
+                    </Suspense>
+                  </PhoneMockup>
+                </div>
+              </AnimatedSection>
+            ))
+          )}
         </div>
       </MotionSection>
 
@@ -86,6 +120,7 @@ const MobileShowcase = () => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default MobileShowcase;

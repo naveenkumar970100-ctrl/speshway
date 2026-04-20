@@ -128,6 +128,77 @@ export default function SiteSettingsPanel({ admin }: { admin?: { email?: string;
         </div>
       )}
 
+      {/* ── Hero Highlight Color ── */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+          <div>
+            <h2 className="font-bold text-gray-800 flex items-center gap-2">
+              🎨 Hero Highlight Color
+            </h2>
+            <p className="text-xs text-gray-400 mt-0.5">The colour of the second line text in the homepage carousel (e.g. "Online &amp; Beyond")</p>
+          </div>
+          <button
+            onClick={() => handleSave("hero_highlight_color")}
+            disabled={saving["hero_highlight_color"]}
+            className={`px-5 py-2 rounded-xl text-sm font-bold transition-colors ${saved["hero_highlight_color"] ? "bg-green-500 text-white" : "bg-purple-600 text-white hover:bg-purple-700"} disabled:opacity-60`}
+          >
+            {saving["hero_highlight_color"] ? "Saving…" : saved["hero_highlight_color"] ? "✓ Saved" : "Save"}
+          </button>
+        </div>
+        <div className="p-6">
+          <div className="flex gap-4 items-center flex-wrap">
+            {/* Color picker */}
+            <div className="flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-gray-200 focus-within:border-purple-500 transition-all bg-white">
+              <input
+                type="color"
+                value={values["hero_highlight_color"] || "#a855f7"}
+                onChange={e => setValues(p => ({ ...p, hero_highlight_color: e.target.value }))}
+                className="w-10 h-10 rounded-lg cursor-pointer border-0 bg-transparent p-0"
+              />
+              <input
+                type="text"
+                value={values["hero_highlight_color"] || ""}
+                onChange={e => setValues(p => ({ ...p, hero_highlight_color: e.target.value }))}
+                onKeyDown={e => e.key === "Enter" && handleSave("hero_highlight_color")}
+                placeholder="#a855f7"
+                className="w-28 text-sm focus:outline-none font-mono"
+              />
+            </div>
+            {/* Preset swatches */}
+            <div className="flex gap-2 flex-wrap">
+              {[
+                { label: "Purple", color: "#a855f7" },
+                { label: "Orange", color: "#f97316" },
+                { label: "Pink", color: "#ec4899" },
+                { label: "Cyan", color: "#06b6d4" },
+                { label: "Green", color: "#22c55e" },
+                { label: "Yellow", color: "#eab308" },
+                { label: "Red", color: "#ef4444" },
+                { label: "White", color: "#ffffff" },
+              ].map(s => (
+                <button
+                  key={s.color}
+                  title={s.label}
+                  onClick={() => setValues(p => ({ ...p, hero_highlight_color: s.color }))}
+                  className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 ${values["hero_highlight_color"] === s.color ? "border-gray-800 scale-110" : "border-gray-200"}`}
+                  style={{ background: s.color }}
+                />
+              ))}
+            </div>
+            {/* Live preview */}
+            <div className="ml-auto text-right">
+              <p className="text-xs text-gray-400 mb-1">Preview</p>
+              <span
+                className="text-2xl font-black"
+                style={{ color: values["hero_highlight_color"] || "#a855f7" }}
+              >
+                Online &amp; Beyond
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* ── Stats Quick Edit ── */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
