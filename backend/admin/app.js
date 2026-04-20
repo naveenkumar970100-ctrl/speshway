@@ -87,6 +87,11 @@ async function initDashboard(admin) {
     item.addEventListener("click", (e) => {
       e.preventDefault();
       setSection(item.dataset.section);
+      // Close sidebar on mobile after navigation
+      if (window.innerWidth < 768) {
+        document.getElementById('sidebar').classList.remove('sidebar-open');
+        document.getElementById('sidebar-overlay').classList.remove('active');
+      }
     });
   });
 }

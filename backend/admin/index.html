@@ -36,7 +36,7 @@ f<!DOCTYPE html>
 
   <!-- Dashboard Page -->
   <div id="dashboard-page" class="hidden">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
       <div class="sidebar-logo">
         <div class="logo-icon sm">S</div>
         <span>Speshway Admin</span>
@@ -50,11 +50,20 @@ f<!DOCTYPE html>
       <button id="logout-btn" class="logout-btn">🚪 Logout</button>
     </aside>
 
+    <!-- Mobile overlay -->
+    <div id="sidebar-overlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
+
     <main class="main-content">
       <header class="topbar">
-        <div>
-          <h1 id="section-title">Overview</h1>
-          <p id="admin-greeting" class="greeting"></p>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <!-- Hamburger — mobile only -->
+          <button class="hamburger-btn" id="hamburger-btn" onclick="toggleSidebar()" aria-label="Open menu">
+            <span></span><span></span><span></span>
+          </button>
+          <div>
+            <h1 id="section-title">Overview</h1>
+            <p id="admin-greeting" class="greeting"></p>
+          </div>
         </div>
         <div class="topbar-right">
           <span id="admin-badge" class="badge"></span>
@@ -102,5 +111,15 @@ f<!DOCTYPE html>
   </div>
 
   <script src="app.js"></script>
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('sidebar-open');
+      document.getElementById('sidebar-overlay').classList.toggle('active');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('sidebar-open');
+      document.getElementById('sidebar-overlay').classList.remove('active');
+    }
+  </script>
 </body>
 </html>
