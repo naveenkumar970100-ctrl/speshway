@@ -125,11 +125,12 @@ const Services = () => {
           </MotionSection>
         </div>
 
-        <div className="grid grid-cols-4 gap-3 md:gap-12 relative">
-          {/* Animated path line */}
-          <div className="absolute top-6 md:top-10 left-[10%] right-[10%] h-[2px] bg-white/5 overflow-hidden z-0">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-accent animate-line-grow origin-left" />
-          </div>
+        <MotionSection animation="zoom-out">
+          <div className="grid grid-cols-4 gap-3 md:gap-12 relative">
+            {/* Animated path line — animates when parent MotionSection becomes visible */}
+            <div className="absolute top-6 md:top-10 left-[10%] right-[10%] h-[2px] bg-white/5 overflow-hidden z-0">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-accent origin-left scale-x-0 transition-transform duration-[1500ms] ease-out delay-300 [.opacity-100_&]:scale-x-100" />
+            </div>
           {process.map((p, i) => (
             <MotionSection key={p.step} delay={i * 0.1} animation="zoom-out">
               <div className="text-center group relative z-10">
