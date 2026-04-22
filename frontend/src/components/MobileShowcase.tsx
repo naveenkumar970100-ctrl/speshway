@@ -75,7 +75,7 @@ const MobileShowcase = () => {
                       <img
                         src={(item as ApiPhone).image}
                         alt={(item as ApiPhone).label || `App ${i + 1}`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover object-top"
                       />
                     </PhoneMockup>
                   ) : (
@@ -108,7 +108,7 @@ const MobileShowcase = () => {
                       <img
                         src={(item as ApiPhone).image}
                         alt={(item as ApiPhone).label || `App ${i + 1}`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover object-top"
                       />
                     </PhoneMockup>
                   ) : (
