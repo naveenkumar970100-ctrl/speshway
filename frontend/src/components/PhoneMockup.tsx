@@ -23,7 +23,7 @@ const PhoneMockup = ({
     <div className={`absolute inset-0 bg-${color}/20 blur-3xl rounded-full scale-75 -z-10 transition-all duration-700 group-hover:scale-110 group-hover:bg-${color}/40`} />
 
     {/* Phone frame */}
-    <div className="relative w-[140px] md:w-[220px] mx-auto">
+    <div className="relative w-full max-w-[140px] md:w-[220px] mx-auto">
       {/* Outer shell — always dark regardless of theme */}
       <div
         className={`relative rounded-[2.5rem] border-2 border-${color}/30 shadow-[0_0_40px_hsl(var(--${color})/0.2)] overflow-hidden transition-all duration-500 group-hover:shadow-[0_0_60px_hsl(var(--${color})/0.45)] group-hover:border-${color}/60 group-hover:scale-[1.03]`}
