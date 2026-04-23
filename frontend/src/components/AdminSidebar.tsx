@@ -34,64 +34,64 @@ export default function AdminSidebar({ active }: { active: string }) {
 
   return (
     <>
-      {/* Hamburger — visible only on mobile/tablet (below lg) */}
+      {/* Hamburger button — only on mobile (below lg) */}
       <button
         onClick={() => setOpen(true)}
-        className="fixed top-3 left-3 z-[300] lg:hidden w-10 h-10 bg-[#2d1b69] rounded-xl flex items-center justify-center shadow-lg"
+        className="fixed top-3 left-3 z-[500] lg:hidden w-10 h-10 bg-[#2d1b69] rounded-xl flex flex-col items-center justify-center gap-[5px] shadow-lg"
         aria-label="Open menu"
       >
-        <span className="flex flex-col gap-[5px]">
-          <span className="block w-5 h-0.5 bg-white rounded" />
-          <span className="block w-5 h-0.5 bg-white rounded" />
-          <span className="block w-5 h-0.5 bg-white rounded" />
-        </span>
+        <span className="block w-5 h-0.5 bg-white rounded" />
+        <span className="block w-5 h-0.5 bg-white rounded" />
+        <span className="block w-5 h-0.5 bg-white rounded" />
       </button>
 
-      {/* Overlay — mobile/tablet only */}
-      {open && (
-        <div
-          className="fixed inset-0 bg-black/60 z-[250] lg:hidden"
-          onClick={() => setOpen(false)}
-        />
-      )}
+      {/* Full-screen dark overlay — shown when sidebar is open on mobile */}
+      <div
+        className={`fixed inset-0 z-[600] bg-black/70 transition-opacity duration-300 lg:hidden ${
+          open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setOpen(false)}
+      />
 
-      {/* Sidebar */}
+      {/* Sidebar drawer */}
       <aside
         className={`
-          fixed top-0 left-0 h-full z-[260] w-56 bg-[#1e1b2e] text-white flex flex-col py-5 px-3
+          fixed top-0 left-0 h-full z-[700] w-64 bg-[#1e1b2e] text-white
+          flex flex-col py-5 px-4 shadow-2xl
           transition-transform duration-300 ease-in-out
           ${open ? "translate-x-0" : "-translate-x-full"}
-          lg:translate-x-0
+          lg:translate-x-0 lg:w-56 lg:shadow-none
         `}
       >
-        {/* Close — mobile only */}
-        <button
-          onClick={() => setOpen(false)}
-          className="absolute top-3 right-3 lg:hidden text-purple-300 hover:text-white text-xl leading-none"
-          aria-label="Close menu"
-        >
-          ✕
-        </button>
-
-        {/* Logo */}
-        <div className="flex items-center gap-2 mb-6 pr-6">
-          <img src={logo} alt="" className="w-8 h-8 object-contain shrink-0" />
-          <span className="font-bold text-sm leading-tight">Speshway Admin</span>
+        {/* Header row: logo + close button */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-2">
+            <img src={logo} alt="" className="w-8 h-8 object-contain shrink-0" />
+            <span className="font-bold text-sm leading-tight">Speshway Admin</span>
+          </div>
+          {/* Close button — mobile only */}
+          <button
+            onClick={() => setOpen(false)}
+            className="lg:hidden w-8 h-8 flex items-center justify-center rounded-lg text-purple-300 hover:text-white hover:bg-white/10 transition-colors text-lg"
+            aria-label="Close menu"
+          >
+            ✕
+          </button>
         </div>
 
-        {/* Nav */}
+        {/* Nav items */}
         <nav className="flex flex-col gap-0.5 flex-1 overflow-y-auto">
           {navItems.map(n => (
             <button
               key={n.label}
               onClick={() => handleNav(n.path)}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-colors ${
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-colors w-full ${
                 active === n.label
                   ? "bg-purple-600/40 text-white"
                   : "text-purple-300 hover:bg-purple-600/20 hover:text-white"
               }`}
             >
-              <span className="text-base">{n.icon}</span>
+              <span className="text-base shrink-0">{n.icon}</span>
               <span>{n.label}</span>
             </button>
           ))}
@@ -100,7 +100,7 @@ export default function AdminSidebar({ active }: { active: string }) {
         {/* Logout */}
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-400 hover:bg-red-500/15 text-sm font-medium mt-3"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-400 hover:bg-red-500/15 text-sm font-medium mt-3 w-full"
         >
           🚪 Logout
         </button>

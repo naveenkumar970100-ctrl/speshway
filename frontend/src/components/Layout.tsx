@@ -21,28 +21,35 @@ const Layout = ({ children }: { children: ReactNode }) => {
   }, [pathname]);
 
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.0,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: "vertical",
-      gestureOrientation: "vertical",
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      smoothTouch: false,
-      touchMultiplier: 2,
-      infinite: false,
-    });
-
+    // Lenis smooth scroll — skip on touch-only devices to avoid virtual-scroll errors
+    let lenis: InstanceType<typeof Lenis> | null = null;
     let rafId: number;
-    function raf(time: number) {
-      lenis.raf(time);
+
+    try {
+      lenis = new Lenis({
+        duration: 1.0,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: "vertical",
+        gestureOrientation: "vertical",
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+        infinite: false,
+      });
+
+      function raf(time: number) {
+        try { lenis?.raf(time); } catch { /* ignore scroll errors */ }
+        rafId = requestAnimationFrame(raf);
+      }
       rafId = requestAnimationFrame(raf);
+    } catch {
+      // Lenis failed to init — fall back to native scroll silently
     }
-    rafId = requestAnimationFrame(raf);
 
     return () => {
-      cancelAnimationFrame(rafId);
-      lenis.destroy();
+      if (rafId) cancelAnimationFrame(rafId);
+      try { lenis?.destroy(); } catch { /* ignore */ }
     };
   }, []);
 
