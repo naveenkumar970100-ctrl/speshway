@@ -28,20 +28,25 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Core React
-          if (id.includes("node_modules/react") || id.includes("node_modules/react-dom") || id.includes("node_modules/react-router-dom")) return "react-core";
-          // Radix UI
-          if (id.includes("@radix-ui")) return "radix";
+          // ALL React + ecosystem must stay in one chunk to avoid duplicate context
+          if (
+            id.includes("node_modules/react/") ||
+            id.includes("node_modules/react-dom/") ||
+            id.includes("node_modules/react-router-dom/") ||
+            id.includes("node_modules/scheduler/") ||
+            id.includes("node_modules/@radix-ui/") ||
+            id.includes("node_modules/next-themes/")
+          ) return "react-core";
           // Framer Motion
-          if (id.includes("framer-motion")) return "motion";
+          if (id.includes("node_modules/framer-motion/")) return "motion";
           // Charts
-          if (id.includes("recharts")) return "charts";
+          if (id.includes("node_modules/recharts/")) return "charts";
           // Tanstack
-          if (id.includes("@tanstack")) return "tanstack";
+          if (id.includes("node_modules/@tanstack/")) return "tanstack";
           // Lucide icons
-          if (id.includes("lucide-react")) return "icons";
+          if (id.includes("node_modules/lucide-react/")) return "icons";
           // Everything else from node_modules
-          if (id.includes("node_modules")) return "vendor";
+          if (id.includes("node_modules/")) return "vendor";
         },
       },
     },
