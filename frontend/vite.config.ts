@@ -25,20 +25,7 @@ export default defineConfig(({ mode }) => ({
     target: "esnext",
     minify: "esbuild",
     cssMinify: true,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          // Keep ALL React ecosystem in one chunk — prevents duplicate context errors
-          "react-vendor": [
-            "react",
-            "react-dom",
-            "react-router-dom",
-            "react-hook-form",
-            "@hookform/resolvers",
-          ],
-        },
-      },
-    },
+    rollupOptions: {},
     chunkSizeWarningLimit: 600,
   },
 }));
