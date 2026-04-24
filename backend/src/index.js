@@ -74,8 +74,8 @@ app.use("/api/assets", assetRoutes);
 app.use("/api/phone-showcase", phoneShowcaseRoutes);
 app.use("/api/dashboard", verifyToken, dashboardRoutes);
 
-// Catch-all: serve admin index for /admin/* (Express 5 requires named wildcard)
-app.get("/admin/*path", (req, res) => {
+// Catch-all: serve admin index for /admin/* (SPA routing)
+app.get("/admin/*", (req, res) => {
   res.sendFile(path.join(__dirname, "../admin/index.html"));
 });
 
