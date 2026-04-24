@@ -1,5 +1,5 @@
 const TeamMember = require("../models/TeamMember");
-const { cloudinary } = require("../config/cloudinary");
+const { cloudinary, uploadToCloudinary } = require("../config/cloudinary");
 
 exports.getPublic = async (req, res) => {
   try {
@@ -22,14 +22,23 @@ exports.getAll = async (req, res) => {
 exports.create = async (req, res) => {
   try {
     const { name, role, bio, initials, gradient, linkedin, github, twitter, email, order } = req.body;
+    let image = "", imagePublicId = "";
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.buffer, {
+        folder: "speshway/team",
+        transformation: [{ width: 400, height: 400, crop: "fill", gravity: "face", quality: "auto:good" }],
+      });
+      image = result.secure_url;
+      imagePublicId = result.public_id;
+    }
     const member = await TeamMember.create({
       name, role, bio: bio || "",
       initials: initials || name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2),
       gradient: gradient || "from-primary to-accent",
       linkedin: linkedin || "", github: github || "", twitter: twitter || "", email: email || "",
       order: order || 0,
-      image: req.file ? req.file.path : "",
-      imagePublicId: req.file ? req.file.filename : "",
+      image,
+      imagePublicId,
     });
     res.status(201).json(member);
   } catch (err) {
@@ -52,8 +61,12 @@ exports.update = async (req, res) => {
     };
     if (req.file) {
       if (existing.imagePublicId) await cloudinary.uploader.destroy(existing.imagePublicId).catch(() => {});
-      updates.image = req.file.path;
-      updates.imagePublicId = req.file.filename;
+      const result = await uploadToCloudinary(req.file.buffer, {
+        folder: "speshway/team",
+        transformation: [{ width: 400, height: 400, crop: "fill", gravity: "face", quality: "auto:good" }],
+      });
+      updates.image = result.secure_url;
+      updates.imagePublicId = result.public_id;
     }
     const member = await TeamMember.findByIdAndUpdate(req.params.id, updates, { new: true });
     res.json(member);

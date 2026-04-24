@@ -1,5 +1,5 @@
 const Settings = require("../models/Settings");
-const { cloudinary } = require("../config/cloudinary");
+const { cloudinary, uploadToCloudinary } = require("../config/cloudinary");
 
 // GET /api/assets — returns all asset URLs from settings
 exports.getAll = async (req, res) => {
@@ -23,19 +23,24 @@ exports.upload = async (req, res) => {
     // Delete old asset from Cloudinary if exists
     const existing = await Settings.findOne({ key });
     if (existing?.value) {
-      // Extract public_id from URL
       const publicIdMatch = existing.value.match(/speshway\/assets\/[^.]+/);
       if (publicIdMatch) await cloudinary.uploader.destroy(publicIdMatch[0]).catch(() => {});
     }
 
+    // Upload new asset
+    const result = await uploadToCloudinary(req.file.buffer, {
+      folder: "speshway/assets",
+      transformation: [{ quality: "auto:good" }],
+    });
+
     // Save new URL to settings
     await Settings.findOneAndUpdate(
       { key },
-      { key, label: key, value: req.file.path, group: "assets", type: "image" },
+      { key, label: key, value: result.secure_url, group: "assets", type: "image" },
       { upsert: true, new: true }
     );
 
-    res.json({ url: req.file.path, key });
+    res.json({ url: result.secure_url, key });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

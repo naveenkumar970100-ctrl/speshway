@@ -1,5 +1,5 @@
 const Project = require("../models/Project");
-const { cloudinary } = require("../config/cloudinary");
+const { cloudinary, uploadToCloudinary } = require("../config/cloudinary");
 
 exports.getAll = async (req, res) => {
   try {
@@ -23,6 +23,15 @@ exports.getOne = async (req, res) => {
 exports.create = async (req, res) => {
   try {
     const { title, category, description, tech, liveUrl, features, status, client, order } = req.body;
+    let image = "", imagePublicId = "";
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.buffer, {
+        folder: "speshway/projects",
+        transformation: [{ width: 1200, height: 800, crop: "limit", quality: "auto:good" }],
+      });
+      image = result.secure_url;
+      imagePublicId = result.public_id;
+    }
     const project = await Project.create({
       title, category, description,
       tech: tech ? JSON.parse(tech) : [],
@@ -31,8 +40,8 @@ exports.create = async (req, res) => {
       status: status || "In Progress",
       client: client || "",
       order: order || 0,
-      image: req.file ? req.file.path : "",
-      imagePublicId: req.file ? req.file.filename : "",
+      image,
+      imagePublicId,
     });
     res.status(201).json(project);
   } catch (err) {
@@ -57,8 +66,12 @@ exports.update = async (req, res) => {
     };
     if (req.file) {
       if (existing.imagePublicId) await cloudinary.uploader.destroy(existing.imagePublicId).catch(() => {});
-      updates.image = req.file.path;
-      updates.imagePublicId = req.file.filename;
+      const result = await uploadToCloudinary(req.file.buffer, {
+        folder: "speshway/projects",
+        transformation: [{ width: 1200, height: 800, crop: "limit", quality: "auto:good" }],
+      });
+      updates.image = result.secure_url;
+      updates.imagePublicId = result.public_id;
     }
     const project = await Project.findByIdAndUpdate(req.params.id, updates, { new: true });
     res.json(project);

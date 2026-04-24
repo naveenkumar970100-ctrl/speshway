@@ -1,5 +1,5 @@
 const CarouselSlide = require("../models/CarouselSlide");
-const { cloudinary } = require("../config/cloudinary");
+const { cloudinary, uploadToCloudinary } = require("../config/cloudinary");
 
 exports.getPublic = async (req, res) => {
   try {
@@ -21,7 +21,16 @@ exports.getAll = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
-    const { badge, title, highlight, desc, ctaText, ctaLink, cta2Text, cta2Link, order, image, imagePublicId } = req.body;
+    const { badge, title, highlight, desc, ctaText, ctaLink, cta2Text, cta2Link, order, image: bodyImage, imagePublicId: bodyPublicId } = req.body;
+    let image = bodyImage || "", imagePublicId = bodyPublicId || "";
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.buffer, {
+        folder: "speshway/carousel",
+        transformation: [{ width: 1920, height: 1080, crop: "limit", quality: "auto:good" }],
+      });
+      image = result.secure_url;
+      imagePublicId = result.public_id;
+    }
     const slide = await CarouselSlide.create({
       badge, title, highlight, desc,
       ctaText: ctaText || "Learn More",
@@ -29,9 +38,8 @@ exports.create = async (req, res) => {
       cta2Text: cta2Text || "Contact Us",
       cta2Link: cta2Link || "/contact",
       order: order || 0,
-      // Use pre-uploaded URL if provided, otherwise use multer file
-      image: image || (req.file ? req.file.path : ""),
-      imagePublicId: imagePublicId || (req.file ? req.file.filename : ""),
+      image,
+      imagePublicId,
     });
     res.status(201).json(slide);
   } catch (err) {
@@ -47,8 +55,12 @@ exports.update = async (req, res) => {
     const updates = { badge, title, highlight, desc, ctaText, ctaLink, cta2Text, cta2Link, order, isActive: isActive === "true" || isActive === true };
     if (req.file) {
       if (existing.imagePublicId) await cloudinary.uploader.destroy(existing.imagePublicId).catch(() => {});
-      updates.image = req.file.path;
-      updates.imagePublicId = req.file.filename;
+      const result = await uploadToCloudinary(req.file.buffer, {
+        folder: "speshway/carousel",
+        transformation: [{ width: 1920, height: 1080, crop: "limit", quality: "auto:good" }],
+      });
+      updates.image = result.secure_url;
+      updates.imagePublicId = result.public_id;
     }
     const slide = await CarouselSlide.findByIdAndUpdate(req.params.id, updates, { new: true });
     res.json(slide);

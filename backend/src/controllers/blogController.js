@@ -1,5 +1,5 @@
 const BlogPost = require("../models/BlogPost");
-const { cloudinary } = require("../config/cloudinary");
+const { cloudinary, uploadToCloudinary } = require("../config/cloudinary");
 
 exports.getPublic = async (req, res) => {
   try {
@@ -32,6 +32,15 @@ exports.getOne = async (req, res) => {
 exports.create = async (req, res) => {
   try {
     const { title, excerpt, content, tag, author, readTime, status, featured, order } = req.body;
+    let image = "", imagePublicId = "";
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.buffer, {
+        folder: "speshway/blog",
+        transformation: [{ width: 1200, height: 800, crop: "limit", quality: "auto:good" }],
+      });
+      image = result.secure_url;
+      imagePublicId = result.public_id;
+    }
     const post = await BlogPost.create({
       title, excerpt, content: content || "",
       tag: tag || "General", author: author || "Speshway Team",
@@ -39,8 +48,8 @@ exports.create = async (req, res) => {
       status: status || "Published",
       featured: featured === "true" || featured === true,
       order: order || 0,
-      image: req.file ? req.file.path : "",
-      imagePublicId: req.file ? req.file.filename : "",
+      image,
+      imagePublicId,
     });
     res.status(201).json(post);
   } catch (err) {
@@ -63,8 +72,12 @@ exports.update = async (req, res) => {
     };
     if (req.file) {
       if (existing.imagePublicId) await cloudinary.uploader.destroy(existing.imagePublicId).catch(() => {});
-      updates.image = req.file.path;
-      updates.imagePublicId = req.file.filename;
+      const result = await uploadToCloudinary(req.file.buffer, {
+        folder: "speshway/blog",
+        transformation: [{ width: 1200, height: 800, crop: "limit", quality: "auto:good" }],
+      });
+      updates.image = result.secure_url;
+      updates.imagePublicId = result.public_id;
     }
     const post = await BlogPost.findByIdAndUpdate(req.params.id, updates, { new: true });
     res.json(post);

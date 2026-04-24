@@ -1,5 +1,4 @@
-const cloudinary = require("cloudinary").v2;
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const { v2: cloudinary } = require("cloudinary");
 const multer = require("multer");
 
 cloudinary.config({
@@ -8,32 +7,35 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Factory — creates a Cloudinary multer storage for a specific folder
-const makeStorage = (folder) =>
-  new CloudinaryStorage({
-    cloudinary,
-    params: {
-      folder: `speshway/${folder}`,
-      allowed_formats: ["jpg", "jpeg", "png", "webp", "gif"],
-      transformation: [{ width: 1200, height: 800, crop: "limit", quality: "auto:good" }],
-    },
+// Memory storage — files are buffered, then streamed to Cloudinary
+const memoryStorage = multer.memoryStorage();
+
+// Upload a buffer to Cloudinary and return the result
+const uploadToCloudinary = (buffer, options = {}) =>
+  new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(options, (err, result) => {
+      if (err) return reject(err);
+      resolve(result);
+    });
+    stream.end(buffer);
   });
 
-// Per-resource upload middleware
-const upload = multer({ storage: makeStorage("projects"), limits: { fileSize: 10 * 1024 * 1024 } });
-const uploadBlog = multer({ storage: makeStorage("blog"), limits: { fileSize: 10 * 1024 * 1024 } });
-const uploadTeam = multer({ storage: makeStorage("team"), limits: { fileSize: 10 * 1024 * 1024 } });
-const uploadCarousel = multer({ storage: makeStorage("carousel"), limits: { fileSize: 10 * 1024 * 1024 } });
-
-// Resume upload (raw files — PDF, DOC, DOCX)
-const resumeStorage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: "speshway/resumes",
-    resource_type: "raw",
-    allowed_formats: ["pdf", "doc", "docx"],
+// Per-resource multer middleware (memory storage)
+const upload = multer({ storage: memoryStorage, limits: { fileSize: 10 * 1024 * 1024 } });
+const uploadBlog = multer({ storage: memoryStorage, limits: { fileSize: 10 * 1024 * 1024 } });
+const uploadTeam = multer({ storage: memoryStorage, limits: { fileSize: 10 * 1024 * 1024 } });
+const uploadCarousel = multer({ storage: memoryStorage, limits: { fileSize: 10 * 1024 * 1024 } });
+const uploadResume = multer({
+  storage: memoryStorage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowed = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+    cb(null, allowed.includes(file.mimetype));
   },
 });
-const uploadResume = multer({ storage: resumeStorage, limits: { fileSize: 5 * 1024 * 1024 } });
 
-module.exports = { cloudinary, upload, uploadBlog, uploadTeam, uploadCarousel, uploadResume };
+module.exports = { cloudinary, upload, uploadBlog, uploadTeam, uploadCarousel, uploadResume, uploadToCloudinary };
