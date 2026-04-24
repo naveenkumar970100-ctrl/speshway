@@ -27,26 +27,15 @@ export default defineConfig(({ mode }) => ({
     cssMinify: true,
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
-          // ALL React + ecosystem must stay in one chunk to avoid duplicate context
-          if (
-            id.includes("node_modules/react/") ||
-            id.includes("node_modules/react-dom/") ||
-            id.includes("node_modules/react-router-dom/") ||
-            id.includes("node_modules/scheduler/") ||
-            id.includes("node_modules/@radix-ui/") ||
-            id.includes("node_modules/next-themes/")
-          ) return "react-core";
-          // Framer Motion
-          if (id.includes("node_modules/framer-motion/")) return "motion";
-          // Charts
-          if (id.includes("node_modules/recharts/")) return "charts";
-          // Tanstack
-          if (id.includes("node_modules/@tanstack/")) return "tanstack";
-          // Lucide icons
-          if (id.includes("node_modules/lucide-react/")) return "icons";
-          // Everything else from node_modules
-          if (id.includes("node_modules/")) return "vendor";
+        manualChunks: {
+          // Keep ALL React ecosystem in one chunk — prevents duplicate context errors
+          "react-vendor": [
+            "react",
+            "react-dom",
+            "react-router-dom",
+            "react-hook-form",
+            "@hookform/resolvers",
+          ],
         },
       },
     },
